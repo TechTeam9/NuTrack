@@ -3,6 +3,7 @@ package edu.uw.tcss450.nutrack;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.animation.Animation;
@@ -32,15 +33,28 @@ public class Login extends AppCompatActivity {
         mainLogo = (ImageView) findViewById(R.id.NutrackLogo);
         textEmail = (EditText) findViewById(R.id.textEmail);
         textPassword = (EditText) findViewById(R.id.textPassword);
-        textComfirmPassword = (EditText) findViewById(R.id.textComfirmPassword);
         btnSubmit = (Button) findViewById(R.id.btnSubmit);
         textViewRegister = (TextView) findViewById(R.id.textViewRegister);
 
         textEmail.setVisibility(View.GONE);
         textPassword.setVisibility(View.GONE);
-        textComfirmPassword.setVisibility(View.GONE);
         btnSubmit.setVisibility(View.GONE);
         textViewRegister.setVisibility(View.GONE);
+
+        textViewRegister.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View view) {
+                AlertDialog.Builder mBuilder = new AlertDialog.Builder((Login.this));
+                View mView = getLayoutInflater().inflate(R.layout.dialog_registration, null);
+
+                mBuilder.setView(mView);
+                AlertDialog dialog = mBuilder.create();
+                dialog.setCanceledOnTouchOutside(false);
+                dialog.show();
+            }
+        });
+
 
         final Animation moveMainLogoAnimation = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.move_logo);
         moveMainLogoAnimation.setFillAfter(true);
@@ -52,25 +66,6 @@ public class Login extends AppCompatActivity {
                 mainLogo.startAnimation(moveMainLogoAnimation);
             }
         }, 1000);
-    }
-
-    public void initializeRegistrationForm(View view) {
-        int transitionRate = getResources().getInteger(android.R.integer.config_mediumAnimTime);
-
-        textViewRegister.animate()
-                .alpha(0f)
-                .setDuration(transitionRate);
-
-        btnSubmit.animate()
-                .translationYBy(140f)
-                .setDuration(transitionRate);
-
-        textComfirmPassword.setAlpha(0f);
-        textComfirmPassword.setVisibility(View.VISIBLE);
-
-        textComfirmPassword.animate()
-                .alpha(1f)
-                .setDuration(transitionRate);
     }
 
     public void verifyLoginValues(View view) {

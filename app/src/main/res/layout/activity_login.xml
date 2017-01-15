@@ -23,7 +23,7 @@
         android:id="@+id/guidelineLeft"
         android:orientation="vertical"
         tools:layout_editor_absoluteY="0dp"
-        tools:layout_editor_absoluteX="39dp"
+        tools:layout_editor_absoluteX="42dp"
         app:layout_constraintGuide_percent="0.1015625" />
 
     <android.support.constraint.Guideline
@@ -32,7 +32,7 @@
         android:id="@+id/guidelineRight"
         android:orientation="vertical"
         tools:layout_editor_absoluteY="0dp"
-        tools:layout_editor_absoluteX="347dp"
+        tools:layout_editor_absoluteX="371dp"
         app:layout_constraintGuide_percent="0.9036458" />
 
     <android.support.constraint.Guideline
@@ -40,7 +40,7 @@
         android:layout_height="wrap_content"
         android:id="@+id/guidelineTop"
         android:orientation="horizontal"
-        tools:layout_editor_absoluteY="58dp"
+        tools:layout_editor_absoluteY="67dp"
         tools:layout_editor_absoluteX="0dp"
         app:layout_constraintGuide_percent="0.10229277" />
 
@@ -50,7 +50,7 @@
         android:id="@+id/guidelineTop1"
         android:orientation="horizontal"
         app:layout_constraintGuide_percent="0.3080425"
-        tools:layout_editor_absoluteY="175dp"
+        tools:layout_editor_absoluteY="203dp"
         tools:layout_editor_absoluteX="0dp" />
 
     <android.support.constraint.Guideline
@@ -58,7 +58,7 @@
         android:layout_height="0dp"
         android:id="@+id/guidelineTop2"
         android:orientation="horizontal"
-        tools:layout_editor_absoluteY="231dp"
+        tools:layout_editor_absoluteY="269dp"
         tools:layout_editor_absoluteX="0dp"
         app:layout_constraintGuide_percent="0.40819424" />
 
@@ -85,7 +85,6 @@
         android:layout_marginRight="16dp"
         android:layout_width="0dp"
         android:textColor="#FFFFFF"
-        android:textColorHint="#FFFFFF"
         android:backgroundTint="@android:color/white" />
 
     <EditText
@@ -102,7 +101,6 @@
         android:layout_marginLeft="16dp"
         app:layout_constraintTop_toBottomOf="@+id/textEmail"
         android:layout_marginTop="8dp"
-        android:textColorHint="#FFFFFF"
         android:textColor="#FFFFFF"
         android:backgroundTint="@android:color/white" />
 
@@ -131,27 +129,7 @@
         app:layout_constraintRight_toLeftOf="@+id/guidelineRight"
         app:layout_constraintTop_toBottomOf="@+id/btnSubmit"
         android:textSize="10sp"
-        android:layout_marginTop="8dp"
-        android:onClick="initializeRegistrationForm"
+        android:layout_marginTop="16dp"
         android:textColor="#FFFFFF" />
 
-    <EditText
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:inputType="textPersonName"
-        android:ems="10"
-        android:id="@+id/textComfirmPassword"
-        app:layout_constraintRight_toLeftOf="@+id/guidelineRight"
-        app:layout_constraintTop_toBottomOf="@+id/textPassword"
-        app:layout_constraintLeft_toLeftOf="@+id/guidelineLeft"
-        android:layout_marginTop="8dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginRight="16dp"
-        android:hint="Comfirm Password"
-        android:textSize="24sp"
-        android:textColor="#FFFFFF"
-        android:textColorHint="#FFFFFF"
-        android:backgroundTint="@android:color/white" />
 </android.support.constraint.ConstraintLayout>
