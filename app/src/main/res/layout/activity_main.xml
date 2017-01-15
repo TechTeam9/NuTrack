@@ -5,7 +5,7 @@
     android:id="@+id/activity_main_page"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="tcss450.uw.edu.projecttesting.Main">
+    tools:context="edu.uw.tcss450.nutrack.Main">
 
     <android.support.constraint.Guideline
         android:layout_width="0dp"
