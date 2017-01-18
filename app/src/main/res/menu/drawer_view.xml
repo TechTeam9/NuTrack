@@ -12,5 +12,10 @@
             android:title="Home"
             android:checked="true" />
 
+        <item
+            android:id="@+id/nav_calories_calculator"
+            android:icon="@drawable/ic_menu_camera"
+            android:title="Calories Calculator"/>
+
     </group>
 </menu>

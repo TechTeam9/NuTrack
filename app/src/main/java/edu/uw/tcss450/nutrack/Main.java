@@ -1,5 +1,8 @@
 package edu.uw.tcss450.nutrack;
 
+import android.content.res.Configuration;
+import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
@@ -11,11 +14,10 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.Button;
-import android.widget.RelativeLayout;
 
-public class Main extends AppCompatActivity {
+import edu.uw.tcss450.nutrack.fragment.CaloriesCalculator;
+
+public class Main extends AppCompatActivity implements Profile.OnFragmentInteractionListener, CaloriesCalculator.OnFragmentInteractionListener{
 
     private DrawerLayout myDrawer;
 
@@ -31,6 +33,9 @@ public class Main extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         myToolbar = (Toolbar) findViewById(R.id.toolbar);
+        myToolbar.setTitleTextColor(Color.WHITE);
+        myToolbar.setTitle("Home");
+
         myNaviDrawer = (NavigationView) findViewById(R.id.naviView);
         myDrawer = (DrawerLayout) findViewById(R.id.main_frame);
 
@@ -47,8 +52,13 @@ public class Main extends AppCompatActivity {
     @Override
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
-        // Sync the toggle state after onRestoreInstanceState has occurred.
         myDrawerToggle.syncState();
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        myDrawerToggle.onConfigurationChanged(newConfig);
     }
 
 
@@ -79,14 +89,14 @@ public class Main extends AppCompatActivity {
         Class fragmentClass;
         switch(menuItem.getItemId()) {
             case R.id.nav_profile:
-                fragmentClass = Main.class;
+                fragmentClass = Profile.class;
                 break;
             case R.id.nav_home:
                 fragmentClass = Main.class;
                 break;
 
             default:
-                fragmentClass = Main.class;
+                fragmentClass = CaloriesCalculator.class;
         }
 
         try {
@@ -95,20 +105,21 @@ public class Main extends AppCompatActivity {
             e.printStackTrace();
         }
 
-        // Insert the fragment by replacing any existing fragment
         FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction().replace(R.id.flContent, fragment).commit();
 
-        // Highlight the selected item has been done by NavigationView
         menuItem.setChecked(true);
-        // Set action bar title
-        setTitle(menuItem.getTitle());
-        // Close the navigation drawer
+        myToolbar.setTitle(menuItem.getTitle());
         myDrawer.closeDrawers();
     }
 
     private ActionBarDrawerToggle setupDrawerToggle() {
         return new ActionBarDrawerToggle(this, myDrawer, myToolbar, R.string.drawer_open, R.string.drawer_close);
+    }
+
+    @Override
+    public void onFragmentInteraction(Uri uri) {
+
     }
 }
 
