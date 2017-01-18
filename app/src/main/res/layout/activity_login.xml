@@ -125,11 +125,15 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/textViewRegister"
-        app:layout_constraintLeft_toLeftOf="@+id/guidelineLeft"
+         app:layout_constraintLeft_toLeftOf="@+id/guidelineLeft"
         app:layout_constraintRight_toLeftOf="@+id/guidelineRight"
         app:layout_constraintTop_toBottomOf="@+id/btnSubmit"
         android:textSize="10sp"
         android:layout_marginTop="16dp"
-        android:textColor="#FFFFFF" />
+        android:textColor="#FFFFFF"
+        android:paddingBottom="5dp"
+        android:paddingTop="5dp"
+        android:paddingLeft="5dp"
+        android:paddingRight="5dp" />
 
 </android.support.constraint.ConstraintLayout>
