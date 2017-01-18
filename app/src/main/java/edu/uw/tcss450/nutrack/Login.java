@@ -1,11 +1,13 @@
 package edu.uw.tcss450.nutrack;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
@@ -55,6 +57,13 @@ public class Login extends AppCompatActivity {
             }
         });
 
+        btnSubmit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                verifyUser();
+            }
+        });
+
 
         final Animation moveMainLogoAnimation = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.move_logo);
         moveMainLogoAnimation.setFillAfter(true);
@@ -77,8 +86,10 @@ public class Login extends AppCompatActivity {
     }
 
     public void verifyUser() {
-
+        Intent intent = new Intent(this, Main.class);
+        startActivity(intent);
     }
+
 
     private class LoginAnimationListener implements Animation.AnimationListener {
 
