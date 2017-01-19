@@ -1,6 +1,7 @@
 package edu.uw.tcss450.nutrack;
 
 import android.content.res.Configuration;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
@@ -28,6 +29,8 @@ public class Main extends AppCompatActivity implements Profile.OnFragmentInterac
 
     private ActionBarDrawerToggle myDrawerToggle;
 
+    private SQLiteDatabase myDatabase;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,6 +51,7 @@ public class Main extends AppCompatActivity implements Profile.OnFragmentInterac
 
 
         initializeDrawerContent();
+        initializeDatabase();
     }
 
     @Override
@@ -82,6 +86,9 @@ public class Main extends AppCompatActivity implements Profile.OnFragmentInterac
                 return true;
             }
         });
+    }
+
+    private void initializeDatabase() {
     }
 
     public void selectDrawerItem(MenuItem menuItem) {
