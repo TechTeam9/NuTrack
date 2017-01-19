@@ -16,6 +16,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
 import edu.uw.tcss450.nutrack.fragment.CaloriesCalculator;
+import edu.uw.tcss450.nutrack.fragment.Profile;
 
 public class Main extends AppCompatActivity implements Profile.OnFragmentInteractionListener, CaloriesCalculator.OnFragmentInteractionListener{
 
