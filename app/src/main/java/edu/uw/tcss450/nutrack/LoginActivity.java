@@ -7,7 +7,6 @@ import android.os.Looper;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
@@ -15,7 +14,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-public class Login extends AppCompatActivity {
+public class LoginActivity extends AppCompatActivity {
     private ImageView mainLogo;
 
     private EditText textEmail;
@@ -47,55 +46,96 @@ public class Login extends AppCompatActivity {
 
             @Override
             public void onClick(View view) {
-                AlertDialog.Builder mBuilder = new AlertDialog.Builder((Login.this));
-                View mView = getLayoutInflater().inflate(R.layout.dialog_registration, null);
-
-                mBuilder.setView(mView);
-                AlertDialog dialog = mBuilder.create();
-                dialog.setCanceledOnTouchOutside(false);
-                dialog.show();
+                initializeRegistrationDialog();
             }
         });
 
         btnSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                verifyUser();
+                verifyLogin();
             }
         });
 
+        if (verifyAccountExistance()) {
+            verifyLogin();
+        } else {
+            final Animation moveMainLogoAnimation = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.move_logo);
+            moveMainLogoAnimation.setFillAfter(true);
+            moveMainLogoAnimation.setAnimationListener(new LoginAnimationListener());
 
-        final Animation moveMainLogoAnimation = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.move_logo);
-        moveMainLogoAnimation.setFillAfter(true);
-        moveMainLogoAnimation.setAnimationListener(new LoginAnimationListener());
+            new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    mainLogo.startAnimation(moveMainLogoAnimation);
+                }
+            }, 1000);
+        }
 
-        new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                mainLogo.startAnimation(moveMainLogoAnimation);
-            }
-        }, 1000);
-    }
-
-    public void verifyLoginValues(View view) {
-
-    }
-
-    public void verifyRegistrationValues(View view) {
 
     }
 
-    public void verifyUser() {
-        Intent intent = new Intent(this, Main.class);
+    public void verifyLogin() {
+        Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
     }
 
 
-    private class LoginAnimationListener implements Animation.AnimationListener {
+    private boolean verifyAccountExistance() {
+        DBMemberTableHelper memberTable = new DBMemberTableHelper(this);
+        //***************************************NEED TO CHANGE COMPARE TO == AFTER COMPLETING LOGIN PAGE********************************//
+        if (memberTable.getMemberSize() >= 1) {
+            memberTable.close();
+            return true;
+        } else {
+            return false;
+        }
+    }
 
+    private void initializeRegistrationDialog() {
+        AlertDialog.Builder mBuilder = new AlertDialog.Builder((LoginActivity.this));
+        View mView = getLayoutInflater().inflate(R.layout.dialog_registration, null);
+
+        mBuilder.setView(mView);
+        final AlertDialog dialog = mBuilder.create();
+        dialog.setCanceledOnTouchOutside(false);
+
+        dialog.show();
+
+        Button btnRegister = (Button) dialog.findViewById(R.id.registration_button_register);
+        btnRegister.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                EditText tempEmail = (EditText) dialog.findViewById(R.id.registration_editText_email);
+                EditText tempPassword = (EditText) dialog.findViewById(R.id.registration_editText_password);
+                EditText tempConfirmPassword = (EditText) dialog.findViewById(R.id.registration_editText_comfirmPassword);
+
+                String email = tempEmail.getText().toString();
+                String password = tempPassword.getText().toString();
+
+                if (insertNewMemberData(email, password)) {
+                    dialog.dismiss();
+
+                }
+            }
+        });
+    }
+
+    private boolean insertNewMemberData(String theEmail, String thePassword) {
+        DBMemberTableHelper memberTable = new DBMemberTableHelper(this);
+
+        if (memberTable.insertMember(theEmail, thePassword)) {
+            memberTable.close();
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+
+    private class LoginAnimationListener implements Animation.AnimationListener {
         @Override
         public void onAnimationStart(Animation animation) {
-
         }
 
         @Override

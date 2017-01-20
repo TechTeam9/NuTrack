@@ -9,6 +9,7 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -17,9 +18,10 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
 import edu.uw.tcss450.nutrack.fragment.CaloriesCalculator;
-import edu.uw.tcss450.nutrack.fragment.Profile;
+import edu.uw.tcss450.nutrack.fragment.MainFragment;
+import edu.uw.tcss450.nutrack.fragment.ProfileFragment;
 
-public class Main extends AppCompatActivity implements Profile.OnFragmentInteractionListener, CaloriesCalculator.OnFragmentInteractionListener{
+public class MainActivity extends AppCompatActivity implements ProfileFragment.OnFragmentInteractionListener, CaloriesCalculator.OnFragmentInteractionListener, MainFragment.OnFragmentInteractionListener{
 
     private DrawerLayout myDrawer;
 
@@ -51,7 +53,18 @@ public class Main extends AppCompatActivity implements Profile.OnFragmentInterac
 
 
         initializeDrawerContent();
-        initializeDatabase();
+
+        Class fragmentClass = MainFragment.class;
+        Fragment fragment = null;
+        try {
+            fragment = (Fragment) fragmentClass.newInstance();
+        } catch (InstantiationException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
+        FragmentTransaction fragmentTracs = getSupportFragmentManager().beginTransaction();
+        fragmentTracs.add(R.id.flContent, fragment).commit();
     }
 
     @Override
@@ -97,10 +110,10 @@ public class Main extends AppCompatActivity implements Profile.OnFragmentInterac
         Class fragmentClass;
         switch(menuItem.getItemId()) {
             case R.id.nav_profile:
-                fragmentClass = Profile.class;
+                fragmentClass = ProfileFragment.class;
                 break;
             case R.id.nav_home:
-                fragmentClass = Main.class;
+                fragmentClass = MainFragment.class;
                 break;
 
             default:

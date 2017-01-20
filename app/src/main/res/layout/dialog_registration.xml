@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:id="@+id/registration_dialog">
 
     <TextView
         android:text="Registration"
@@ -19,7 +20,7 @@
         android:layout_height="wrap_content"
         android:inputType="textPersonName"
         android:ems="10"
-        android:id="@+id/editTextEmail"
+        android:id="@+id/registration_editText_email"
         android:layout_marginLeft="40dp"
         android:layout_marginRight="40dp"
         android:hint="Email" />
@@ -29,7 +30,7 @@
         android:layout_height="wrap_content"
         android:inputType="textPersonName"
         android:ems="10"
-        android:id="@+id/editTextPassword"
+        android:id="@+id/registration_editText_password"
         android:hint="Password"
         android:layout_marginLeft="40dp"
         android:layout_marginRight="40dp" />
@@ -39,7 +40,7 @@
         android:layout_height="wrap_content"
         android:inputType="textPersonName"
         android:ems="10"
-        android:id="@+id/editTextComfirmPassword"
+        android:id="@+id/registration_editText_comfirmPassword"
         android:layout_marginLeft="40dp"
         android:layout_marginRight="40dp"
         android:hint="Comfirm Password" />
@@ -49,7 +50,7 @@
         android:layout_gravity="center"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/buttonRegister"
+        android:id="@+id/registration_button_register"
         android:layout_marginTop="20dp"
         android:layout_marginBottom="50dp" />
 </LinearLayout>

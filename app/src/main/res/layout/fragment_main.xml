@@ -1,13 +1,16 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="edu.uw.tcss450.nutrack.fragment.SettingFragment">
+    android:orientation="vertical"
+    tools:context="edu.uw.tcss450.nutrack.fragment.MainFragment">
 
     <!-- TODO: Update blank fragment layout -->
+
     <TextView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:id="@+id/mainF_textView_email"
+        android:text="Main" />
 
-</FrameLayout>
+</LinearLayout>
