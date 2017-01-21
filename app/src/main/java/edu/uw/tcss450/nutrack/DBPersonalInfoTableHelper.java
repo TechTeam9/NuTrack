@@ -9,21 +9,22 @@ import android.database.sqlite.SQLiteOpenHelper;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-/**
- * Created by Ming on 1/19/2017.
- */
 
-public class DBPersonalInfoTableHelper extends SQLiteOpenHelper {
+public class DBPersonalInfoTableHelper  extends SQLiteOpenHelper {
 
     public static final String DATABASE_NAME = "nutrack.db";
 
     public static final String TABLE_NAME = "personal_info";
 
-    public static final String COLUMN_EMAIL = "email";
+    public static final String COLUMN_NAME = "name";
 
-    public static final String COLUMN_PASSWORD = "password";
+    public static final String COLUMN_HEIGHT = "height";
 
-    public static final String COLUMN_JOINDATE = "join_date";
+    public static final String COLUMN_WEIGHT = "weight";
+
+    public static final String COLUMN_DOB = "DOB";
+
+    public static final String COLUMN_GENDER = "gender";
 
     public DBPersonalInfoTableHelper(Context context) {
         super(context, DATABASE_NAME, null, 1);
@@ -32,9 +33,11 @@ public class DBPersonalInfoTableHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         String createTableQuery = "CREATE TABLE personal_info(" +
-                "email TEXT PRIMARY KEY ASC," +
-                "password TEXT," +
-                "join_date NUMERIC" +
+                "name TEXT," +
+                "height REAL," +
+                "weight REAL," +
+                "DOB NUMERIC," +
+                "gender TEXT," +
                 ")";
         db.execSQL(createTableQuery);
     }
@@ -45,30 +48,29 @@ public class DBPersonalInfoTableHelper extends SQLiteOpenHelper {
         onCreate(db);
     }
 
-    public boolean insertMember(String theEmail, String thePassword) {
+    public boolean insertMember(String theName, float theHeight, float theWeight, Date theDOB, String theGender) {
         SQLiteDatabase db = this.getWritableDatabase();
-        ContentValues memberValues = new ContentValues();
+        ContentValues personalInfoValues = new ContentValues();
 
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Date date = new Date();
 
-        memberValues.put(COLUMN_EMAIL, theEmail);
-        memberValues.put(COLUMN_PASSWORD, thePassword);
-        memberValues.put(COLUMN_JOINDATE, dateFormat.format(date));
+        personalInfoValues.put(COLUMN_NAME, theName);
+        personalInfoValues.put(COLUMN_HEIGHT, theHeight);
+        personalInfoValues.put(COLUMN_WEIGHT, theWeight);
+        personalInfoValues.put(COLUMN_DOB, "");
+        personalInfoValues.put(COLUMN_GENDER, theGender);
 
-        db.insert(TABLE_NAME, null, memberValues);
+        db.insert(TABLE_NAME, null, personalInfoValues);
         return true;
     }
 
     public Cursor getData() {
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor result = db.rawQuery("SELECT * FROM memberTable", null);
-        return result;
+        return db.rawQuery("SELECT * FROM memberTable", null);
     }
 
     public int getMemberSize() {
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor result = db.rawQuery("SELECT * FROM memberTable", null);
-        return result.getCount();
+        return db.rawQuery("SELECT * FROM memberTable", null).getCount();
     }
 }

@@ -9,9 +9,6 @@ import android.database.sqlite.SQLiteOpenHelper;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-/**
- * Created by Ming on 1/19/2017.
- */
 
 public class DBMemberTableHelper extends SQLiteOpenHelper {
 
@@ -62,13 +59,19 @@ public class DBMemberTableHelper extends SQLiteOpenHelper {
 
     public Cursor getData() {
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor result = db.rawQuery("SELECT * FROM memberTable", null);
-        return result;
+        return db.rawQuery("SELECT * FROM memberTable", null);
     }
 
     public int getMemberSize() {
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor result = db.rawQuery("SELECT * FROM memberTable", null);
-        return result.getCount();
+        return db.rawQuery("SELECT * FROM memberTable", null).getCount();
+    }
+
+    public boolean deleteData() {
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        db.delete(TABLE_NAME, "1", null);
+        db.close();
+        return true;
     }
 }

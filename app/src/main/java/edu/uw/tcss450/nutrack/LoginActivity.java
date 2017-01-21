@@ -115,7 +115,7 @@ public class LoginActivity extends AppCompatActivity {
 
                 if (insertNewMemberData(email, password)) {
                     dialog.dismiss();
-
+                    verifyLogin();
                 }
             }
         });

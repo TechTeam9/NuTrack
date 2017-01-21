@@ -8,7 +8,12 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.oguzdev.circularfloatingactionmenu.library.FloatingActionButton;
+import com.oguzdev.circularfloatingactionmenu.library.FloatingActionMenu;
+import com.oguzdev.circularfloatingactionmenu.library.SubActionButton;
 
 import edu.uw.tcss450.nutrack.DBMemberTableHelper;
 import edu.uw.tcss450.nutrack.R;
@@ -82,6 +87,41 @@ public class MainFragment extends Fragment {
         TextView emailText = (TextView) view.findViewById(R.id.mainF_textView_email);
         emailText.setText(email);
 
+        //Floating Menu Icon
+        ImageView floatingMenuIcon = new ImageView(getContext());
+        floatingMenuIcon.setImageResource(R.mipmap.ic_launcher);
+
+        FloatingActionButton actionButton = new FloatingActionButton.Builder(getActivity())
+                .setContentView(floatingMenuIcon)
+                .build();
+
+
+        //Variable naming in here is not final yet, will rename after decide what button to add.
+        SubActionButton.Builder itemBuilder = new SubActionButton.Builder(getActivity());
+        ImageView itemIcon1 = new ImageView(getActivity());
+        itemIcon1.setImageResource(R.mipmap.ic_launcher);
+
+        ImageView itemIcon2 = new ImageView(getActivity());
+        itemIcon2.setImageResource(R.mipmap.ic_launcher);
+
+        ImageView itemIcon3 = new ImageView(getActivity());
+        itemIcon3.setImageResource(R.mipmap.ic_launcher);
+
+        ImageView itemIcon4 = new ImageView(getActivity());
+        itemIcon4.setImageResource(R.mipmap.ic_launcher);
+
+        SubActionButton button1 = itemBuilder.setContentView(itemIcon1).build();
+        SubActionButton button2 = itemBuilder.setContentView(itemIcon2).build();
+        SubActionButton button3 = itemBuilder.setContentView(itemIcon3).build();
+        SubActionButton button4 = itemBuilder.setContentView(itemIcon4).build();
+
+        FloatingActionMenu actionMenu = new FloatingActionMenu.Builder(getActivity())
+                .addSubActionView(button1)
+                .addSubActionView(button2)
+                .addSubActionView(button3)
+                .addSubActionView(button4)
+                .attachTo(actionButton)
+                .build();
 
         return view;
     }

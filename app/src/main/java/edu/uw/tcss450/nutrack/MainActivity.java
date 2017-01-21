@@ -1,5 +1,6 @@
 package edu.uw.tcss450.nutrack;
 
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
@@ -116,6 +117,8 @@ public class MainActivity extends AppCompatActivity implements ProfileFragment.O
                 fragmentClass = MainFragment.class;
                 break;
 
+            case R.id.nav_sign_out:
+                userSignOut();
             default:
                 fragmentClass = CaloriesCalculator.class;
         }
@@ -141,6 +144,14 @@ public class MainActivity extends AppCompatActivity implements ProfileFragment.O
     @Override
     public void onFragmentInteraction(Uri uri) {
 
+    }
+
+    private void userSignOut() {
+        DBMemberTableHelper dbMemberTableHelper = new DBMemberTableHelper(this);
+        dbMemberTableHelper.deleteData();
+
+        Intent intent = new Intent(this, LoginActivity.class);
+        startActivity(intent);
     }
 }
 
