@@ -11,6 +11,8 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
@@ -130,6 +132,8 @@ public class MainFragment extends Fragment {
         LineData lineData = new LineData(dataSet);
         weightChart.setData(lineData);
         weightChart.animateY(1000);
+
+
 
 
 

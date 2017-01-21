@@ -19,7 +19,13 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
+
+import com.oguzdev.circularfloatingactionmenu.library.FloatingActionButton;
+import com.oguzdev.circularfloatingactionmenu.library.FloatingActionMenu;
+import com.oguzdev.circularfloatingactionmenu.library.SubActionButton;
 
 import edu.uw.tcss450.nutrack.fragment.CaloriesCalculator;
 import edu.uw.tcss450.nutrack.fragment.MainFragment;
@@ -55,7 +61,6 @@ public class MainActivity extends AppCompatActivity implements ProfileFragment.O
 
         myDrawer.addDrawerListener(myDrawerToggle);
 
-
         initializeDrawerContent();
 
         Class fragmentClass = MainFragment.class;
@@ -70,6 +75,7 @@ public class MainActivity extends AppCompatActivity implements ProfileFragment.O
         FragmentTransaction fragmentTracs = getSupportFragmentManager().beginTransaction();
         fragmentTracs.add(R.id.flContent, fragment).commit();
 
+        initializeFloatingActionButton();
     }
 
     @Override
@@ -104,6 +110,45 @@ public class MainActivity extends AppCompatActivity implements ProfileFragment.O
                 return true;
             }
         });
+    }
+
+    public void initializeFloatingActionButton() {
+        //Floating Menu Icon
+        ImageView floatingMenuIcon = new ImageView(this);
+        floatingMenuIcon.setImageResource(R.mipmap.ic_launcher);
+
+        final FloatingActionButton actionButton = new FloatingActionButton.Builder(this)
+                .setContentView(floatingMenuIcon)
+                .build();
+
+
+        //Variable naming in here is not final yet, will rename after decide what button to add.
+        SubActionButton.Builder itemBuilder = new SubActionButton.Builder(this);
+        ImageView itemIcon1 = new ImageView(this);
+        itemIcon1.setImageResource(R.mipmap.ic_launcher);
+
+        ImageView itemIcon2 = new ImageView(this);
+        itemIcon2.setImageResource(R.mipmap.ic_launcher);
+
+        ImageView itemIcon3 = new ImageView(this);
+        itemIcon3.setImageResource(R.mipmap.ic_launcher);
+
+        ImageView itemIcon4 = new ImageView(this);
+        itemIcon4.setImageResource(R.mipmap.ic_launcher);
+
+        SubActionButton button1 = itemBuilder.setContentView(itemIcon1).build();
+        SubActionButton button2 = itemBuilder.setContentView(itemIcon2).build();
+        SubActionButton button3 = itemBuilder.setContentView(itemIcon3).build();
+        SubActionButton button4 = itemBuilder.setContentView(itemIcon4).build();
+
+        final FloatingActionMenu actionMenu = new FloatingActionMenu.Builder(this)
+                .addSubActionView(button1)
+                .addSubActionView(button2)
+                .addSubActionView(button3)
+                .addSubActionView(button4)
+                .attachTo(actionButton)
+                .build();
+
     }
 
     private void initializeDatabase() {
