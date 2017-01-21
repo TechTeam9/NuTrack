@@ -17,6 +17,9 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import android.view.MotionEvent;
+import android.view.View;
+import android.widget.LinearLayout;
 
 import edu.uw.tcss450.nutrack.fragment.CaloriesCalculator;
 import edu.uw.tcss450.nutrack.fragment.MainFragment;
@@ -66,6 +69,7 @@ public class MainActivity extends AppCompatActivity implements ProfileFragment.O
         }
         FragmentTransaction fragmentTracs = getSupportFragmentManager().beginTransaction();
         fragmentTracs.add(R.id.flContent, fragment).commit();
+
     }
 
     @Override

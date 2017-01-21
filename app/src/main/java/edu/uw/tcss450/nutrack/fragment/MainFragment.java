@@ -1,22 +1,35 @@
 package edu.uw.tcss450.nutrack.fragment;
 
 import android.content.Context;
-import android.database.Cursor;
+import android.graphics.Color;
+import android.graphics.Point;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.DrawerLayout;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.TextView;
+import android.widget.LinearLayout;
 
+import com.github.mikephil.charting.charts.LineChart;
+import com.github.mikephil.charting.components.Legend;
+import com.github.mikephil.charting.components.XAxis;
+import com.github.mikephil.charting.components.YAxis;
+import com.github.mikephil.charting.data.Entry;
+import com.github.mikephil.charting.data.LineData;
+import com.github.mikephil.charting.data.LineDataSet;
 import com.oguzdev.circularfloatingactionmenu.library.FloatingActionButton;
 import com.oguzdev.circularfloatingactionmenu.library.FloatingActionMenu;
 import com.oguzdev.circularfloatingactionmenu.library.SubActionButton;
 
-import edu.uw.tcss450.nutrack.DBMemberTableHelper;
+import java.util.ArrayList;
+import java.util.List;
+
 import edu.uw.tcss450.nutrack.R;
+
 
 /**
  * A simple {@link Fragment} subclass.
@@ -77,51 +90,48 @@ public class MainFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_main, container, false);
 
-        DBMemberTableHelper db = new DBMemberTableHelper(getContext());
-        Cursor cur = db.getData();
+        //Line Chart for weight
+        final LineChart weightChart = (LineChart) view.findViewById(R.id.main_weight_chart);
+        weightChart.setLogEnabled(false);
+        weightChart.setDescription(null);
+        weightChart.setBorderColor(Color.BLACK);
+        weightChart.setBorderWidth(1);
+        weightChart.setDrawBorders(true);
 
-        cur.moveToFirst();
-        String email = cur.getString(cur.getColumnIndex(DBMemberTableHelper.COLUMN_EMAIL));
-        String password = cur.getString(cur.getColumnIndex(DBMemberTableHelper.COLUMN_PASSWORD));
+        Legend weightChartLegend = weightChart.getLegend();
+        weightChartLegend.setEnabled(false);
+        YAxis yAxisLeft = weightChart.getAxisLeft();
+        yAxisLeft.setEnabled(false);
+        YAxis yAxisRight = weightChart.getAxisRight();
+        yAxisRight.setEnabled(false);
+        XAxis xAxis = weightChart.getXAxis();
+        xAxis.setEnabled(false);
 
-        TextView emailText = (TextView) view.findViewById(R.id.mainF_textView_email);
-        emailText.setText(email);
-
-        //Floating Menu Icon
-        ImageView floatingMenuIcon = new ImageView(getContext());
-        floatingMenuIcon.setImageResource(R.mipmap.ic_launcher);
-
-        FloatingActionButton actionButton = new FloatingActionButton.Builder(getActivity())
-                .setContentView(floatingMenuIcon)
-                .build();
+        List<Point> weightData = new ArrayList<Point>();
+        weightData.add(new Point(1, 2));
+        weightData.add(new Point(2, 4));
+        weightData.add(new Point(3, 10));
+        weightData.add(new Point(4, 8));
+        weightData.add(new Point(5, 5));
+        weightData.add(new Point(6, 1));
+        weightData.add(new Point(7, 3));
 
 
-        //Variable naming in here is not final yet, will rename after decide what button to add.
-        SubActionButton.Builder itemBuilder = new SubActionButton.Builder(getActivity());
-        ImageView itemIcon1 = new ImageView(getActivity());
-        itemIcon1.setImageResource(R.mipmap.ic_launcher);
+        List<Entry> entries = new ArrayList<Entry>();
 
-        ImageView itemIcon2 = new ImageView(getActivity());
-        itemIcon2.setImageResource(R.mipmap.ic_launcher);
+        for (Point tempPoint : weightData) {
+            entries.add(new Entry(tempPoint.x, tempPoint.y));
+        }
 
-        ImageView itemIcon3 = new ImageView(getActivity());
-        itemIcon3.setImageResource(R.mipmap.ic_launcher);
+        LineDataSet dataSet = new LineDataSet(entries, "");
+        dataSet.setColor(Color.BLUE);
+        dataSet.setValueTextColor(Color.BLACK);
 
-        ImageView itemIcon4 = new ImageView(getActivity());
-        itemIcon4.setImageResource(R.mipmap.ic_launcher);
+        LineData lineData = new LineData(dataSet);
+        weightChart.setData(lineData);
+        weightChart.animateY(1000);
 
-        SubActionButton button1 = itemBuilder.setContentView(itemIcon1).build();
-        SubActionButton button2 = itemBuilder.setContentView(itemIcon2).build();
-        SubActionButton button3 = itemBuilder.setContentView(itemIcon3).build();
-        SubActionButton button4 = itemBuilder.setContentView(itemIcon4).build();
 
-        FloatingActionMenu actionMenu = new FloatingActionMenu.Builder(getActivity())
-                .addSubActionView(button1)
-                .addSubActionView(button2)
-                .addSubActionView(button3)
-                .addSubActionView(button4)
-                .attachTo(actionButton)
-                .build();
 
         return view;
     }
