@@ -92,6 +92,7 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 
+    // Codes for building a dialog.
     private void initializeRegistrationDialog() {
         AlertDialog.Builder mBuilder = new AlertDialog.Builder((LoginActivity.this));
         View mView = getLayoutInflater().inflate(R.layout.dialog_registration, null);

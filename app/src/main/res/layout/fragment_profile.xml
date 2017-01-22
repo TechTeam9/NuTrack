@@ -1,5 +1,6 @@
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -8,42 +9,66 @@
 
     <!-- TODO: Update blank fragment layout -->
 
-    <EditText
+    <ImageView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:inputType="textPersonName"
-        android:ems="10"
-        android:id="@+id/profile_editText_name"
-        android:hint="Name" />
+        app:srcCompat="@color/colorPrimary"
+        android:id="@+id/imageView"
+        android:layout_height="150dp"
+        android:layout_marginBottom="40dp"/>
 
-    <EditText
+    <TextView
+        android:text="Name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:inputType="textPersonName"
-        android:ems="10"
-        android:id="@+id/profile_editText_height"
-        android:hint="Height" />
+        android:id="@+id/profile_textView_NameTitle" />
 
-    <EditText
+    <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:inputType="textPersonName"
-        android:ems="10"
-        android:id="@+id/profile_editText_weight"
-        android:hint="Weight" />
+        android:id="@+id/profile_textView_name" />
 
-    <EditText
+    <TextView
+        android:text="Height"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:inputType="textPersonName"
-        android:ems="10"
-        android:id="@+id/profile_editText_gender"
-        android:hint="Gender" />
+        android:id="@+id/profile_textView_heightTitle" />
 
-    <Button
-        android:text="Button"
+    <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/button2" />
+        android:id="@+id/profile_textView_height" />
+
+    <TextView
+        android:text="Weight"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/profile_textView_weightTitle" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/profile_textView_weight" />
+
+    <TextView
+        android:text="Date Of Birth"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/profile_textView_dateOfBirthTitle" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/profile_textView_DateOfBirth" />
+
+    <TextView
+        android:text="Gender"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/profile_textView_genderTitle" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/profile_textView_gender" />
 
 </LinearLayout>
