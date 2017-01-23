@@ -16,11 +16,13 @@ public class DBDailyLogTableHelper extends SQLiteOpenHelper {
 
     public static final String TABLE_NAME = "daily_log";
 
-    public static final String COLUMN_EMAIL = "email";
+    public static final String COLUMN_DATE = "date";
 
-    public static final String COLUMN_PASSWORD = "password";
+    public static final String COLUMN_WEIGHT = "weight";
 
-    public static final String COLUMN_JOINDATE = "join_date";
+    public static final String COLUMN_CALORIES = "calories";
+
+    public static final String COLUMN_PROTEIN = "protein";
 
     public DBDailyLogTableHelper(Context context) {
         super(context, DATABASE_NAME, null, 1);
@@ -29,9 +31,10 @@ public class DBDailyLogTableHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         String createTableQuery = "CREATE TABLE daily_log(" +
-                "email TEXT PRIMARY KEY ASC," +
-                "password TEXT," +
-                "join_date NUMERIC" +
+                "date NUMERIC PRIMARY KEY ASC," +
+                "weight REAL," +
+                "calories REAL," +
+                "protein REAL" +
                 ")";
         db.execSQL(createTableQuery);
     }
@@ -46,16 +49,54 @@ public class DBDailyLogTableHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues memberValues = new ContentValues();
 
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         Date date = new Date();
 
-        memberValues.put(COLUMN_EMAIL, theEmail);
-        memberValues.put(COLUMN_PASSWORD, thePassword);
-        memberValues.put(COLUMN_JOINDATE, dateFormat.format(date));
 
         db.insert(TABLE_NAME, null, memberValues);
         return true;
     }
+
+
+    public boolean createTodayLog() {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues logValues = new ContentValues();
+
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        Date date = new Date();
+
+        logValues.put(COLUMN_DATE, dateFormat.format(date));
+
+        db.insert(TABLE_NAME, null, logValues);
+
+        return true;
+    }
+
+    public boolean updateTodayWeight(Date theDate, float theWeight) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues logValues = new ContentValues();
+        logValues.put(COLUMN_WEIGHT, theWeight);
+
+        db.rawQuery("UPDATE " + TABLE_NAME + " SET " + COLUMN_WEIGHT + "=" + theWeight + "WHERE date='" + theDate + "'", null);
+
+        return true;
+    }
+
+    public boolean updateTodayCalories(Date theDate, float theCalories) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.rawQuery("UPDATE " + TABLE_NAME + " SET " + COLUMN_WEIGHT + "=" + theCalories + "WHERE date='" + theDate + "'", null);
+        db.close();
+        return true;
+    }
+
+    public boolean updateTodayProtein(Date theDate, float theProtein) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.rawQuery("UPDATE " + TABLE_NAME + " SET " + COLUMN_WEIGHT + "=" + theProtein + "WHERE date='" + theDate + "'", null);
+        db.close();
+        return true;
+    }
+
+
 
     public Cursor getData() {
         SQLiteDatabase db = this.getReadableDatabase();

@@ -13,6 +13,11 @@
             android:checked="true" />
 
         <item
+            android:id="@+id/nav_daily_log"
+            android:icon="@drawable/ic_menu_share"
+            android:title="Daily Log" />
+
+        <item
             android:id="@+id/nav_calories_calculator"
             android:icon="@drawable/ic_menu_camera"
             android:title="Calories Calculator"/>
@@ -21,5 +26,7 @@
             android:id="@+id/nav_sign_out"
             android:icon="@drawable/ic_menu_send"
             android:title="Sign Out" />
+
+
     </group>
 </menu>
