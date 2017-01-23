@@ -77,7 +77,6 @@ public class MainActivity extends AppCompatActivity implements ProfileFragment.O
 
         initializeFloatingActionButton();
 
-        myDrawer.openDrawer(myNaviDrawer);
     }
 
     @Override

@@ -1,20 +1,27 @@
 package edu.uw.tcss450.nutrack.fragment;
 
+import android.animation.AnimatorSet;
+import android.animation.ValueAnimator;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Point;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.animation.ValueAnimatorCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.DrawerLayout;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AccelerateDecelerateInterpolator;
+import android.view.animation.ScaleAnimation;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.Switch;
 
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.Legend;
@@ -46,6 +53,8 @@ public class MainFragment extends Fragment {
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
+
+    private int graphHeight;
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -90,7 +99,8 @@ public class MainFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_main, container, false);
+        final View view = inflater.inflate(R.layout.fragment_main, container, false);
+
 
         //Line Chart for weight
         final LineChart weightChart = (LineChart) view.findViewById(R.id.main_weight_chart);
@@ -134,7 +144,48 @@ public class MainFragment extends Fragment {
         weightChart.animateY(1000);
 
 
+        Switch weightChartSwitch = (Switch) view.findViewById(R.id.main_weightChart_switch);
+        weightChartSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                final LinearLayout weightChartFrame = (LinearLayout) view.findViewById(R.id.main_weightChart_frame);
+                LinearLayout weightChartTitle = (LinearLayout) view.findViewById(R.id.main_weightChart_title);
+                ValueAnimator slideAnimator;
+                AnimatorSet set = new AnimatorSet();
 
+                if (isChecked) {
+                    slideAnimator = ValueAnimator.ofInt(weightChartFrame.getHeight(), graphHeight).setDuration(500);
+
+                } else {
+                    //********************Need to Fix***********************
+                    graphHeight = weightChartFrame.getHeight();
+                    //**************************************************
+                    weightChart.animate().scaleY(0).setStartDelay(0);
+                    slideAnimator = ValueAnimator.ofInt(weightChartFrame.getHeight(), weightChartTitle.getHeight()).setDuration(500);
+                }
+
+                slideAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                    @Override
+                    public void onAnimationUpdate(ValueAnimator animation) {
+                        // get the value the interpolator is at
+                        Integer value = (Integer) animation.getAnimatedValue();
+                        // I'm going to set the layout's height 1:1 to the tick
+                        weightChartFrame.getLayoutParams().height = value.intValue();
+                        // force all layouts to see which ones are affected by
+                        // this layouts height change
+                        weightChartFrame.requestLayout();
+                    }
+                });
+
+                set.play(slideAnimator);
+                set.setInterpolator(new AccelerateDecelerateInterpolator());
+                set.start();
+
+                if (isChecked) {
+                    weightChart.animate().scaleY(1).setStartDelay(200);
+                }
+            }
+        });
 
 
         return view;

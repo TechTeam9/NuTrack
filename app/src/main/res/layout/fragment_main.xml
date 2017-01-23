@@ -6,35 +6,96 @@
     android:orientation="vertical"
     android:clickable="true"
     android:focusableInTouchMode="true"
+    android:background="#F2F2F2"
     tools:context="edu.uw.tcss450.nutrack.fragment.MainFragment">
 
     <!-- TODO: Update blank fragment layout -->
+
     <LinearLayout
+        android:id="@+id/main_weightChart_frame"
         android:layout_width="match_parent"
-        android:layout_height="30dp"
-        android:background="@color/colorAccent"
-        android:layout_margin="10dp">
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="@android:color/white"
+        android:elevation="2dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="10dp">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:gravity="center"
-            android:text="Weight Graph"
-            android:textSize="18sp"
-            android:textColor="@android:color/white" />
-
-        <Switch
+        <LinearLayout
+            android:id="@+id/main_weightChart_title"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_gravity="end"/>
+            android:layout_height="30dp"
+            android:background="@color/colorAccent">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:text="Weight Graph"
+                android:textSize="18sp"
+                android:textColor="@android:color/white" />
+
+            <Switch
+                android:id="@+id/main_weightChart_switch"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="end"
+                android:checked="true"/>
+
+        </LinearLayout>
+
+        <com.github.mikephil.charting.charts.LineChart
+            android:id="@+id/main_weight_chart"
+            android:layout_height="150dp"
+            android:layout_width="match_parent">
+
+
+        </com.github.mikephil.charting.charts.LineChart>
     </LinearLayout>
 
-    <com.github.mikephil.charting.charts.LineChart
-        android:id="@+id/main_weight_chart"
-        android:layout_height="150dp"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_margin="10dp">
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="@android:color/white"
+        android:elevation="2dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="10dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:background="@color/colorAccent">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:text="Calories Graph"
+                android:textSize="18sp"
+                android:textColor="@android:color/white" />
+
+            <Switch
+                android:id="@+id/main_caloriesChart_switch"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="end"
+                android:checked="true"/>
+
+        </LinearLayout>
+
+        <com.github.mikephil.charting.charts.LineChart
+            android:id="@+id/main_calorie_chart"
+            android:layout_height="150dp"
+            android:layout_width="match_parent">
 
 
-    </com.github.mikephil.charting.charts.LineChart>
+        </com.github.mikephil.charting.charts.LineChart>
+    </LinearLayout>
+
+
 </LinearLayout>
