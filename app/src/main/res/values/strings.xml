@@ -9,4 +9,12 @@
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <string-array name="list_view_labels">
+        <item>Name</item>
+        <item>Height</item>
+        <item>Weight</item>
+        <item>Date of Birth</item>
+        <item>Gender</item>
+    </string-array>
 </resources>
