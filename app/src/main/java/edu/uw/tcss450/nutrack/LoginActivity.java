@@ -17,11 +17,11 @@ import android.widget.TextView;
 public class LoginActivity extends AppCompatActivity {
     private ImageView mainLogo;
 
-    private EditText textEmail;
+    private EditText editTextEmail;
 
-    private EditText textPassword;
+    private EditText editTextPassword;
 
-    private EditText textComfirmPassword;
+    private EditText editTextComfirmPassword;
 
     private Button btnSubmit;
 
@@ -32,13 +32,13 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
 
         mainLogo = (ImageView) findViewById(R.id.NutrackLogo);
-        textEmail = (EditText) findViewById(R.id.textEmail);
-        textPassword = (EditText) findViewById(R.id.textPassword);
-        btnSubmit = (Button) findViewById(R.id.btnSubmit);
-        textViewRegister = (TextView) findViewById(R.id.textViewRegister);
+        editTextEmail = (EditText) findViewById(R.id.login_editText_email);
+        editTextPassword = (EditText) findViewById(R.id.login_editText_password);
+        btnSubmit = (Button) findViewById(R.id.login_button_login);
+        textViewRegister = (TextView) findViewById(R.id.login_textView_register);
 
-        textEmail.setVisibility(View.GONE);
-        textPassword.setVisibility(View.GONE);
+        editTextEmail.setVisibility(View.GONE);
+        editTextPassword.setVisibility(View.GONE);
         btnSubmit.setVisibility(View.GONE);
         textViewRegister.setVisibility(View.GONE);
 
@@ -83,7 +83,7 @@ public class LoginActivity extends AppCompatActivity {
 
     private boolean verifyAccountExistance() {
         DBMemberTableHelper memberTable = new DBMemberTableHelper(this);
-        //***************************************NEED TO CHANGE COMPARE TO == AFTER COMPLETING LOGIN PAGE********************************//
+        //NEED TO CHANGE COMPARE TO == AFTER COMPLETING LOGIN PAGE
         if (memberTable.getMemberSize() >= 1) {
             memberTable.close();
             return true;
@@ -107,16 +107,29 @@ public class LoginActivity extends AppCompatActivity {
         btnRegister.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                EditText tempEmail = (EditText) dialog.findViewById(R.id.registration_editText_email);
-                EditText tempPassword = (EditText) dialog.findViewById(R.id.registration_editText_password);
-                EditText tempConfirmPassword = (EditText) dialog.findViewById(R.id.registration_editText_comfirmPassword);
+                String email =  ((EditText) dialog.findViewById(R.id.registration_editText_email))
+                        .getText()
+                        .toString();
+                String password = ((EditText) dialog.findViewById(R.id.registration_editText_password))
+                        .getText()
+                        .toString();
+                String confirmPassword = ((EditText) dialog.findViewById(R.id.registration_editText_comfirmPassword))
+                        .getText()
+                        .toString();
 
-                String email = tempEmail.getText().toString();
-                String password = tempPassword.getText().toString();
-
-                if (insertNewMemberData(email, password)) {
-                    dialog.dismiss();
-                    verifyLogin();
+                if (email.isEmpty() || password.isEmpty() || confirmPassword.isEmpty()) {
+                    TextView textViewError = (TextView) dialog.findViewById(R.id.registration_textView_error);
+                    textViewError.setText("All Fields must be filled in.");
+                    textViewError.setVisibility(View.VISIBLE);
+                } else if (!password.equals(confirmPassword)){
+                    TextView textViewError = (TextView) dialog.findViewById(R.id.registration_textView_error);
+                    textViewError.setText("Confirm password has to be the same as password.");
+                    textViewError.setVisibility(View.VISIBLE);
+                } else {
+                    if (insertNewMemberData(email, password)) {
+                        dialog.dismiss();
+                        verifyLogin();
+                    }
                 }
             }
         });
@@ -141,11 +154,11 @@ public class LoginActivity extends AppCompatActivity {
 
         @Override
         public void onAnimationEnd(Animation animation) {
-            textEmail.setAlpha(0f);
-            textEmail.setVisibility(View.VISIBLE);
+            editTextEmail.setAlpha(0f);
+            editTextEmail.setVisibility(View.VISIBLE);
 
-            textPassword.setAlpha(0f);
-            textPassword.setVisibility(View.VISIBLE);
+            editTextPassword.setAlpha(0f);
+            editTextPassword.setVisibility(View.VISIBLE);
 
             btnSubmit.setAlpha(0f);
             btnSubmit.setVisibility(View.VISIBLE);
@@ -155,12 +168,12 @@ public class LoginActivity extends AppCompatActivity {
 
             int transitionRate = getResources().getInteger(android.R.integer.config_mediumAnimTime);
 
-            textEmail.animate()
+            editTextEmail.animate()
                     .alpha(1f)
                     .setDuration(transitionRate)
                     .setListener(null);
 
-            textPassword.animate()
+            editTextPassword.animate()
                     .alpha(1f)
                     .setDuration(transitionRate)
                     .setListener(null);

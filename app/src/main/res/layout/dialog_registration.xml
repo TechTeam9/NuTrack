@@ -45,6 +45,15 @@
         android:layout_marginRight="40dp"
         android:hint="Comfirm Password" />
 
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/registration_textView_error"
+        android:layout_marginLeft="40dp"
+        android:layout_marginRight="40dp"
+        android:textColor="@android:color/holo_red_light"
+        android:visibility="gone" />
+
     <Button
         android:text="Register"
         android:layout_gravity="center"
@@ -53,4 +62,5 @@
         android:id="@+id/registration_button_register"
         android:layout_marginTop="20dp"
         android:layout_marginBottom="50dp" />
+
 </LinearLayout>
