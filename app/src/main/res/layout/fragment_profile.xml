@@ -1,5 +1,4 @@
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -10,32 +9,60 @@
     <!-- TODO: Update blank fragment layout -->
 
     <ImageView
-        android:layout_width="match_parent"
-        app:srcCompat="@color/colorPrimary"
         android:id="@+id/imageView"
-        android:layout_height="150dp"
-        android:layout_marginBottom="40dp"/>
+        android:layout_width="match_parent"
+        android:layout_height="180dp"
+        app:srcCompat="@color/colorPrimary"
+        android:background="@drawable/ic_person_black_48dp" />
+    <ImageView
+        android:layout_marginTop="30dp"
+        android:layout_centerHorizontal="true"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:background="@drawable/ic_person_black_48dp" />
 
-
+<LinearLayout
+    android:layout_below="@id/imageView"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:padding="@dimen/activity_vertical_margin">
+
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/ic_account_circle_black_24dp"/>
-        <TextView
+            android:background="@drawable/ic_account_circle_black_24dp" />
+
+        <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:paddingLeft="@dimen/activity_horizontal_margin"
             android:layout_weight="1"
-            android:text="Name "/>
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingLeft="@dimen/activity_horizontal_margin"
+                android:text="Name "
+                android:textSize="18dp"
+                android:textColor="@color/black" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingLeft="@dimen/activity_horizontal_margin"
+                android:textSize="12dp"
+                android:text="Testing name" />
+        </LinearLayout>
+
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/ic_edit_black_24dp"/>
+            android:background="@drawable/ic_edit_black_24dp" />
     </LinearLayout>
 
     <LinearLayout
@@ -43,20 +70,38 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:padding="@dimen/activity_vertical_margin">
+
         <ImageView
             android:layout_width="36dp"
             android:layout_height="36dp"
-            android:background="@drawable/length"/>
-        <TextView
+            android:background="@drawable/length" />
+
+        <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:paddingLeft="@dimen/activity_horizontal_margin"
             android:layout_weight="1"
-            android:text="Height "/>
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="18dp"
+                android:paddingLeft="@dimen/activity_horizontal_margin"
+                android:text="Height "
+                android:textColor="@color/black" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="12dp"
+                android:paddingLeft="@dimen/activity_horizontal_margin"
+                android:text="188 cm" />
+        </LinearLayout>
+
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/ic_edit_black_24dp"/>
+            android:background="@drawable/ic_edit_black_24dp" />
     </LinearLayout>
 
     <LinearLayout
@@ -64,20 +109,38 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:padding="@dimen/activity_vertical_margin">
+
         <ImageView
             android:layout_width="36dp"
             android:layout_height="36dp"
-            android:background="@drawable/scale"/>
-        <TextView
+            android:background="@drawable/scale" />
+
+        <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:paddingLeft="@dimen/activity_horizontal_margin"
             android:layout_weight="1"
-            android:text="Weight "/>
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="18dp"
+                android:paddingLeft="@dimen/activity_horizontal_margin"
+                android:text="Weight "
+                android:textColor="@color/black" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="12dp"
+                android:paddingLeft="@dimen/activity_horizontal_margin"
+                android:text="200 lbs" />
+        </LinearLayout>
+
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/ic_edit_black_24dp"/>
+            android:background="@drawable/ic_edit_black_24dp" />
     </LinearLayout>
 
     <LinearLayout
@@ -85,20 +148,38 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:padding="@dimen/activity_vertical_margin">
+
         <ImageView
             android:layout_width="36dp"
             android:layout_height="36dp"
-            android:background="@drawable/gender"/>
-        <TextView
+            android:background="@drawable/gender" />
+
+        <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:paddingLeft="@dimen/activity_horizontal_margin"
             android:layout_weight="1"
-            android:text="Gender "/>
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="18dp"
+                android:paddingLeft="@dimen/activity_horizontal_margin"
+                android:text="Gender "
+                android:textColor="@color/black" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="12dp"
+                android:paddingLeft="@dimen/activity_horizontal_margin"
+                android:text="Male" />
+        </LinearLayout>
+
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/ic_edit_black_24dp"/>
+            android:background="@drawable/ic_edit_black_24dp" />
     </LinearLayout>
 
     <LinearLayout
@@ -106,19 +187,38 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:padding="@dimen/activity_vertical_margin">
+
         <ImageView
             android:layout_width="36dp"
             android:layout_height="36dp"
-            android:background="@drawable/birthday"/>
-        <TextView
+            android:background="@drawable/birthday" />
+
+        <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:paddingLeft="@dimen/activity_horizontal_margin"
             android:layout_weight="1"
-            android:text="DoB "/>
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="18dp"
+                android:paddingLeft="@dimen/activity_horizontal_margin"
+                android:text="Date of Birth "
+                android:textColor="@color/black" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="12dp"
+                android:paddingLeft="@dimen/activity_horizontal_margin"
+                android:text="9/9/1999" />
+        </LinearLayout>
+
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/ic_edit_black_24dp"/>
+            android:background="@drawable/ic_edit_black_24dp" />
     </LinearLayout>
 </LinearLayout>
+</RelativeLayout>
