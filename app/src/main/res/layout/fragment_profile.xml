@@ -16,59 +16,12 @@
         android:layout_height="150dp"
         android:layout_marginBottom="40dp"/>
 
-    <TextView
-        android:text="Name"
-        android:layout_width="match_parent"
+    <ListView
+        android:id="@+id/listView"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/profile_textView_NameTitle" />
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/profile_textView_name" />
-
-    <TextView
-        android:text="Height"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/profile_textView_heightTitle" />
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/profile_textView_height" />
-
-    <TextView
-        android:text="Weight"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/profile_textView_weightTitle" />
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/profile_textView_weight" />
-
-    <TextView
-        android:text="Date Of Birth"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/profile_textView_dateOfBirthTitle" />
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/profile_textView_DateOfBirth" />
-
-    <TextView
-        android:text="Gender"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/profile_textView_genderTitle" />
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/profile_textView_gender" />
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true" />
 
 </LinearLayout>
