@@ -23,13 +23,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Switch;
 
-import com.github.mikephil.charting.charts.LineChart;
-import com.github.mikephil.charting.components.Legend;
-import com.github.mikephil.charting.components.XAxis;
-import com.github.mikephil.charting.components.YAxis;
-import com.github.mikephil.charting.data.Entry;
-import com.github.mikephil.charting.data.LineData;
-import com.github.mikephil.charting.data.LineDataSet;
+
 import com.oguzdev.circularfloatingactionmenu.library.FloatingActionButton;
 import com.oguzdev.circularfloatingactionmenu.library.FloatingActionMenu;
 import com.oguzdev.circularfloatingactionmenu.library.SubActionButton;
@@ -38,6 +32,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 import edu.uw.tcss450.nutrack.R;
+import lecho.lib.hellocharts.model.Axis;
+import lecho.lib.hellocharts.model.AxisValue;
+import lecho.lib.hellocharts.model.Column;
+import lecho.lib.hellocharts.model.ColumnChartData;
+import lecho.lib.hellocharts.model.SubcolumnValue;
+import lecho.lib.hellocharts.util.ChartUtils;
+import lecho.lib.hellocharts.view.ColumnChartView;
+
+import static android.R.attr.data;
 
 
 /**
@@ -101,47 +104,53 @@ public class MainFragment extends Fragment {
         // Inflate the layout for this fragment
         final View view = inflater.inflate(R.layout.fragment_main, container, false);
 
+        initializeWeightChart(view);
+        initializeCaloriesChart(view);
+        return view;
+    }
 
-        //Line Chart for weight
-        final LineChart weightChart = (LineChart) view.findViewById(R.id.main_weight_chart);
-        weightChart.setLogEnabled(false);
-        weightChart.setDescription(null);
-        weightChart.setBorderColor(Color.BLACK);
-        weightChart.setBorderWidth(1);
-        weightChart.setDrawBorders(true);
+    //Column Chart for weight
+    private void initializeWeightChart(final View view) {
+        final ColumnChartView weightChart = (ColumnChartView) view.findViewById(R.id.main_weight_chart);
+        weightChart.setInteractive(false);
+        weightChart.setZoomEnabled(false);
+        weightChart.setClickable(false);
 
-        Legend weightChartLegend = weightChart.getLegend();
-        weightChartLegend.setEnabled(false);
-        YAxis yAxisLeft = weightChart.getAxisLeft();
-        yAxisLeft.setEnabled(false);
-        YAxis yAxisRight = weightChart.getAxisRight();
-        yAxisRight.setEnabled(false);
-        XAxis xAxis = weightChart.getXAxis();
-        xAxis.setEnabled(false);
+        ColumnChartData weightChartData;
+        int numSubcolumns = 1;
+        int numColumns = 7;
 
-        List<Point> weightData = new ArrayList<Point>();
-        weightData.add(new Point(1, 2));
-        weightData.add(new Point(2, 4));
-        weightData.add(new Point(3, 10));
-        weightData.add(new Point(4, 8));
-        weightData.add(new Point(5, 5));
-        weightData.add(new Point(6, 1));
-        weightData.add(new Point(7, 3));
+        List<Column> columns = new ArrayList<Column>();
+        List<SubcolumnValue> values;
+        for (int i = 0; i < numColumns; ++i) {
 
+            values = new ArrayList<SubcolumnValue>();
+            for (int j = 0; j < numSubcolumns; ++j) {
+                values.add(new SubcolumnValue((float) Math.random() * 50f + 5, ChartUtils.pickColor()));
+            }
 
-        List<Entry> entries = new ArrayList<Entry>();
-
-        for (Point tempPoint : weightData) {
-            entries.add(new Entry(tempPoint.x, tempPoint.y));
+            Column column = new Column(values);
+            column.setHasLabels(true);
+            columns.add(column);
         }
 
-        LineDataSet dataSet = new LineDataSet(entries, "");
-        dataSet.setColor(Color.BLUE);
-        dataSet.setValueTextColor(Color.BLACK);
 
-        LineData lineData = new LineData(dataSet);
-        weightChart.setData(lineData);
-        weightChart.animateY(1000);
+        weightChartData = new ColumnChartData(columns);
+
+        //Set Axis
+        String[] labels = {"Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"};
+        List<AxisValue> axisXValueList = new ArrayList<AxisValue>();
+        Axis axisX = new Axis();
+
+        for (int i = 0; i < 7; i++) {
+            axisXValueList.add(new AxisValue(i).setLabel(labels[i]));
+        }
+        axisX.setValues(axisXValueList);
+
+        weightChartData.setAxisXBottom(axisX);
+
+        weightChart.setColumnChartData(weightChartData);
+
 
 
         Switch weightChartSwitch = (Switch) view.findViewById(R.id.main_weightChart_switch);
@@ -167,12 +176,8 @@ public class MainFragment extends Fragment {
                 slideAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
                     @Override
                     public void onAnimationUpdate(ValueAnimator animation) {
-                        // get the value the interpolator is at
                         Integer value = (Integer) animation.getAnimatedValue();
-                        // I'm going to set the layout's height 1:1 to the tick
                         weightChartFrame.getLayoutParams().height = value.intValue();
-                        // force all layouts to see which ones are affected by
-                        // this layouts height change
                         weightChartFrame.requestLayout();
                     }
                 });
@@ -186,9 +191,89 @@ public class MainFragment extends Fragment {
                 }
             }
         });
+    }
+
+    private void initializeCaloriesChart(final View view) {
+        final ColumnChartView weightChart = (ColumnChartView) view.findViewById(R.id.main_calorie_chart);
+        weightChart.setInteractive(false);
+        weightChart.setZoomEnabled(false);
+        weightChart.setClickable(false);
+
+        ColumnChartData weightChartData;
+        int numSubcolumns = 1;
+        int numColumns = 7;
+
+        List<Column> columns = new ArrayList<Column>();
+        List<SubcolumnValue> values;
+        for (int i = 0; i < numColumns; ++i) {
+
+            values = new ArrayList<SubcolumnValue>();
+            for (int j = 0; j < numSubcolumns; ++j) {
+                values.add(new SubcolumnValue((float) Math.random() * 50f + 5, ChartUtils.pickColor()));
+            }
+
+            Column column = new Column(values);
+            column.setHasLabels(true);
+            columns.add(column);
+        }
 
 
-        return view;
+        weightChartData = new ColumnChartData(columns);
+
+        //Set Axis
+        String[] labels = {"Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"};
+        List<AxisValue> axisXValueList = new ArrayList<AxisValue>();
+        Axis axisX = new Axis();
+
+        for (int i = 0; i < 7; i++) {
+            axisXValueList.add(new AxisValue(i).setLabel(labels[i]));
+        }
+        axisX.setValues(axisXValueList);
+
+        weightChartData.setAxisXBottom(axisX);
+
+        weightChart.setColumnChartData(weightChartData);
+
+
+
+        Switch weightChartSwitch = (Switch) view.findViewById(R.id.main_calorieChart_switch);
+        weightChartSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                final LinearLayout weightChartFrame = (LinearLayout) view.findViewById(R.id.main_calorieChart_frame);
+                LinearLayout weightChartTitle = (LinearLayout) view.findViewById(R.id.main_calorieChart_title);
+                ValueAnimator slideAnimator;
+                AnimatorSet set = new AnimatorSet();
+
+                if (isChecked) {
+                    slideAnimator = ValueAnimator.ofInt(weightChartFrame.getHeight(), graphHeight).setDuration(500);
+
+                } else {
+                    //********************Need to Fix***********************
+                    graphHeight = weightChartFrame.getHeight();
+                    //**************************************************
+                    weightChart.animate().scaleY(0).setStartDelay(0);
+                    slideAnimator = ValueAnimator.ofInt(weightChartFrame.getHeight(), weightChartTitle.getHeight()).setDuration(500);
+                }
+
+                slideAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                    @Override
+                    public void onAnimationUpdate(ValueAnimator animation) {
+                        Integer value = (Integer) animation.getAnimatedValue();
+                        weightChartFrame.getLayoutParams().height = value.intValue();
+                        weightChartFrame.requestLayout();
+                    }
+                });
+
+                set.play(slideAnimator);
+                set.setInterpolator(new AccelerateDecelerateInterpolator());
+                set.start();
+
+                if (isChecked) {
+                    weightChart.animate().scaleY(1).setStartDelay(200);
+                }
+            }
+        });
     }
 
     // TODO: Rename method, update argument and hook method into UI event

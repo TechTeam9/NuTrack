@@ -46,16 +46,18 @@
 
         </LinearLayout>
 
-        <com.github.mikephil.charting.charts.LineChart
+        <lecho.lib.hellocharts.view.ColumnChartView
             android:id="@+id/main_weight_chart"
             android:layout_height="150dp"
-            android:layout_width="match_parent">
+            android:layout_width="match_parent"
+            android:layout_marginTop="20dp">
 
 
-        </com.github.mikephil.charting.charts.LineChart>
+        </lecho.lib.hellocharts.view.ColumnChartView>
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/main_calorieChart_frame"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
@@ -67,6 +69,7 @@
         android:layout_marginBottom="10dp">
 
         <LinearLayout
+            android:id="@+id/main_calorieChart_title"
             android:layout_width="match_parent"
             android:layout_height="30dp"
             android:background="@color/colorAccent">
@@ -80,7 +83,7 @@
                 android:textColor="@android:color/white" />
 
             <Switch
-                android:id="@+id/main_caloriesChart_switch"
+                android:id="@+id/main_calorieChart_switch"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_gravity="end"
@@ -88,13 +91,14 @@
 
         </LinearLayout>
 
-        <com.github.mikephil.charting.charts.LineChart
+        <lecho.lib.hellocharts.view.ColumnChartView
             android:id="@+id/main_calorie_chart"
             android:layout_height="150dp"
-            android:layout_width="match_parent">
+            android:layout_width="match_parent"
+            android:layout_marginTop="20dp">
 
 
-        </com.github.mikephil.charting.charts.LineChart>
+        </lecho.lib.hellocharts.view.ColumnChartView>
     </LinearLayout>
 
 
