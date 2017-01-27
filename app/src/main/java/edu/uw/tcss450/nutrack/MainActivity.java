@@ -30,6 +30,7 @@ import com.oguzdev.circularfloatingactionmenu.library.SubActionButton;
 import edu.uw.tcss450.nutrack.fragment.CaloriesCalculator;
 import edu.uw.tcss450.nutrack.fragment.MainFragment;
 import edu.uw.tcss450.nutrack.fragment.ProfileFragment;
+import edu.uw.tcss450.nutrack.fragment.SettingFragment;
 
 public class MainActivity extends AppCompatActivity implements ProfileFragment.OnFragmentInteractionListener, CaloriesCalculator.OnFragmentInteractionListener, MainFragment.OnFragmentInteractionListener{
 
@@ -166,7 +167,9 @@ public class MainActivity extends AppCompatActivity implements ProfileFragment.O
             case R.id.nav_home:
                 fragmentClass = MainFragment.class;
                 break;
-
+            case R.id.nav_settings:
+                fragmentClass = SettingFragment.class;
+                break;
             case R.id.nav_sign_out:
                 userSignOut();
             default:

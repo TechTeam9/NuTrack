@@ -7,6 +7,11 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.TextView;
+
+import org.w3c.dom.Text;
 
 import edu.uw.tcss450.nutrack.R;
 
@@ -65,8 +70,53 @@ public class ProfileFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_profile, container, false);
+        final View view = inflater.inflate(R.layout.fragment_profile, container, false);
+
+        final LinearLayout nameFrame = (LinearLayout) view.findViewById(R.id.profile_frame_name);
+
+        nameFrame.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                activateEditMode(v);
+            }
+        });
+
+
+
+        return view;
+    }
+
+    private void activateEditMode(View view) {
+        TextView nameValue = (TextView) view.findViewById(R.id.profile_textView_valueName);
+        EditText nameEdit = (EditText) view.findViewById(R.id.profile_editText_name);
+        nameEdit.setText(nameValue.getText().toString());
+        nameValue.setVisibility(View.GONE);
+        nameEdit.setVisibility(View.VISIBLE);
+
+        TextView heightValue = (TextView) view.findViewById(R.id.profile_textView_valueHeight);
+        EditText heightEdit = (EditText) view.findViewById(R.id.profile_editText_height);
+        heightEdit.setText(heightValue.getText().toString());
+        heightValue.setVisibility(View.GONE);
+        heightEdit.setVisibility(View.VISIBLE);
+
+        TextView weightValue = (TextView) view.findViewById(R.id.profile_textView_valueWeight);
+        EditText weightEdit = (EditText) view.findViewById(R.id.profile_editText_weight);
+        weightEdit.setText(weightValue.getText().toString());
+        weightValue.setVisibility(View.GONE);
+        weightEdit.setVisibility(View.VISIBLE);
+
+        TextView genderValue = (TextView) view.findViewById(R.id.profile_textView_valueGender);
+        EditText genderEdit = (EditText) view.findViewById(R.id.profile_editText_gender);
+        //genderEdit.setText(genderValue.getText().toString());
+        genderValue.setVisibility(View.GONE);
+        genderEdit.setVisibility(View.VISIBLE);
+
+        TextView DoBValue = (TextView) view.findViewById(R.id.profile_textView_valueDoB);
+        EditText DoBEdit = (EditText) view.findViewById(R.id.profile_editText_DoB);
+        //DoBEdit.setText(DoBValue.getText().toString());
+        DoBValue.setVisibility(View.GONE);
+        DoBEdit.setVisibility(View.VISIBLE);
+
     }
 
     // TODO: Rename method, update argument and hook method into UI event

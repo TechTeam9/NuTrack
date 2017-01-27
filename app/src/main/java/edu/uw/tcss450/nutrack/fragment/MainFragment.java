@@ -31,6 +31,8 @@ import com.oguzdev.circularfloatingactionmenu.library.SubActionButton;
 import java.util.ArrayList;
 import java.util.List;
 
+import az.plainpie.PieView;
+import az.plainpie.animation.PieAngleAnimation;
 import edu.uw.tcss450.nutrack.R;
 import lecho.lib.hellocharts.model.Axis;
 import lecho.lib.hellocharts.model.AxisValue;
@@ -108,6 +110,8 @@ public class MainFragment extends Fragment {
         initializeCaloriesChart(view);
         return view;
     }
+
+
 
     //Column Chart for weight
     private void initializeWeightChart(final View view) {
