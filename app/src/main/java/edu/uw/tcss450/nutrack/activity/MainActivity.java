@@ -148,7 +148,6 @@ public class MainActivity extends AppCompatActivity implements ProfileFragment.O
                 .addSubActionView(button4)
                 .attachTo(actionButton)
                 .build();
-
     }
 
     public void selectDrawerItem(MenuItem menuItem) {

@@ -140,7 +140,6 @@ public class LookUpFoodFragment extends Fragment {
                 }
 
                 String timeDifference = compareTime(currentTime, searchTime);
-                System.out.println(timeDifference);
                 HashMap<String, String> tempFood = new HashMap<>();
                 tempFood.put("food", foods.getString(0));
                 tempFood.put("time", timeDifference);
@@ -159,10 +158,17 @@ public class LookUpFoodFragment extends Fragment {
 
     }
 
+    /**
+     * Compare current time and searching time
+     * @param theCurrentTime system current time
+     * @param theSearchTime time that doing search
+     * @return a string that can tell how long ago did this search
+     */
     private String compareTime(Date theCurrentTime, Date theSearchTime) {
         long difference = theCurrentTime.getTime() - theSearchTime.getTime();
         difference = difference / 1000;
 
+        //NEED TO FIX ALL THE MAGIC NUMBERS!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         if (difference < 60) {
             return difference + " seconds ago";
         } else if (difference >= 60 && difference < 3600) {
@@ -182,7 +188,7 @@ public class LookUpFoodFragment extends Fragment {
         DBRecentSearchTableHelper dbHelper = new DBRecentSearchTableHelper(getContext());
         dbHelper.insertFood(theFood);
 
-
+        // FOR API USES!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         final FatSecretAPI mFatSecret = new FatSecretAPI();
          new AsyncTask<String, String, String>() {
              @Override
