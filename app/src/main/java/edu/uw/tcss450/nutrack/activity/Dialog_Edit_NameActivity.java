@@ -1,4 +1,4 @@
-package edu.uw.tcss450.nutrack;
+package edu.uw.tcss450.nutrack.activity;
 
 import android.content.Intent;
 import android.support.v7.app.AlertDialog;
@@ -7,6 +7,8 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+
+import edu.uw.tcss450.nutrack.R;
 
 public class Dialog_Edit_NameActivity extends AppCompatActivity {
 

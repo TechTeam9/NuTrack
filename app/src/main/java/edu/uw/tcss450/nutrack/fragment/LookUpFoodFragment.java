@@ -1,31 +1,42 @@
 package edu.uw.tcss450.nutrack.fragment;
 
 import android.content.Context;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.widget.SearchView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ListView;
+import android.widget.SimpleAdapter;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+
 import edu.uw.tcss450.nutrack.API.FatSecretAPI;
+import edu.uw.tcss450.nutrack.DBHelper.DBRecentSearchTableHelper;
 import edu.uw.tcss450.nutrack.R;
 
 
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link CaloriesCalculator.OnFragmentInteractionListener} interface
+ * {@link LookUpFoodFragment.OnFragmentInteractionListener} interface
  * to handle interaction events.
- * Use the {@link CaloriesCalculator#newInstance} factory method to
+ * Use the {@link LookUpFoodFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class CaloriesCalculator extends Fragment {
+public class LookUpFoodFragment extends Fragment {
 
 
 
@@ -38,7 +49,7 @@ public class CaloriesCalculator extends Fragment {
 
     private OnFragmentInteractionListener mListener;
 
-    public CaloriesCalculator() {
+    public LookUpFoodFragment() {
         // Required empty public constructor
     }
 
@@ -51,8 +62,8 @@ public class CaloriesCalculator extends Fragment {
      * @return A new instance of fragment CaloriesCalculator.
      */
     // TODO: Rename and change types and number of parameters
-    public static CaloriesCalculator newInstance(String param1, String param2) {
-        CaloriesCalculator fragment = new CaloriesCalculator();
+    public static LookUpFoodFragment newInstance(String param1, String param2) {
+        LookUpFoodFragment fragment = new LookUpFoodFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -72,14 +83,106 @@ public class CaloriesCalculator extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_calories_calculator, container, false);;
+        View view = inflater.inflate(R.layout.fragment_look_up_food, container, false);;
 
-        searchFood("apple");
+        initializeSearchListener(view);
+        initializeRecentSearchList(view);
 
         return view;
     }
 
+    private void initializeSearchListener(View view) {
+        final SearchView searchView = (SearchView) view.findViewById(R.id.lookUp_searchView);
+
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                String searchInput = searchView.getQuery().toString();
+                searchView.clearFocus();
+                searchFood(searchInput);
+
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                return false;
+            }
+        });
+
+        searchView.setOnSearchClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+
+    }
+
+
+    private void initializeRecentSearchList(View view) {
+        DBRecentSearchTableHelper dbHelper = new DBRecentSearchTableHelper(getContext());
+
+        Cursor foods = dbHelper.getAllFood();
+        if (foods.getCount() != 0) {
+            ArrayList<HashMap<String, String>> foodList = new ArrayList<>();
+
+            int i = 0;
+            foods.moveToLast();
+            while (!foods.isFirst()) {
+                Date currentTime = new Date();
+                SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                Date searchTime = null;
+                try {
+                    searchTime = dateFormat.parse(foods.getString(1));
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+
+                String timeDifference = compareTime(currentTime, searchTime);
+                System.out.println(timeDifference);
+                HashMap<String, String> tempFood = new HashMap<>();
+                tempFood.put("food", foods.getString(0));
+                tempFood.put("time", timeDifference);
+                foodList.add(tempFood);
+                foods.moveToPrevious();
+            }
+
+
+            //foodList.add(foods.getString(0));
+            String formArray[] = {"food", "time"};
+            int to[] = {R.id.recentSearch_textView_food, R.id.recentSearch_textView_time};
+            SimpleAdapter adapter = new SimpleAdapter(getContext(), foodList, R.layout.list_view_recent_search_items, formArray, to);
+            ListView listView = (ListView) view.findViewById(R.id.lookUp_listView);
+            listView.setAdapter(adapter);
+        }
+
+    }
+
+    private String compareTime(Date theCurrentTime, Date theSearchTime) {
+        long difference = theCurrentTime.getTime() - theSearchTime.getTime();
+        difference = difference / 1000;
+
+        if (difference < 60) {
+            return difference + " seconds ago";
+        } else if (difference >= 60 && difference < 3600) {
+            difference = difference / 60;
+
+            return difference + "  minutes ago";
+        } else if (difference >= 3600 && difference < 86400) {
+            difference = difference / 60 / 60;
+
+            return difference + " hours ago";
+        } else {
+            return "Long times ago";
+        }
+    }
+
     private void searchFood(final String theFood) {
+        DBRecentSearchTableHelper dbHelper = new DBRecentSearchTableHelper(getContext());
+        dbHelper.insertFood(theFood);
+
+
         final FatSecretAPI mFatSecret = new FatSecretAPI();
          new AsyncTask<String, String, String>() {
              @Override
@@ -120,6 +223,7 @@ public class CaloriesCalculator extends Fragment {
                  return "";
              }
          }.execute();
+
     }
 
 

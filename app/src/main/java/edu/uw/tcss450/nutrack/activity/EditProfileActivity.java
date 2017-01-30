@@ -1,7 +1,9 @@
-package edu.uw.tcss450.nutrack;
+package edu.uw.tcss450.nutrack.activity;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+
+import edu.uw.tcss450.nutrack.R;
 
 public class EditProfileActivity extends AppCompatActivity {
 

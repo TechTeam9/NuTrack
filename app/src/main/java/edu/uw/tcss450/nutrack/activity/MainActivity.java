@@ -1,4 +1,4 @@
-package edu.uw.tcss450.nutrack;
+package edu.uw.tcss450.nutrack.activity;
 
 import android.content.Intent;
 import android.content.res.Configuration;
@@ -17,22 +17,20 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
-import android.view.MotionEvent;
-import android.view.View;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 
 import com.oguzdev.circularfloatingactionmenu.library.FloatingActionButton;
 import com.oguzdev.circularfloatingactionmenu.library.FloatingActionMenu;
 import com.oguzdev.circularfloatingactionmenu.library.SubActionButton;
 
-import edu.uw.tcss450.nutrack.fragment.CaloriesCalculator;
+import edu.uw.tcss450.nutrack.DBHelper.DBMemberTableHelper;
+import edu.uw.tcss450.nutrack.R;
+import edu.uw.tcss450.nutrack.fragment.LookUpFoodFragment;
 import edu.uw.tcss450.nutrack.fragment.MainFragment;
 import edu.uw.tcss450.nutrack.fragment.ProfileFragment;
 import edu.uw.tcss450.nutrack.fragment.SettingFragment;
 
-public class MainActivity extends AppCompatActivity implements ProfileFragment.OnFragmentInteractionListener, CaloriesCalculator.OnFragmentInteractionListener, MainFragment.OnFragmentInteractionListener{
+public class MainActivity extends AppCompatActivity implements ProfileFragment.OnFragmentInteractionListener, LookUpFoodFragment.OnFragmentInteractionListener, MainFragment.OnFragmentInteractionListener, SettingFragment.OnFragmentInteractionListener{
 
     private DrawerLayout myDrawer;
 
@@ -153,13 +151,10 @@ public class MainActivity extends AppCompatActivity implements ProfileFragment.O
 
     }
 
-    private void initializeDatabase() {
-    }
-
     public void selectDrawerItem(MenuItem menuItem) {
         Fragment fragment = null;
 
-        Class fragmentClass;
+        Class fragmentClass = null;
         switch(menuItem.getItemId()) {
             case R.id.nav_profile:
                 fragmentClass = ProfileFragment.class;
@@ -172,22 +167,29 @@ public class MainActivity extends AppCompatActivity implements ProfileFragment.O
                 break;
             case R.id.nav_sign_out:
                 userSignOut();
+                break;
+
+            case R.id.nav_calories_calculator:
+                fragmentClass = LookUpFoodFragment.class;
+                break;
             default:
-                fragmentClass = CaloriesCalculator.class;
+                fragmentClass = MainFragment.class;
         }
 
-        try {
-            fragment = (Fragment) fragmentClass.newInstance();
-        } catch (Exception e) {
-            e.printStackTrace();
+        if (menuItem.getItemId() != R.id.nav_sign_out) {
+            try {
+                fragment = (Fragment) fragmentClass.newInstance();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            fragmentManager.beginTransaction().replace(R.id.flContent, fragment).commit();
         }
-
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        fragmentManager.beginTransaction().replace(R.id.flContent, fragment).commit();
-
         menuItem.setChecked(true);
         myToolbar.setTitle(menuItem.getTitle());
         myDrawer.closeDrawers();
+
     }
 
     private ActionBarDrawerToggle setupDrawerToggle() {

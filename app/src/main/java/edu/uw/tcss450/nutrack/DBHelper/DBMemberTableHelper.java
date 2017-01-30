@@ -1,4 +1,4 @@
-package edu.uw.tcss450.nutrack;
+package edu.uw.tcss450.nutrack.DBHelper;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -10,11 +10,11 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 
-public class DBDailyLogTableHelper extends SQLiteOpenHelper {
+public class DBMemberTableHelper extends SQLiteOpenHelper {
 
     public static final String DATABASE_NAME = "nutrack.db";
 
-    public static final String TABLE_NAME = "daily_log";
+    public static final String TABLE_NAME = "memberTable";
 
     public static final String COLUMN_EMAIL = "email";
 
@@ -22,17 +22,17 @@ public class DBDailyLogTableHelper extends SQLiteOpenHelper {
 
     public static final String COLUMN_JOINDATE = "join_date";
 
-    public DBDailyLogTableHelper(Context context) {
+    public DBMemberTableHelper(Context context) {
         super(context, DATABASE_NAME, null, 1);
     }
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        String createTableQuery = "CREATE TABLE daily_log(" +
-                "email TEXT PRIMARY KEY ASC," +
-                "password TEXT," +
-                "join_date NUMERIC" +
-                ")";
+        String createTableQuery = "CREATE TABLE memberTable(" +
+                                        "email TEXT PRIMARY KEY ASC," +
+                                        "password TEXT," +
+                                        "join_date NUMERIC" +
+                                        ")";
         db.execSQL(createTableQuery);
     }
 
@@ -65,5 +65,17 @@ public class DBDailyLogTableHelper extends SQLiteOpenHelper {
     public int getMemberSize() {
         SQLiteDatabase db = this.getReadableDatabase();
         return db.rawQuery("SELECT * FROM memberTable", null).getCount();
+    }
+
+    public boolean deleteData() {
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        db.delete(TABLE_NAME, "1", null);
+        db.close();
+        return true;
+    }
+
+    public void closeDB() {
+        this.close();
     }
 }

@@ -1,4 +1,4 @@
-package edu.uw.tcss450.nutrack;
+package edu.uw.tcss450.nutrack.DBHelper;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -48,7 +48,7 @@ public class DBPersonalInfoTableHelper  extends SQLiteOpenHelper {
         onCreate(db);
     }
 
-    public boolean insertMember(String theName, float theHeight, float theWeight, Date theDOB, String theGender) {
+    public boolean insertMember(String theName, double theHeight, double theWeight, Date theDOB, String theGender) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues personalInfoValues = new ContentValues();
 
@@ -66,11 +66,15 @@ public class DBPersonalInfoTableHelper  extends SQLiteOpenHelper {
 
     public Cursor getData() {
         SQLiteDatabase db = this.getReadableDatabase();
-        return db.rawQuery("SELECT * FROM memberTable", null);
+        return db.rawQuery("SELECT * FROM personal_info", null);
     }
 
     public int getMemberSize() {
         SQLiteDatabase db = this.getReadableDatabase();
-        return db.rawQuery("SELECT * FROM memberTable", null).getCount();
+        return db.rawQuery("SELECT * FROM personal_info", null).getCount();
+    }
+
+    public void closeDB() {
+        this.close();
     }
 }

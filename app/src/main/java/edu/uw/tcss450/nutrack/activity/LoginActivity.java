@@ -1,4 +1,4 @@
-package edu.uw.tcss450.nutrack;
+package edu.uw.tcss450.nutrack.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -13,6 +13,11 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import edu.uw.tcss450.nutrack.DBHelper.DBMemberTableHelper;
+import edu.uw.tcss450.nutrack.LoginHelper;
+import edu.uw.tcss450.nutrack.R;
+import edu.uw.tcss450.nutrack.model.Account;
 
 public class LoginActivity extends AppCompatActivity {
     private ImageView mainLogo;
@@ -53,43 +58,46 @@ public class LoginActivity extends AppCompatActivity {
         btnSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                verifyLogin();
+                Account account = new Account(editTextEmail.getText().toString(), editTextPassword.getText().toString());
+                switch (LoginHelper.verifyAccount(account)) {
+                    case LoginHelper.CORRECT_LOGIN_INFO:
+                        startMainActivity();
+                        break;
+                }
             }
         });
 
-        if (verifyAccountExistance()) {
-            verifyLogin();
-        } else {
-            final Animation moveMainLogoAnimation = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.move_logo);
-            moveMainLogoAnimation.setFillAfter(true);
-            moveMainLogoAnimation.setAnimationListener(new LoginAnimationListener());
+        switch (LoginHelper.autoVerifyAccountExistance(this)) {
+            case LoginHelper.CORRECT_AUTO_LOGIN_INFO:
+                startMainActivity();
+                break;
+            case LoginHelper.NO_ACCOUNT_FOUND:
+                initializeLoginForm();
+                break;
+            case LoginHelper.ACCOUNT_FOUND_BUT_LOGIN_ERROR:
 
-            new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    mainLogo.startAnimation(moveMainLogoAnimation);
-                }
-            }, 1000);
+                break;
+            default:
+                break;
         }
-
-
     }
 
-    public void verifyLogin() {
+    private void startMainActivity() {
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
     }
 
+    private void initializeLoginForm() {
+        final Animation moveMainLogoAnimation = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.move_logo);
+        moveMainLogoAnimation.setFillAfter(true);
+        moveMainLogoAnimation.setAnimationListener(new LoginAnimationListener());
 
-    private boolean verifyAccountExistance() {
-        DBMemberTableHelper memberTable = new DBMemberTableHelper(this);
-        //NEED TO CHANGE COMPARE TO == AFTER COMPLETING LOGIN PAGE
-        if (memberTable.getMemberSize() >= 1) {
-            memberTable.close();
-            return true;
-        } else {
-            return false;
-        }
+        new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                mainLogo.startAnimation(moveMainLogoAnimation);
+            }
+        }, 1000);
     }
 
     // Codes for building a dialog.
@@ -107,30 +115,33 @@ public class LoginActivity extends AppCompatActivity {
         btnRegister.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String email =  ((EditText) dialog.findViewById(R.id.registration_editText_email))
-                        .getText()
-                        .toString();
-                String password = ((EditText) dialog.findViewById(R.id.registration_editText_password))
-                        .getText()
-                        .toString();
-                String confirmPassword = ((EditText) dialog.findViewById(R.id.registration_editText_comfirmPassword))
-                        .getText()
-                        .toString();
+            String email = ((EditText) dialog.findViewById(R.id.registration_editText_email))
+                    .getText()
+                    .toString();
+            String password = ((EditText) dialog.findViewById(R.id.registration_editText_password))
+                    .getText()
+                    .toString();
+            String confirmPassword = ((EditText) dialog.findViewById(R.id.registration_editText_comfirmPassword))
+                    .getText()
+                    .toString();
 
-                if (email.isEmpty() || password.isEmpty() || confirmPassword.isEmpty()) {
-                    TextView textViewError = (TextView) dialog.findViewById(R.id.registration_textView_error);
-                    textViewError.setText("All Fields must be filled in.");
-                    textViewError.setVisibility(View.VISIBLE);
-                } else if (!password.equals(confirmPassword)){
-                    TextView textViewError = (TextView) dialog.findViewById(R.id.registration_textView_error);
-                    textViewError.setText("Confirm password has to be the same as password.");
-                    textViewError.setVisibility(View.VISIBLE);
-                } else {
-                    if (insertNewMemberData(email, password)) {
-                        dialog.dismiss();
-                        verifyLogin();
-                    }
+            if (email.isEmpty() || password.isEmpty() || confirmPassword.isEmpty()) {
+                TextView textViewError = (TextView) dialog.findViewById(R.id.registration_textView_error);
+                textViewError.setText(R.string.all_fields_must_fill_in_error, null);
+                textViewError.setVisibility(View.VISIBLE);
+            } else if (!password.equals(confirmPassword)) {
+                TextView textViewError = (TextView) dialog.findViewById(R.id.registration_textView_error);
+                textViewError.setText(R.string.passwords_not_the_same_error);
+                textViewError.setVisibility(View.VISIBLE);
+            } else {
+                if (insertNewMemberData(email, password)) {
+                    dialog.dismiss();
+
+                    //This part needs to change when external DB is set up.
+
+                    startMainActivity();
                 }
+            }
             }
         });
     }
