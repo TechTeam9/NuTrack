@@ -25,19 +25,33 @@
             android:orientation="horizontal">
 
             <ImageView
-                android:id="@+id/profileSetup_imageView_male"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:clickable="true"
-                android:src="@drawable/male_100" />
-
-            <ImageView
                 android:id="@+id/profileSetup_imageView_female"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/activity_horizontal_margin"
                 android:clickable="true"
                 android:src="@drawable/female_100" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_gravity="center">
+
+            <Button
+                android:text="Male"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/custom_switch_male"
+                android:elevation="2dp"/>
+
+            <Button
+                android:text="Female"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/custom_switch_female"
+                android:padding="0dp"/>
         </LinearLayout>
 
         <LinearLayout

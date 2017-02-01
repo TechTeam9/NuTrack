@@ -18,7 +18,7 @@ public class ProfileSetupActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile_setup);
-
+/*
         genderChosen = "male";
         ImageView maleIcon = (ImageView) findViewById(R.id.profileSetup_imageView_male);
         maleIcon.setOnClickListener(new View.OnClickListener() {
@@ -35,7 +35,7 @@ public class ProfileSetupActivity extends AppCompatActivity {
                 switchGender("female");
             }
         });
-
+*/
         //Button btnSubmit = (Button) findViewById(R.id.profileSetup_button_submit)
 
     }
@@ -43,7 +43,7 @@ public class ProfileSetupActivity extends AppCompatActivity {
     private void insertProfile() {
 
     }
-
+    /*
     private void switchGender(String theGender) {
         ImageView maleIcon = (ImageView) findViewById(R.id.profileSetup_imageView_male);
         ImageView femaleIcon = (ImageView) findViewById(R.id.profileSetup_imageView_female);
@@ -62,5 +62,5 @@ public class ProfileSetupActivity extends AppCompatActivity {
             }
         }
     }
-
+    */
 }
