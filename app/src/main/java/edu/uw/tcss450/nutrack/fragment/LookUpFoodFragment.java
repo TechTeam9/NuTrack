@@ -6,6 +6,8 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.widget.SearchView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,10 +24,12 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Map;
 
 import edu.uw.tcss450.nutrack.API.FatSecretAPI;
 import edu.uw.tcss450.nutrack.DBHelper.DBRecentSearchTableHelper;
 import edu.uw.tcss450.nutrack.R;
+import edu.uw.tcss450.nutrack.model.Food;
 
 
 /**
@@ -187,6 +191,7 @@ public class LookUpFoodFragment extends Fragment {
     private void searchFood(final String theFood) {
         DBRecentSearchTableHelper dbHelper = new DBRecentSearchTableHelper(getContext());
         dbHelper.insertFood(theFood);
+        final ArrayList<String> foodsList = new ArrayList<>();
 
         // FOR API USES!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         final FatSecretAPI mFatSecret = new FatSecretAPI();
@@ -203,26 +208,33 @@ public class LookUpFoodFragment extends Fragment {
                          if (FOODS_ARRAY != null) {
                              for (int i = 0; i < FOODS_ARRAY.length(); i++) {
                                  JSONObject food_items = FOODS_ARRAY.optJSONObject(i);
+
+                                 /*
                                  String food_name = food_items.getString("food_name");
                                  String food_description = food_items.getString("food_description");
                                  String[] row = food_description.split("-");
                                  String id = food_items.getString("food_type");
-                                 /*
+
                                  if (id.equals("Brand")) {
                                      brand = food_items.getString("brand_name");
                                  }
                                  if (id.equals("Generic")) {
                                      brand = "Generic";
                                  }
-                                 */
+
                                  String food_id = food_items.getString("food_id");
                                 // mItem.add(new Item(food_name, row[1].substring(1),
                                  //        "" + brand, food_id));
-                                 System.out.println(food_name);
-                                 System.out.println(food_id);
+                                 */
+                                 //System.out.println(food_items.getString("food_name"));
+                                 //System.out.println(food_id);
+
+                                 foodsList.add(food_items.getString("food_name"));
                              }
                          }
                      }
+                     goToResult(theFood, foodsList);
+
                  } catch (JSONException exception) {
                      return "Error";
                  }
@@ -230,15 +242,15 @@ public class LookUpFoodFragment extends Fragment {
              }
          }.execute();
 
+
     }
 
+    private void goToResult(String theFoodName, ArrayList<String> theFoodList) {
+        System.out.println(theFoodList.get(0));
+        mListener.onFragmentInteraction(theFoodName, theFoodList);
 
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
-        }
     }
+
 
     @Override
     public void onAttach(Context context) {
@@ -257,6 +269,7 @@ public class LookUpFoodFragment extends Fragment {
         mListener = null;
     }
 
+
     /**
      * This interface must be implemented by activities that contain this
      * fragment to allow an interaction in this fragment to be communicated
@@ -269,6 +282,6 @@ public class LookUpFoodFragment extends Fragment {
      */
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
-        void onFragmentInteraction(Uri uri);
+        void onFragmentInteraction(String theFoodName, ArrayList<String> theFoodList);
     }
 }

@@ -23,9 +23,9 @@ public class FatSecretAPI {
 
     private final String METHOD = "GET";
 
-    private final String CONSUMER_KEY = "";
+    private final String CONSUMER_KEY = "aceffd6069f24bde9e9710dbcef45ea9";
 
-    private final String SECRET_KEY = "";
+    private final String SECRET_KEY = "cc2b625f2d0a49509c0745e8e434b008";
 
     private final String URL = "http://platform.fatsecret.com/rest/server.api";
 

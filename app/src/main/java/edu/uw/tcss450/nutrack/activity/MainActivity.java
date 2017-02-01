@@ -23,14 +23,17 @@ import com.oguzdev.circularfloatingactionmenu.library.FloatingActionButton;
 import com.oguzdev.circularfloatingactionmenu.library.FloatingActionMenu;
 import com.oguzdev.circularfloatingactionmenu.library.SubActionButton;
 
+import java.util.ArrayList;
+
 import edu.uw.tcss450.nutrack.DBHelper.DBMemberTableHelper;
 import edu.uw.tcss450.nutrack.R;
 import edu.uw.tcss450.nutrack.fragment.LookUpFoodFragment;
 import edu.uw.tcss450.nutrack.fragment.MainFragment;
 import edu.uw.tcss450.nutrack.fragment.ProfileFragment;
+import edu.uw.tcss450.nutrack.fragment.SearchResultFragment;
 import edu.uw.tcss450.nutrack.fragment.SettingFragment;
 
-public class MainActivity extends AppCompatActivity implements ProfileFragment.OnFragmentInteractionListener, LookUpFoodFragment.OnFragmentInteractionListener, MainFragment.OnFragmentInteractionListener, SettingFragment.OnFragmentInteractionListener{
+public class MainActivity extends AppCompatActivity implements ProfileFragment.OnFragmentInteractionListener, LookUpFoodFragment.OnFragmentInteractionListener, MainFragment.OnFragmentInteractionListener, SettingFragment.OnFragmentInteractionListener, SearchResultFragment.OnFragmentInteractionListener{
 
     private DrawerLayout myDrawer;
 
@@ -196,8 +199,18 @@ public class MainActivity extends AppCompatActivity implements ProfileFragment.O
     }
 
     @Override
-    public void onFragmentInteraction(Uri uri) {
+    public void onFragmentInteraction(String theFoodName, ArrayList<String> theFoodList) {
+        SearchResultFragment fragment = new SearchResultFragment();
+        Bundle args = new Bundle();
+        args.putString("food_name", theFoodName);
+        args.putStringArrayList("food_list", theFoodList);
+        fragment.setArguments(args);
 
+        FragmentTransaction transaction = getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.flContent, fragment);
+        // Commit the transaction
+        transaction.commit();
     }
 
     private void userSignOut() {
@@ -206,6 +219,11 @@ public class MainActivity extends AppCompatActivity implements ProfileFragment.O
 
         Intent intent = new Intent(this, LoginActivity.class);
         startActivity(intent);
+    }
+
+    @Override
+    public void onFragmentInteraction(Uri uri) {
+
     }
 }
 
