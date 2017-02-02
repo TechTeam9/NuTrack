@@ -63,7 +63,7 @@
             <EditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="MM/DD/YYYY Date of Birth" />
+                android:hint="Date of Birth (MM/DD/YYYY)" />
 
             <LinearLayout
                 android:layout_width="match_parent"
