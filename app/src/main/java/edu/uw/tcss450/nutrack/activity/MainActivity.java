@@ -165,7 +165,9 @@ public class MainActivity extends AppCompatActivity implements ProfileFragment.O
                 fragmentClass = MainFragment.class;
                 break;
             case R.id.nav_settings:
-                fragmentClass = SettingFragment.class;
+                Intent intent = new Intent(this, ProfileSetupActivity.class);
+                startActivity(intent);
+                //fragmentClass = SettingFragment.class;
                 break;
             case R.id.nav_sign_out:
                 userSignOut();
@@ -178,7 +180,7 @@ public class MainActivity extends AppCompatActivity implements ProfileFragment.O
                 fragmentClass = MainFragment.class;
         }
 
-        if (menuItem.getItemId() != R.id.nav_sign_out) {
+        if (menuItem.getItemId() != R.id.nav_sign_out && menuItem.getItemId() != R.id.nav_settings) {
             try {
                 fragment = (Fragment) fragmentClass.newInstance();
             } catch (Exception e) {
