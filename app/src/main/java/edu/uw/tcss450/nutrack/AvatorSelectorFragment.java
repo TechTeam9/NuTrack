@@ -12,8 +12,10 @@ import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.AnimationSet;
+import android.view.animation.DecelerateInterpolator;
 import android.view.animation.TranslateAnimation;
 import android.widget.Button;
 import android.widget.FrameLayout;
@@ -34,6 +36,10 @@ public class AvatorSelectorFragment extends Fragment {
             , R.drawable.avatar_m4, R.drawable.avatar_m5
             , R.drawable.avatar_m6, R.drawable.avatar_m7
             , R.drawable.avatar_m8, R.drawable.avatar_m9};
+
+    private static final int MOVE_SPEED = 300;
+
+    private static final int FADING_SPEED = 300;
 
     private OnFragmentInteractionListener mListener;
 
@@ -69,6 +75,10 @@ public class AvatorSelectorFragment extends Fragment {
 
     private int myAvatarImageIndex[];
 
+    private AlphaAnimation fadeInAnimation;
+
+    private AlphaAnimation fadeOutAnimation;
+
     public AvatorSelectorFragment() {
     }
 
@@ -84,6 +94,15 @@ public class AvatorSelectorFragment extends Fragment {
         myAvatarImageIndex[1] = 4;
         myAvatarImageIndex[2] = 5;
 
+        //Setup fadeIn and fadeOut animation.
+        fadeInAnimation = new AlphaAnimation(0.5f, 1.0f);
+        fadeInAnimation.setDuration(FADING_SPEED);
+        fadeInAnimation.setFillAfter(true);
+
+        fadeOutAnimation = new AlphaAnimation(1.0f, 0.5f);
+        fadeOutAnimation.setDuration(FADING_SPEED);
+        fadeOutAnimation.setFillAfter(true);
+
         //Get screen pixel
         DisplayMetrics metrics = new DisplayMetrics();
         getActivity().getWindowManager().getDefaultDisplay().getMetrics(metrics);
@@ -94,11 +113,11 @@ public class AvatorSelectorFragment extends Fragment {
         mySpareImageId = R.id.avatar_3;
 
 
-        mySideAvatarDim = metrics.widthPixels * 0.1f;
-        myCenterAvatarDim = metrics.widthPixels * 0.2f;
+        mySideAvatarDim = metrics.widthPixels * 0.15f;
+        myCenterAvatarDim = metrics.widthPixels * 0.3f;
         myPositionLeftX = metrics.widthPixels * 0.20f - mySideAvatarDim * 0.5f;
         myPositionCenterX = metrics.widthPixels * 0.5f - mySideAvatarDim * 0.5f;
-        myPositionRightX = metrics.widthPixels* 0.80f - mySideAvatarDim * 0.5f;
+        myPositionRightX = metrics.widthPixels * 0.80f - mySideAvatarDim * 0.5f;
         mySmallerPositionY = mySideAvatarDim * 0.5f;
 
         FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(mySideAvatarDim.intValue(), mySideAvatarDim.intValue());
@@ -140,9 +159,7 @@ public class AvatorSelectorFragment extends Fragment {
         myLeftImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                moveLeft();
-
+                moveRight();
             }
         });
 
@@ -150,9 +167,7 @@ public class AvatorSelectorFragment extends Fragment {
         myRightImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                moveRight();
-
+                moveLeft();
             }
         });
 
@@ -174,37 +189,41 @@ public class AvatorSelectorFragment extends Fragment {
 
         //
         ObjectAnimator sideLeftAnim = ObjectAnimator.ofFloat(myLeftImage, "translationX", -1 * mySideAvatarDim);
-        sideLeftAnim.setDuration(500).start();
+        sideLeftAnim.setDuration(MOVE_SPEED).start();
         sideLeftAnim = ObjectAnimator.ofFloat(myLeftImage, "scaleX", 0.5f);
-        sideLeftAnim.setDuration(500).start();
+        sideLeftAnim.setDuration(MOVE_SPEED).start();
         sideLeftAnim = ObjectAnimator.ofFloat(myLeftImage, "scaleY", 0.5f);
-        sideLeftAnim.setDuration(500).start();
+        sideLeftAnim.setDuration(MOVE_SPEED).start();
 
+        //Center Avatar
         ObjectAnimator centerAnim = ObjectAnimator.ofFloat(myCenterImage, "translationX", myPositionLeftX);
-        centerAnim.setDuration(500).start();
+        centerAnim.setDuration(MOVE_SPEED).start();
         centerAnim = ObjectAnimator.ofFloat(myCenterImage, "scaleX", 1f);
-        centerAnim.setDuration(500).start();
+        centerAnim.setDuration(MOVE_SPEED).start();
         centerAnim = ObjectAnimator.ofFloat(myCenterImage, "scaleY", 1f);
-        centerAnim.setDuration(500).start();
+        centerAnim.setDuration(MOVE_SPEED).start();
 
+
+        //Right Avatar
         ObjectAnimator sideRightAnim = ObjectAnimator.ofFloat(myRightImage, "translationX", myPositionCenterX);
-        sideRightAnim.setDuration(500).start();
+        sideRightAnim.setDuration(MOVE_SPEED).start();
         sideRightAnim = ObjectAnimator.ofFloat(myRightImage, "scaleX", 2f);
-        sideRightAnim.setDuration(500).start();
+        sideRightAnim.setDuration(MOVE_SPEED).start();
         sideRightAnim = ObjectAnimator.ofFloat(myRightImage, "scaleY", 2f);
-        sideRightAnim.setDuration(500).start();
+        sideRightAnim.setDuration(MOVE_SPEED).start();
 
+        //Spare Avatar
         mySpareImage.setX(1440);
-        mySpareImage.setVisibility(View.VISIBLE);
 
         if (myAvatarImageIndex[2] == 10) {
-            mySpareImage.setBackgroundResource(R.drawable.ic_account_circle_black_24dp);
+            mySpareImage.setVisibility(View.GONE);
         } else {
+            mySpareImage.setVisibility(View.VISIBLE);
             mySpareImage.setBackgroundResource(MALE_AVATAR[myAvatarImageIndex[2]]);
         }
 
         ObjectAnimator spareAnim = ObjectAnimator.ofFloat(mySpareImage, "translationX", myPositionRightX);
-        spareAnim.setDuration(500).start();
+        spareAnim.setDuration(MOVE_SPEED).start();
         //************************************************************************
         spareAnim = ObjectAnimator.ofFloat(mySpareImage, "scaleX", 0.5f);
         spareAnim.setDuration(0).start();
@@ -212,9 +231,9 @@ public class AvatorSelectorFragment extends Fragment {
         spareAnim.setDuration(0).start();
         //************************************************************************
         spareAnim = ObjectAnimator.ofFloat(mySpareImage, "scaleX", 1f);
-        spareAnim.setDuration(500).start();
+        spareAnim.setDuration(MOVE_SPEED).start();
         spareAnim = ObjectAnimator.ofFloat(mySpareImage, "scaleY", 1f);
-        spareAnim.setDuration(500).start();
+        spareAnim.setDuration(MOVE_SPEED).start();
 
 
         //After assigning events
@@ -224,34 +243,32 @@ public class AvatorSelectorFragment extends Fragment {
         mySpareImage = (Button) getView().findViewById(mySpareImageId);
 
         //Disable clickable if it reaches the edge
-        if (myAvatarImageIndex[2] == 10) {
-            myLeftImage.setClickable(false);
-        } else {
-            myLeftImage.setClickable(true);
-            myLeftImage.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    moveLeft();
-
-
-                    getView().invalidate();
-                }
-            }); 
-        }
-
-
-
-        myCenterImage.setClickable(false);
-
-        myRightImage.setClickable(true);
-        myRightImage.setOnClickListener(new View.OnClickListener() {
+        myLeftImage.setClickable(true);
+        myLeftImage.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(View view) {
                 moveRight();
 
                 getView().invalidate();
             }
         });
+
+        myCenterImage.setClickable(false);
+
+        if (myAvatarImageIndex[2] == 10) {
+            myRightImage.setClickable(false);
+        } else {
+            myRightImage.setClickable(true);
+            myRightImage.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    moveLeft();
+
+                    getView().invalidate();
+                }
+            });
+        }
+
 
     }
 
@@ -267,17 +284,18 @@ public class AvatorSelectorFragment extends Fragment {
         myAvatarImageIndex[1]--;
         myAvatarImageIndex[2]--;
 
+        //Spare Avatar
         mySpareImage.setX(-1 * mySideAvatarDim);
         mySpareImage.setVisibility(View.VISIBLE);
 
         if (myAvatarImageIndex[0] == -1) {
-            mySpareImage.setBackgroundResource(R.drawable.ic_account_circle_black_24dp);
+            mySpareImage.setVisibility(View.GONE);
         } else {
             mySpareImage.setBackgroundResource(MALE_AVATAR[myAvatarImageIndex[0]]);
         }
 
         ObjectAnimator spareAnim = ObjectAnimator.ofFloat(mySpareImage, "translationX", myPositionLeftX);
-        spareAnim.setDuration(500).start();
+        spareAnim.setDuration(MOVE_SPEED).start();
         //************************************************************************
         spareAnim = ObjectAnimator.ofFloat(mySpareImage, "scaleX", 0.5f);
         spareAnim.setDuration(0).start();
@@ -285,31 +303,33 @@ public class AvatorSelectorFragment extends Fragment {
         spareAnim.setDuration(0).start();
         //************************************************************************
         spareAnim = ObjectAnimator.ofFloat(mySpareImage, "scaleX", 1f);
-        spareAnim.setDuration(500).start();
+        spareAnim.setDuration(MOVE_SPEED).start();
         spareAnim = ObjectAnimator.ofFloat(mySpareImage, "scaleY", 1f);
-        spareAnim.setDuration(500).start();
+        spareAnim.setDuration(MOVE_SPEED).start();
 
+        //Left Avatar
         ObjectAnimator sideLeftAnim = ObjectAnimator.ofFloat(myLeftImage, "translationX", myPositionCenterX);
-        sideLeftAnim.setDuration(500).start();
+        sideLeftAnim.setDuration(MOVE_SPEED).start();
         sideLeftAnim = ObjectAnimator.ofFloat(myLeftImage, "scaleX", 2f);
-        sideLeftAnim.setDuration(500).start();
+        sideLeftAnim.setDuration(MOVE_SPEED).start();
         sideLeftAnim = ObjectAnimator.ofFloat(myLeftImage, "scaleY", 2f);
-        sideLeftAnim.setDuration(500).start();
+        sideLeftAnim.setDuration(MOVE_SPEED).start();
 
+        //Center Avatar
         ObjectAnimator centerAnim = ObjectAnimator.ofFloat(myCenterImage, "translationX", myPositionRightX);
-        centerAnim.setDuration(500).start();
+        centerAnim.setDuration(MOVE_SPEED).start();
         centerAnim = ObjectAnimator.ofFloat(myCenterImage, "scaleX", 1f);
-        centerAnim.setDuration(500).start();
+        centerAnim.setDuration(MOVE_SPEED).start();
         centerAnim = ObjectAnimator.ofFloat(myCenterImage, "scaleY", 1f);
-        centerAnim.setDuration(500).start();
+        centerAnim.setDuration(MOVE_SPEED).start();
 
+        //Right Avatar
         ObjectAnimator sideRightAnim = ObjectAnimator.ofFloat(myRightImage, "translationX", 1440);
-        sideRightAnim.setDuration(500).start();
+        sideRightAnim.setDuration(MOVE_SPEED).start();
         centerAnim = ObjectAnimator.ofFloat(myRightImage, "scaleX", 0.5f);
-        centerAnim.setDuration(500).start();
+        centerAnim.setDuration(MOVE_SPEED).start();
         centerAnim = ObjectAnimator.ofFloat(myRightImage, "scaleY", 0.5f);
-        centerAnim.setDuration(500).start();
-
+        centerAnim.setDuration(MOVE_SPEED).start();
 
 
         //After assigning events
@@ -318,34 +338,34 @@ public class AvatorSelectorFragment extends Fragment {
         myRightImage = (Button) getView().findViewById(myRightImageId);
         mySpareImage = (Button) getView().findViewById(mySpareImageId);
 
-
-        myLeftImage.setClickable(true);
-        myLeftImage.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                moveLeft();
-
-
-                getView().invalidate();
-            }
-        });
-
-        myCenterImage.setClickable(false);
-
-        //Disable clickable if it reaches the edge
         if (myAvatarImageIndex[0] == -1) {
-            myRightImage.setClickable(false);
+            myLeftImage.setClickable(false);
         } else {
-            myRightImage.setClickable(true);
-            myRightImage.setOnClickListener(new View.OnClickListener() {
+            myLeftImage.setClickable(true);
+            myLeftImage.setOnClickListener(new View.OnClickListener() {
                 @Override
-                public void onClick(View v) {
+                public void onClick(View view) {
                     moveRight();
 
                     getView().invalidate();
                 }
             });
         }
+
+
+        myCenterImage.setClickable(false);
+
+
+        //Disable clickable if it reaches the edge
+        myRightImage.setClickable(true);
+        myRightImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                moveLeft();
+
+                getView().invalidate();
+            }
+        });
 
     }
 
