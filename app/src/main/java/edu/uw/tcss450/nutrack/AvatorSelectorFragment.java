@@ -127,7 +127,6 @@ public class AvatorSelectorFragment extends Fragment {
         myLeftImage.setLayoutParams(lp);
         myLeftImage.setX(myPositionLeftX);
         myLeftImage.setY(0);
-
         myLeftImage.setBackgroundResource(MALE_AVATAR[3]);
 
         myCenterImage = (Button) view.findViewById(R.id.avator_1);

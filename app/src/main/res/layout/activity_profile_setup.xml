@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/activity_profile_setup"
     android:layout_width="match_parent"
@@ -12,96 +12,135 @@
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_centerVertical="true"
+        android:background="@color/lightGrayBackground"
         android:orientation="vertical">
 
-        <FrameLayout
-            android:id="@+id/avatar_frame"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+        <TextView
+            android:id="@+id/profileSetup_textView_title"
+            android:text="Setup Your Profile"
             android:layout_gravity="center"
-            android:orientation="horizontal">
-
-
-        </FrameLayout>
-
-        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_gravity="center">
+            android:layout_marginTop="30dp"
+            android:textSize="30sp"
+            android:textColor="@color/black"/>
 
-            <Button
-                android:text="Male"
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:elevation="2dp"
+            android:background="@android:color/white">
+
+            <FrameLayout
+                android:id="@+id/avatar_frame"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="30dp"
+                android:layout_marginBottom="20dp"
+                android:orientation="horizontal">
+
+            </FrameLayout>
+
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@drawable/custom_switch_male"
-                android:elevation="2dp"/>
+                android:orientation="horizontal"
+                android:layout_gravity="center" >
+                <Button
+                    android:text="Male"
+                    android:layout_width="100dp"
+                    android:layout_height="30dp"
+                    android:background="@drawable/custom_switch_male"
+                    android:elevation="2dp"/>
 
-            <Button
-                android:text="Female"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@drawable/custom_switch_female"
-                android:padding="0dp"/>
+                <Button
+                    android:text="Female"
+                    android:layout_width="100dp"
+                    android:layout_height="30dp"
+                    android:background="@drawable/custom_switch_female"
+                    android:padding="0dp"/>
+            </LinearLayout>
+
+
         </LinearLayout>
+
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
             android:orientation="vertical"
-            android:padding="@dimen/activity_vertical_margin">
+            android:padding="@dimen/activity_vertical_margin"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp">
 
 
             <EditText
+                android:id="@+id/profileSetup_editText_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Name" />
+                android:layout_marginTop="10dp"
+                android:hint="@string/name" />
 
 
             <EditText
+                android:id="@+id/profileSetup_editText_dateOfBirth"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Date of Birth (MM/DD/YYYY)" />
+                android:layout_marginTop="10dp"
+                android:inputType="date"
+                android:hint="@string/date_of_birth" />
+
+            <DatePicker
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:datePickerMode="spinner"
+                android:calendarViewShown="false"
+                android:id="@+id/datePicker" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:layout_marginTop="10dp">
 
                 <EditText
+                    android:id="@+id/profileSetup_editText_height"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:hint="Height"
+                    android:hint="@string/height"
                     android:inputType="numberDecimal" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="cm" />
+                    android:text="@string/cm" />
             </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
                 android:orientation="horizontal">
 
                 <EditText
+                    android:id="@+id/profileSetup_editText_weight"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:hint="Weight"
+                    android:hint="@string/weight"
                     android:inputType="numberDecimal" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="lbs" />
+                    android:text="@string/lbs" />
             </LinearLayout>
 
         </LinearLayout>
     </LinearLayout>
 
-</RelativeLayout>
+</ScrollView>

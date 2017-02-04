@@ -182,7 +182,17 @@ public class LoginActivity extends AppCompatActivity implements PostWebServiceTa
     @Override
     public void onLoginCompleted(int resultCode) {
         if (resultCode == LoginHelper.CORRECT_LOGIN_INFO) {
-            startMainActivity();
+            DBMemberTableHelper memberTable = new DBMemberTableHelper(this);
+            String email = ((EditText) findViewById(R.id.login_editText_email))
+                    .getText()
+                    .toString();
+            String password = ((EditText) findViewById(R.id.login_editText_password))
+                    .getText()
+                    .toString();
+
+            if (memberTable.insertMember(email, password)) {
+                startMainActivity();
+            };
         } else if (resultCode == LoginHelper.ACCOUNT_FOUND_BUT_LOGIN_ERROR) {
             DBMemberTableHelper memberTable = new DBMemberTableHelper(this);
             memberTable.deleteData();
