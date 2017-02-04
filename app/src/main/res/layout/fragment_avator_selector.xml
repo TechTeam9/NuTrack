@@ -6,30 +6,31 @@
     tools:context="edu.uw.tcss450.nutrack.AvatorSelectorFragment">
 
     <!-- TODO: Update blank fragment layout -->
-    <Button
+    <ImageView
         android:layout_width="100dp"
         android:layout_height="100dp"
         android:background="@drawable/ic_account_circle_black_24dp"
         android:id="@+id/avator_1"
         android:clickable="true" />
 
-    <Button
+    <ImageView
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:background="@drawable/ic_account_circle_black_24dp"
         android:id="@+id/avator_0"
         android:clickable="true" />
 
-    <Button
+    <ImageView
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:background="@drawable/ic_account_circle_black_24dp"
         android:id="@+id/avator_2"
         android:clickable="true" />
 
-    <Button
+    <ImageView
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:background="@drawable/ic_account_circle_black_24dp"
-        android:id="@+id/avatar_3" />
+        android:id="@+id/avatar_3"
+        android:clickable="true" />
 </FrameLayout>

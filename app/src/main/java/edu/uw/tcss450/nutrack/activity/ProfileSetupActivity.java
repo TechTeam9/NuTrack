@@ -17,39 +17,44 @@ import edu.uw.tcss450.nutrack.R;
 
 public class ProfileSetupActivity extends AppCompatActivity implements AvatorSelectorFragment.OnFragmentInteractionListener{
 
-    private String genderChosen;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile_setup);
 
-        FragmentManager fragmentManager = getFragmentManager();
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        Fragment avatorSelectorFragment = new AvatorSelectorFragment();
-        fragmentTransaction.add(R.id.avatar_frame, avatorSelectorFragment, "Avator");
-        fragmentTransaction.commit();
-/*
-        genderChosen = "male";
-        ImageView maleIcon = (ImageView) findViewById(R.id.profileSetup_imageView_male);
+        final AvatorSelectorFragment avatorSelectorFragment = new AvatorSelectorFragment();
+        final Button maleIcon = (Button) findViewById(R.id.profileSetup_button_male);
+        final Button femaleIcon = (Button) findViewById(R.id.profileSetup_button_female);
+
         maleIcon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                switchGender("male");
+                avatorSelectorFragment.changeAvatarGender(AvatorSelectorFragment.MALE, femaleIcon);
+                maleIcon.setClickable(false);
             }
         });
+        maleIcon.setClickable(false);
 
-        ImageView femaleIcon = (ImageView) findViewById(R.id.profileSetup_imageView_female);
         femaleIcon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                switchGender("female");
+                avatorSelectorFragment.changeAvatarGender(AvatorSelectorFragment.FEMALE, maleIcon);
+                femaleIcon.setClickable(false);
             }
         });
-*/
-        //Button btnSubmit = (Button) findViewById(R.id.profileSetup_button_submit)
+
+        FragmentManager fragmentManager = getFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.add(R.id.avatar_frame, avatorSelectorFragment, "Avator");
+        fragmentTransaction.commit();
+
+
+
+
 
     }
+
+
 
     private void insertProfile() {
 
@@ -59,24 +64,5 @@ public class ProfileSetupActivity extends AppCompatActivity implements AvatorSel
     public void onFragmentInteraction(Uri uri) {
 
     }
-    /*
-    private void switchGender(String theGender) {
-        ImageView maleIcon = (ImageView) findViewById(R.id.profileSetup_imageView_male);
-        ImageView femaleIcon = (ImageView) findViewById(R.id.profileSetup_imageView_female);
 
-        if (theGender.equals("male")) {
-            if (!genderChosen.equals("male")) {
-                maleIcon.setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.male_100, null));
-                femaleIcon.setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.mipmap.ic_launcher, null));
-                genderChosen = "male";
-            }
-        } else {
-            if (!genderChosen.equals("female")) {
-                femaleIcon.setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.female_100, null));
-                maleIcon.setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.mipmap.ic_launcher, null));
-                genderChosen = "female";
-            }
-        }
-    }
-    */
 }

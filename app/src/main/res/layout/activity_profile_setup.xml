@@ -12,25 +12,23 @@
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:background="@color/lightGrayBackground"
         android:orientation="vertical">
-
-        <TextView
-            android:id="@+id/profileSetup_textView_title"
-            android:text="Setup Your Profile"
-            android:layout_gravity="center"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="30dp"
-            android:textSize="30sp"
-            android:textColor="@color/black"/>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:elevation="2dp"
-            android:background="@android:color/white">
+            android:layout_marginBottom="15dp" >
+
+            <TextView
+                android:id="@+id/profileSetup_textView_title"
+                android:text="Setup Your Profile"
+                android:layout_gravity="center"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="30dp"
+                android:textSize="30sp"
+                android:textColor="@color/black"/>
 
             <FrameLayout
                 android:id="@+id/avatar_frame"
@@ -49,13 +47,16 @@
                 android:orientation="horizontal"
                 android:layout_gravity="center" >
                 <Button
+                    android:id="@+id/profileSetup_button_male"
                     android:text="Male"
                     android:layout_width="100dp"
                     android:layout_height="30dp"
                     android:background="@drawable/custom_switch_male"
-                    android:elevation="2dp"/>
+                    android:elevation="2dp"
+                    android:clickable="false" />
 
                 <Button
+                    android:id="@+id/profileSetup_button_female"
                     android:text="Female"
                     android:layout_width="100dp"
                     android:layout_height="30dp"
@@ -71,34 +72,48 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:orientation="vertical"
-            android:padding="@dimen/activity_vertical_margin"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="20dp">
+            android:orientation="vertical" >
 
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@android:color/black"
+                android:alpha="0.12" />
 
             <EditText
                 android:id="@+id/profileSetup_editText_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
+                android:layout_margin="15dp"
+                android:layout_marginBottom="15dp"
                 android:hint="@string/name" />
 
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@android:color/black"
+                android:alpha="0.12" />
 
-            <EditText
-                android:id="@+id/profileSetup_editText_dateOfBirth"
+            <TextView
+                android:id="@+id/profileSetup_textView_dateOfBirth"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:inputType="date"
-                android:hint="@string/date_of_birth" />
+                android:layout_margin="15dp"
+                android:text="Date Of Birth"/>
 
             <DatePicker
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:datePickerMode="spinner"
                 android:calendarViewShown="false"
+                android:layout_margin="15dp"
                 android:id="@+id/datePicker" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@android:color/black"
+                android:alpha="0.12" />
 
             <LinearLayout
                 android:layout_width="match_parent"

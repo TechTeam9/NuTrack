@@ -134,6 +134,7 @@ public class LoginActivity extends AppCompatActivity implements PostWebServiceTa
 
     private void startMainActivity() {
         Intent intent = new Intent(this, MainActivity.class);
+        finish();
         startActivity(intent);
     }
 

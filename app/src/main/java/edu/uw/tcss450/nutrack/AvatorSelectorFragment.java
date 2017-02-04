@@ -1,5 +1,6 @@
 package edu.uw.tcss450.nutrack;
 
+import android.animation.Animator;
 import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
@@ -8,6 +9,7 @@ import android.os.Bundle;
 import android.app.Fragment;
 import android.os.Handler;
 import android.os.Looper;
+import android.support.v4.content.ContextCompat;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -37,11 +39,23 @@ public class AvatorSelectorFragment extends Fragment {
             , R.drawable.avatar_m6, R.drawable.avatar_m7
             , R.drawable.avatar_m8, R.drawable.avatar_m9};
 
+    private static final int FEMALE_AVATAR[] = {R.drawable.avatar_f0, R.drawable.avatar_f1
+            , R.drawable.avatar_f2, R.drawable.avatar_f3
+            , R.drawable.avatar_f4, R.drawable.avatar_f5
+            , R.drawable.avatar_f6, R.drawable.avatar_f7
+            , R.drawable.avatar_f8, R.drawable.avatar_f9};
+
     private static final int MOVE_SPEED = 300;
 
-    private static final int FADING_SPEED = 300;
+    private static final int FADING_SPEED = 500;
+
+    public static final int MALE = 10;
+
+    public static final int FEMALE = 11;
 
     private OnFragmentInteractionListener mListener;
+
+    private int myAvatarList[];
 
     private Float myPositionLeftX;
 
@@ -57,13 +71,13 @@ public class AvatorSelectorFragment extends Fragment {
 
     private Float myCenterAvatarDim;
 
-    private Button myLeftImage;
+    private ImageView myLeftImage;
 
-    private Button myCenterImage;
+    private ImageView myCenterImage;
 
-    private Button myRightImage;
+    private ImageView myRightImage;
 
-    private Button mySpareImage;
+    private ImageView mySpareImage;
 
     private int myLeftImageId;
 
@@ -88,11 +102,17 @@ public class AvatorSelectorFragment extends Fragment {
                              Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.fragment_avator_selector, container, false);
 
+        //Default gender is male.
+        myAvatarList = MALE_AVATAR;
+
+
         //Setup the initial index location of avatar image.
         myAvatarImageIndex = new int[3];
         myAvatarImageIndex[0] = 3;
         myAvatarImageIndex[1] = 4;
         myAvatarImageIndex[2] = 5;
+
+
 
         //Setup fadeIn and fadeOut animation.
         fadeInAnimation = new AlphaAnimation(0.5f, 1.0f);
@@ -123,13 +143,13 @@ public class AvatorSelectorFragment extends Fragment {
         FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(mySideAvatarDim.intValue(), mySideAvatarDim.intValue());
         lp.setMargins(0, (myCenterAvatarDim.intValue() - mySideAvatarDim.intValue()) / 2, 0, (myCenterAvatarDim.intValue() - mySideAvatarDim.intValue()) / 2);
 
-        myLeftImage = (Button) view.findViewById(R.id.avator_0);
+        myLeftImage = (ImageView) view.findViewById(R.id.avator_0);
         myLeftImage.setLayoutParams(lp);
         myLeftImage.setX(myPositionLeftX);
         myLeftImage.setY(0);
-        myLeftImage.setBackgroundResource(MALE_AVATAR[3]);
+        myLeftImage.setImageResource(myAvatarList[3]);
 
-        myCenterImage = (Button) view.findViewById(R.id.avator_1);
+        myCenterImage = (ImageView) view.findViewById(R.id.avator_1);
         myCenterImage.setLayoutParams(lp);
 
         ObjectAnimator CenterAnim = ObjectAnimator.ofFloat(myCenterImage, "scaleX", 2f);
@@ -140,16 +160,16 @@ public class AvatorSelectorFragment extends Fragment {
         myCenterImage.setX(myPositionCenterX);
         myCenterImage.setY(0);
 
-        myCenterImage.setBackgroundResource(MALE_AVATAR[4]);
+        myCenterImage.setImageResource(myAvatarList[4]);
 
-        myRightImage = (Button) view.findViewById(R.id.avator_2);
+        myRightImage = (ImageView) view.findViewById(R.id.avator_2);
         myRightImage.setLayoutParams(lp);
         myRightImage.setX(myPositionRightX);
         myRightImage.setY(0);
 
-        myRightImage.setBackgroundResource(MALE_AVATAR[5]);
+        myRightImage.setImageResource(myAvatarList[5]);
 
-        mySpareImage = (Button) view.findViewById(R.id.avatar_3);
+        mySpareImage = (ImageView) view.findViewById(R.id.avatar_3);
         mySpareImage.setLayoutParams(lp);
         mySpareImage.setVisibility(View.GONE);
 
@@ -186,7 +206,7 @@ public class AvatorSelectorFragment extends Fragment {
         myAvatarImageIndex[1]++;
         myAvatarImageIndex[2]++;
 
-        //
+        //Left Avatar
         ObjectAnimator sideLeftAnim = ObjectAnimator.ofFloat(myLeftImage, "translationX", -1 * mySideAvatarDim);
         sideLeftAnim.setDuration(MOVE_SPEED).start();
         sideLeftAnim = ObjectAnimator.ofFloat(myLeftImage, "scaleX", 0.5f);
@@ -218,7 +238,7 @@ public class AvatorSelectorFragment extends Fragment {
             mySpareImage.setVisibility(View.GONE);
         } else {
             mySpareImage.setVisibility(View.VISIBLE);
-            mySpareImage.setBackgroundResource(MALE_AVATAR[myAvatarImageIndex[2]]);
+            mySpareImage.setImageResource(myAvatarList[myAvatarImageIndex[2]]);
         }
 
         ObjectAnimator spareAnim = ObjectAnimator.ofFloat(mySpareImage, "translationX", myPositionRightX);
@@ -236,10 +256,10 @@ public class AvatorSelectorFragment extends Fragment {
 
 
         //After assigning events
-        myLeftImage = (Button) getView().findViewById(myLeftImageId);
-        myCenterImage = (Button) getView().findViewById(myCenterImageId);
-        myRightImage = (Button) getView().findViewById(myRightImageId);
-        mySpareImage = (Button) getView().findViewById(mySpareImageId);
+        myLeftImage = (ImageView) getView().findViewById(myLeftImageId);
+        myCenterImage = (ImageView) getView().findViewById(myCenterImageId);
+        myRightImage = (ImageView) getView().findViewById(myRightImageId);
+        mySpareImage = (ImageView) getView().findViewById(mySpareImageId);
 
         //Disable clickable if it reaches the edge
         myLeftImage.setClickable(true);
@@ -290,7 +310,7 @@ public class AvatorSelectorFragment extends Fragment {
         if (myAvatarImageIndex[0] == -1) {
             mySpareImage.setVisibility(View.GONE);
         } else {
-            mySpareImage.setBackgroundResource(MALE_AVATAR[myAvatarImageIndex[0]]);
+            mySpareImage.setImageResource(myAvatarList[myAvatarImageIndex[0]]);
         }
 
         ObjectAnimator spareAnim = ObjectAnimator.ofFloat(mySpareImage, "translationX", myPositionLeftX);
@@ -332,10 +352,10 @@ public class AvatorSelectorFragment extends Fragment {
 
 
         //After assigning events
-        myLeftImage = (Button) getView().findViewById(myLeftImageId);
-        myCenterImage = (Button) getView().findViewById(myCenterImageId);
-        myRightImage = (Button) getView().findViewById(myRightImageId);
-        mySpareImage = (Button) getView().findViewById(mySpareImageId);
+        myLeftImage = (ImageView) getView().findViewById(myLeftImageId);
+        myCenterImage = (ImageView) getView().findViewById(myCenterImageId);
+        myRightImage = (ImageView) getView().findViewById(myRightImageId);
+        mySpareImage = (ImageView) getView().findViewById(mySpareImageId);
 
         if (myAvatarImageIndex[0] == -1) {
             myLeftImage.setClickable(false);
@@ -366,6 +386,94 @@ public class AvatorSelectorFragment extends Fragment {
             }
         });
 
+    }
+
+    public void changeAvatarGender(final int theGender, final Button theButton) {
+        int leftIndex = myAvatarImageIndex[0];
+        int rightIndex = myAvatarImageIndex[2];
+        myAvatarImageIndex[0] = 3;
+        myAvatarImageIndex[1] = 4;
+        myAvatarImageIndex[2] = 5;
+
+        if (theGender == MALE) {
+            myAvatarList = MALE_AVATAR;
+
+        } else {
+            myAvatarList = FEMALE_AVATAR;
+        }
+
+
+        //Left Avatar
+        final AlphaAnimation leftAnim;
+        if (leftIndex == -1) {
+            leftAnim = new AlphaAnimation(0, 0);
+        } else {
+            leftAnim = new AlphaAnimation(1, 0);
+        }
+        leftAnim.setDuration(FADING_SPEED);
+        leftAnim.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {}
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                myLeftImage.setVisibility(View.VISIBLE);
+                myLeftImage.setImageResource(myAvatarList[myAvatarImageIndex[0]]);
+                animation = new AlphaAnimation(0, 1);
+                animation.setDuration(FADING_SPEED);
+                myLeftImage.startAnimation(animation);
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {}
+        });
+        myLeftImage.startAnimation(leftAnim);
+
+        final AlphaAnimation centerAnim = new AlphaAnimation(1, 0);
+        centerAnim.setDuration(FADING_SPEED);
+        centerAnim.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {}
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                myCenterImage.setImageResource(myAvatarList[myAvatarImageIndex[1]]);
+                animation = new AlphaAnimation(0, 1);
+                animation.setDuration(FADING_SPEED);
+                myCenterImage.startAnimation(animation);
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {}
+        });
+        myCenterImage.startAnimation(centerAnim);
+
+        final AlphaAnimation rightAnim;
+        if (rightIndex == 10) {
+            rightAnim = new AlphaAnimation(0, 0);
+        } else {
+            rightAnim = new AlphaAnimation(1, 0);
+        }
+        rightAnim.setDuration(FADING_SPEED);
+        rightAnim.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {}
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                myRightImage.setVisibility(View.VISIBLE);
+                myRightImage.setImageResource(myAvatarList[myAvatarImageIndex[2]]);
+                animation = new AlphaAnimation(0, 1);
+                animation.setDuration(FADING_SPEED);
+                myRightImage.startAnimation(animation);
+
+                theButton.setClickable(true);
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {}
+        });
+        myRightImage.startAnimation(rightAnim);
     }
 
     // TODO: Rename method, update argument and hook method into UI event
