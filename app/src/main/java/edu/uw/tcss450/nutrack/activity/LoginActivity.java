@@ -204,7 +204,6 @@ public class LoginActivity extends AppCompatActivity implements PostWebServiceTa
             Toast.makeText(this, "Incorrect Password", Toast.LENGTH_SHORT).show();
         } else if (resultCode == LoginHelper.NO_USERNAME_FOUND) {
             Toast.makeText(this, "No Username Found", Toast.LENGTH_SHORT).show();
-
         }
     }
 

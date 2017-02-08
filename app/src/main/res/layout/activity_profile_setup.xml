@@ -4,7 +4,6 @@
     android:id="@+id/activity_profile_setup"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-
     tools:context="edu.uw.tcss450.nutrack.activity.ProfileSetupActivity">
 
     <LinearLayout
@@ -17,26 +16,26 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:layout_marginBottom="15dp" >
+            android:layout_marginBottom="15dp"
+            android:orientation="vertical">
 
             <TextView
                 android:id="@+id/profileSetup_textView_title"
-                android:text="Setup Your Profile"
-                android:layout_gravity="center"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_gravity="center"
                 android:layout_marginTop="30dp"
-                android:textSize="30sp"
-                android:textColor="@color/black"/>
+                android:text="Setup Your Profile"
+                android:textColor="@color/black"
+                android:textSize="30sp" />
 
             <FrameLayout
                 android:id="@+id/avatar_frame"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_marginTop="30dp"
                 android:layout_marginBottom="20dp"
+                android:layout_marginTop="30dp"
                 android:orientation="horizontal">
 
             </FrameLayout>
@@ -44,24 +43,25 @@
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_gravity="center" >
+                android:layout_gravity="center"
+                android:orientation="horizontal">
+
                 <Button
                     android:id="@+id/profileSetup_button_male"
-                    android:text="Male"
                     android:layout_width="100dp"
                     android:layout_height="30dp"
                     android:background="@drawable/custom_switch_male"
+                    android:clickable="false"
                     android:elevation="2dp"
-                    android:clickable="false" />
+                    android:text="Male" />
 
                 <Button
                     android:id="@+id/profileSetup_button_female"
-                    android:text="Female"
                     android:layout_width="100dp"
                     android:layout_height="30dp"
                     android:background="@drawable/custom_switch_female"
-                    android:padding="0dp"/>
+                    android:padding="0dp"
+                    android:text="Female" />
             </LinearLayout>
 
 
@@ -72,91 +72,124 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="left"
-            android:orientation="vertical" >
+            android:layout_marginBottom="15dp"
+            android:orientation="vertical">
 
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:background="@android:color/black"
-                android:alpha="0.12" />
-
-            <EditText
-                android:id="@+id/profileSetup_editText_name"
+                android:alpha="0.12"
+                android:background="@android:color/black" />
+            <!-- One row for Name -->
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="72dp"
-                android:layout_marginLeft="15dp"
-                android:layout_marginRight="15dp"
-                android:hint="@string/name" />
+                android:layout_height="wrap_content"
+                android:descendantFocusability="beforeDescendants"
+                android:focusableInTouchMode="true">
 
+                <android.support.design.widget.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingTop="15dp"
+                    android:paddingBottom="15dp"
+                    android:paddingLeft="20dp"
+                    android:paddingRight="100dp">
+
+                    <android.support.design.widget.TextInputEditText
+                        android:id="@+id/profileSetup_editText_name"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/name" />
+                </android.support.design.widget.TextInputLayout>
+            </LinearLayout>
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:background="@android:color/black"
-                android:alpha="0.12" />
+                android:alpha="0.12"
+                android:background="@android:color/black" />
 
             <TextView
                 android:id="@+id/profileSetup_textView_dateOfBirth"
                 android:layout_width="match_parent"
                 android:layout_height="36dp"
-                android:layout_marginLeft="15dp"
+                android:layout_marginLeft="20dp"
                 android:layout_marginRight="15dp"
-                android:text="Date Of Birth"/>
+                android:layout_marginTop="15dp"
+                android:text="Date Of Birth"
+                android:textSize="18sp"/>
 
             <DatePicker
-                android:layout_width="match_parent"
+                android:id="@+id/datePicker"
+                android:layout_width="wrap_content"
                 android:layout_height="180dp"
-                android:layout_gravity="left"
-                android:datePickerMode="spinner"
+                android:layout_marginLeft="20dp"
                 android:calendarViewShown="false"
-                android:id="@+id/datePicker" />
+                android:datePickerMode="spinner"
+                android:gravity="left" />
 
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:background="@android:color/black"
-                android:alpha="0.12" />
+                android:alpha="0.12"
+                android:background="@android:color/black" />
 
+            <!-- One row for Height -->
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_marginTop="10dp">
+                android:layout_height="wrap_content">
 
-                <EditText
-                    android:id="@+id/profileSetup_editText_height"
-                    android:layout_width="0dp"
+                <android.support.design.widget.TextInputLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:hint="@string/height"
-                    android:inputType="numberDecimal" />
+                    android:paddingTop="15dp"
+                    android:paddingBottom="15dp"
+                    android:paddingLeft="20dp"
+                    android:paddingRight="100dp">
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/cm" />
+                    <android.support.design.widget.TextInputEditText
+                        android:id="@+id/profileSetup_editText_height"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/height" />
+                </android.support.design.widget.TextInputLayout>
             </LinearLayout>
 
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:alpha="0.12"
+                android:background="@android:color/black" />
+
+            <!-- One row for Height -->
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:orientation="horizontal">
+                android:layout_height="wrap_content">
 
-                <EditText
-                    android:id="@+id/profileSetup_editText_weight"
-                    android:layout_width="0dp"
+                <android.support.design.widget.TextInputLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:hint="@string/weight"
-                    android:inputType="numberDecimal" />
+                    android:paddingTop="15dp"
+                     android:paddingLeft="20dp"
+                    android:paddingRight="100dp">
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/lbs" />
+                    <android.support.design.widget.TextInputEditText
+                        android:id="@+id/profileSetup_editText_weight"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/weight" />
+                </android.support.design.widget.TextInputLayout>
             </LinearLayout>
 
         </LinearLayout>
+
+        <Button
+            android:id="@+id/profileSetup_button_submit"
+            android:text="@string/submit"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="25dp"
+            android:textSize="30sp"/>
+
     </LinearLayout>
 
 </ScrollView>
