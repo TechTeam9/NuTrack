@@ -48,10 +48,6 @@ public class ProfileSetupActivity extends AppCompatActivity implements AvatorSel
         fragmentTransaction.add(R.id.avatar_frame, avatorSelectorFragment, "Avator");
         fragmentTransaction.commit();
 
-
-
-
-
     }
 
 

@@ -12,13 +12,13 @@ import java.util.Date;
 
 public class DBMemberTableHelper extends SQLiteOpenHelper {
 
-    public static final String DATABASE_NAME = "nutrack.db";
+    private static final String DATABASE_NAME = "nutrack.db";
 
-    public static final String TABLE_NAME = "memberTable";
+    private static final String TABLE_NAME = "memberTable";
 
-    public static final String COLUMN_EMAIL = "email";
+    private static final String COLUMN_EMAIL = "email";
 
-    public static final String COLUMN_PASSWORD = "password";
+    private static final String COLUMN_PASSWORD = "password";
 
     public static final String COLUMN_JOINDATE = "join_date";
 

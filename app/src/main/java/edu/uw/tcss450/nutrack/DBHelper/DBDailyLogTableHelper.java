@@ -12,15 +12,15 @@ import java.util.Date;
 
 public class DBDailyLogTableHelper extends SQLiteOpenHelper {
 
-    public static final String DATABASE_NAME = "nutrack.db";
+    private static final String DATABASE_NAME = "nutrack.db";
 
-    public static final String TABLE_NAME = "daily_log";
+    private static final String TABLE_NAME = "daily_log";
 
-    public static final String COLUMN_EMAIL = "email";
+    private static final String COLUMN_EMAIL = "email";
 
-    public static final String COLUMN_PASSWORD = "password";
+    private static final String COLUMN_PASSWORD = "password";
 
-    public static final String COLUMN_JOINDATE = "join_date";
+    private static final String COLUMN_JOINDATE = "join_date";
 
     public DBDailyLogTableHelper(Context context) {
         super(context, DATABASE_NAME, null, 1);

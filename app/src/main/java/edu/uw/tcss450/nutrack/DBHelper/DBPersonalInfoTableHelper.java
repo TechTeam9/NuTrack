@@ -12,19 +12,19 @@ import java.util.Date;
 
 public class DBPersonalInfoTableHelper  extends SQLiteOpenHelper {
 
-    public static final String DATABASE_NAME = "nutrack.db";
+    private static final String DATABASE_NAME = "nutrack.db";
 
-    public static final String TABLE_NAME = "personal_info";
+    private static final String TABLE_NAME = "personal_info";
 
-    public static final String COLUMN_NAME = "name";
+    private static final String COLUMN_NAME = "name";
 
-    public static final String COLUMN_HEIGHT = "height";
+    private static final String COLUMN_HEIGHT = "height";
 
-    public static final String COLUMN_WEIGHT = "weight";
+    private static final String COLUMN_WEIGHT = "weight";
 
-    public static final String COLUMN_DOB = "DOB";
+    private static final String COLUMN_DOB = "DOB";
 
-    public static final String COLUMN_GENDER = "gender";
+    private static final String COLUMN_GENDER = "gender";
 
     public DBPersonalInfoTableHelper(Context context) {
         super(context, DATABASE_NAME, null, 1);

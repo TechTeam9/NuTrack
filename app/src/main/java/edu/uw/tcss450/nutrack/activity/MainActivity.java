@@ -35,33 +35,33 @@ import edu.uw.tcss450.nutrack.fragment.SettingFragment;
 
 public class MainActivity extends AppCompatActivity implements ProfileFragment.OnFragmentInteractionListener, LookUpFoodFragment.OnFragmentInteractionListener, MainFragment.OnFragmentInteractionListener, SettingFragment.OnFragmentInteractionListener, SearchResultFragment.OnFragmentInteractionListener{
 
-    private DrawerLayout myDrawer;
+    private DrawerLayout mDrawer;
 
-    private Toolbar myToolbar;
+    private Toolbar mToolbar;
 
-    private NavigationView myNaviDrawer;
+    private NavigationView mNaviDrawer;
 
-    private ActionBarDrawerToggle myDrawerToggle;
+    private ActionBarDrawerToggle mDrawerToggle;
 
-    private SQLiteDatabase myDatabase;
+    private SQLiteDatabase mDatabase;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        myToolbar = (Toolbar) findViewById(R.id.toolbar);
-        myToolbar.setTitleTextColor(Color.WHITE);
-        myToolbar.setTitle("Home");
+        mToolbar = (Toolbar) findViewById(R.id.toolbar);
+        mToolbar.setTitleTextColor(Color.WHITE);
+        mToolbar.setTitle("Home");
 
-        myNaviDrawer = (NavigationView) findViewById(R.id.naviView);
-        myDrawer = (DrawerLayout) findViewById(R.id.main_frame);
+        mNaviDrawer = (NavigationView) findViewById(R.id.naviView);
+        mDrawer = (DrawerLayout) findViewById(R.id.main_frame);
 
-        setSupportActionBar(myToolbar);
+        setSupportActionBar(mToolbar);
 
-        myDrawerToggle = setupDrawerToggle();
+        mDrawerToggle = setupDrawerToggle();
 
-        myDrawer.addDrawerListener(myDrawerToggle);
+        mDrawer.addDrawerListener(mDrawerToggle);
 
         initializeDrawerContent();
 
@@ -84,13 +84,13 @@ public class MainActivity extends AppCompatActivity implements ProfileFragment.O
     @Override
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
-        myDrawerToggle.syncState();
+        mDrawerToggle.syncState();
     }
 
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
-        myDrawerToggle.onConfigurationChanged(newConfig);
+        mDrawerToggle.onConfigurationChanged(newConfig);
     }
 
 
@@ -98,7 +98,7 @@ public class MainActivity extends AppCompatActivity implements ProfileFragment.O
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-                myDrawer.openDrawer(GravityCompat.START);
+                mDrawer.openDrawer(GravityCompat.START);
                 return true;
         }
 
@@ -106,7 +106,7 @@ public class MainActivity extends AppCompatActivity implements ProfileFragment.O
     }
 
     public void initializeDrawerContent() {
-        myNaviDrawer.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+        mNaviDrawer.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 selectDrawerItem(item);
@@ -191,13 +191,13 @@ public class MainActivity extends AppCompatActivity implements ProfileFragment.O
             fragmentManager.beginTransaction().replace(R.id.flContent, fragment).commit();
         }
         menuItem.setChecked(true);
-        myToolbar.setTitle(menuItem.getTitle());
-        myDrawer.closeDrawers();
+        mToolbar.setTitle(menuItem.getTitle());
+        mDrawer.closeDrawers();
 
     }
 
     private ActionBarDrawerToggle setupDrawerToggle() {
-        return new ActionBarDrawerToggle(this, myDrawer, myToolbar, R.string.drawer_open, R.string.drawer_close);
+        return new ActionBarDrawerToggle(this, mDrawer, mToolbar, R.string.drawer_open, R.string.drawer_close);
     }
 
     @Override

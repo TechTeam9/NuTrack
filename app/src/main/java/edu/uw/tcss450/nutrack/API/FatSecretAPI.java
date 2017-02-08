@@ -21,17 +21,17 @@ import javax.crypto.spec.SecretKeySpec;
 
 public class FatSecretAPI {
 
-    private final String METHOD = "GET";
+    private final static String METHOD = "GET";
 
-    private final String CONSUMER_KEY = "aceffd6069f24bde9e9710dbcef45ea9";
+    private final static String CONSUMER_KEY = "aceffd6069f24bde9e9710dbcef45ea9";
 
-    private final String SECRET_KEY = "cc2b625f2d0a49509c0745e8e434b008";
+    private final static String SECRET_KEY = "cc2b625f2d0a49509c0745e8e434b008";
 
-    private final String URL = "http://platform.fatsecret.com/rest/server.api";
+    private final static String URL = "http://platform.fatsecret.com/rest/server.api";
 
-    private final String SIGNATURE_METHOD = "HMAC-SHA1";
+    private final static String SIGNATURE_METHOD = "HMAC-SHA1";
 
-    private final String HMAC_SHA1_ALGORITHM = "HmacSHA1";
+    private final static String HMAC_SHA1_ALGORITHM = "HmacSHA1";
 
     public JSONObject searchFood(String searchFood) {
         List<String> params = new ArrayList<>(Arrays.asList(generateOauthParams()));

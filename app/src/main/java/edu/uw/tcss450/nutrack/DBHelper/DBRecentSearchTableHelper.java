@@ -12,13 +12,13 @@ import java.util.Date;
 
 public class DBRecentSearchTableHelper extends SQLiteOpenHelper {
 
-    public static final String DATABASE_NAME = "nutrack.db";
+    private static final String DATABASE_NAME = "nutrack.db";
 
-    public static final String TABLE_NAME = "recent_search";
+    private static final String TABLE_NAME = "recent_search";
 
-    public static final String COLUMN_FOOD_NAME = "food_name";
+    private static final String COLUMN_FOOD_NAME = "food_name";
 
-    public static final String COLUMN_TIME = "search_time";
+    private static final String COLUMN_TIME = "search_time";
 
     public DBRecentSearchTableHelper(Context context) {
         super(context, DATABASE_NAME, null, 1);
