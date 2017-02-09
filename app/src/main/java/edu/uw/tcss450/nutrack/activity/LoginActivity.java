@@ -6,7 +6,6 @@ import android.os.Handler;
 import android.os.Looper;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -20,50 +19,49 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import edu.uw.tcss450.nutrack.DBHelper.DBMemberTableHelper;
-import edu.uw.tcss450.nutrack.GetWebServiceTask;
+import edu.uw.tcss450.nutrack.getAccountInfo;
 import edu.uw.tcss450.nutrack.LoginHelper;
-import edu.uw.tcss450.nutrack.PostWebServiceTask;
+import edu.uw.tcss450.nutrack.AddAccountInfo;
 import edu.uw.tcss450.nutrack.ProfileHelper;
 import edu.uw.tcss450.nutrack.R;
 import edu.uw.tcss450.nutrack.model.Account;
-import edu.uw.tcss450.nutrack.model.Profile;
 
 /**
  * @Author
  * @version
  * @since
  */
-public class LoginActivity extends AppCompatActivity implements PostWebServiceTask.RegistrationCompleted, GetWebServiceTask.LoginCompleted, ProfileHelper.CheckProfileCompleted{
+public class LoginActivity extends AppCompatActivity implements AddAccountInfo.RegistrationCompleted, getAccountInfo.LoginCompleted, ProfileHelper.CheckProfileCompleted{
 
     /**
      * The ImageView for the main logo of the application
      */
-    private ImageView mainLogo;
+    private ImageView mMainLogo;
 
     /**
      * The EditText for the email input
      */
-    private EditText editTextEmail;
+    private EditText mFieldEmail;
 
     /**
      * The EditText for the password input
      */
-    private EditText editTextPassword;
+    private EditText mFieldPassword;
 
     /**
      * The Button for login
      */
-    private Button btnSubmit;
+    private Button mBtnSubmit;
 
     /**
      * The TextView for register option
      */
-    private TextView textViewRegister;
+    private TextView mViewRegister;
 
     /**
      * The registration dialog
      */
-    private AlertDialog myRegistrationDialog;
+    private AlertDialog mRegistrationDialog;
 
     private String mEmail;
 
@@ -72,29 +70,29 @@ public class LoginActivity extends AppCompatActivity implements PostWebServiceTa
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        mainLogo = (ImageView) findViewById(R.id.NutrackLogo);
-        editTextEmail = (EditText) findViewById(R.id.login_editText_email);
-        editTextPassword = (EditText) findViewById(R.id.login_editText_password);
-        btnSubmit = (Button) findViewById(R.id.login_button_login);
-        textViewRegister = (TextView) findViewById(R.id.login_textView_register);
+        mMainLogo = (ImageView) findViewById(R.id.NutrackLogo);
+        mFieldEmail = (EditText) findViewById(R.id.login_editText_email);
+        mFieldPassword = (EditText) findViewById(R.id.login_editText_password);
+        mBtnSubmit = (Button) findViewById(R.id.login_button_login);
+        mViewRegister = (TextView) findViewById(R.id.login_textView_register);
 
-        editTextEmail.setVisibility(View.GONE);
-        editTextPassword.setVisibility(View.GONE);
-        btnSubmit.setVisibility(View.GONE);
-        textViewRegister.setVisibility(View.GONE);
+        mFieldEmail.setVisibility(View.GONE);
+        mFieldPassword.setVisibility(View.GONE);
+        mBtnSubmit.setVisibility(View.GONE);
+        mViewRegister.setVisibility(View.GONE);
 
-        textViewRegister.setOnClickListener(new View.OnClickListener() {
+        mViewRegister.setOnClickListener(new View.OnClickListener() {
 
             @Override
-            public void onClick(View view) {
+            public void onClick(View theView) {
                 initializeRegistrationDialog();
             }
         });
 
-        btnSubmit.setOnClickListener(new View.OnClickListener() {
+        mBtnSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
-                Account account = new Account(editTextEmail.getText().toString(), editTextPassword.getText().toString());
+            public void onClick(View theView) {
+                Account account = new Account(mFieldEmail.getText().toString(), mFieldPassword.getText().toString());
                 loginAccount(account);
             }
         });
@@ -119,7 +117,7 @@ public class LoginActivity extends AppCompatActivity implements PostWebServiceTa
         new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
             @Override
             public void run() {
-                mainLogo.startAnimation(moveMainLogoAnimation);
+                mMainLogo.startAnimation(moveMainLogoAnimation);
             }
         }, 1000);
     }
@@ -132,37 +130,37 @@ public class LoginActivity extends AppCompatActivity implements PostWebServiceTa
         View mView = getLayoutInflater().inflate(R.layout.dialog_registration, null);
 
         mBuilder.setView(mView);
-        myRegistrationDialog = mBuilder.create();
-        myRegistrationDialog.setCanceledOnTouchOutside(false);
+        mRegistrationDialog = mBuilder.create();
+        mRegistrationDialog.setCanceledOnTouchOutside(false);
 
-        myRegistrationDialog.show();
+        mRegistrationDialog.show();
 
-        Button btnRegister = (Button) myRegistrationDialog.findViewById(R.id.registration_button_register);
+        Button btnRegister = (Button) mRegistrationDialog.findViewById(R.id.registration_button_register);
         btnRegister.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-            String email = ((EditText) myRegistrationDialog.findViewById(R.id.registration_editText_email))
-                    .getText()
-                    .toString();
-            String password = ((EditText) myRegistrationDialog.findViewById(R.id.registration_editText_password))
-                    .getText()
-                    .toString();
-            String confirmPassword = ((EditText) myRegistrationDialog.findViewById(R.id.registration_editText_comfirmPassword))
-                    .getText()
-                    .toString();
+                String email = ((EditText) mRegistrationDialog.findViewById(R.id.registration_editText_email))
+                        .getText()
+                        .toString();
+                String password = ((EditText) mRegistrationDialog.findViewById(R.id.registration_editText_password))
+                        .getText()
+                        .toString();
+                String confirmPassword = ((EditText) mRegistrationDialog.findViewById(R.id.registration_editText_comfirmPassword))
+                        .getText()
+                        .toString();
 
-            if (email.isEmpty() || password.isEmpty() || confirmPassword.isEmpty()) {
-                TextView textViewError = (TextView) myRegistrationDialog.findViewById(R.id.registration_textView_error);
-                textViewError.setText(R.string.all_fields_must_fill_in_error, null);
-                textViewError.setVisibility(View.VISIBLE);
-            } else if (!password.equals(confirmPassword)) {
-                TextView textViewError = (TextView) myRegistrationDialog.findViewById(R.id.registration_textView_error);
-                textViewError.setText(R.string.passwords_not_the_same_error);
-                textViewError.setVisibility(View.VISIBLE);
-            } else {
-                    createAccount(email, password);
+                if (email.isEmpty() || password.isEmpty() || confirmPassword.isEmpty()) {
+                    TextView textViewError = (TextView) mRegistrationDialog.findViewById(R.id.registration_textView_error);
+                    textViewError.setText(R.string.all_fields_must_fill_in_error, null);
+                    textViewError.setVisibility(View.VISIBLE);
+                } else if (!password.equals(confirmPassword)) {
+                    TextView textViewError = (TextView) mRegistrationDialog.findViewById(R.id.registration_textView_error);
+                    textViewError.setText(R.string.passwords_not_the_same_error);
+                    textViewError.setVisibility(View.VISIBLE);
+                } else {
+                        createAccount(email, password);
 
-            }
+                }
             }
         });
     }
@@ -219,27 +217,27 @@ public class LoginActivity extends AppCompatActivity implements PostWebServiceTa
 
     /**
      * After the registration process is completed.
-     * @param resultCode
+     * @param theResultCode
      */
     @Override
-    public void onRegistrationCompleted(int resultCode) {
-        if (resultCode == LoginHelper.REGISTRATION_SUCCESS) {
-            String email = ((EditText) myRegistrationDialog.findViewById(R.id.registration_editText_email))
+    public void onRegistrationCompleted(int theResultCode) {
+        if (theResultCode == LoginHelper.REGISTRATION_SUCCESS) {
+            String email = ((EditText) mRegistrationDialog.findViewById(R.id.registration_editText_email))
                     .getText()
                     .toString();
-            String password = ((EditText) myRegistrationDialog.findViewById(R.id.registration_editText_password))
+            String password = ((EditText) mRegistrationDialog.findViewById(R.id.registration_editText_password))
                     .getText()
                     .toString();
 
             if (insertNewMemberData(email, password)) {
-                myRegistrationDialog.dismiss();
+                mRegistrationDialog.dismiss();
 
                 mEmail = email;
                 startProfileSetupActivity();
             }
 
-        } else if (resultCode == LoginHelper.EMAIL_ALREADY_EXIST){
-            TextView textViewError = (TextView) myRegistrationDialog.findViewById(R.id.registration_textView_error);
+        } else if (theResultCode == LoginHelper.EMAIL_ALREADY_EXIST){
+            TextView textViewError = (TextView) mRegistrationDialog.findViewById(R.id.registration_textView_error);
             textViewError.setText(R.string.email_already_exist, null);
             textViewError.setVisibility(View.VISIBLE);
         }
@@ -247,12 +245,12 @@ public class LoginActivity extends AppCompatActivity implements PostWebServiceTa
 
     /**
      * After the login process is completed.
-     * @param resultCode
+     * @param theResultCode
      */
     @Override
-    public void onLoginCompleted(int resultCode, String theEmail) {
+    public void onLoginCompleted(int theResultCode, String theEmail) {
         mEmail = theEmail;
-        if (resultCode == LoginHelper.CORRECT_LOGIN_INFO) {
+        if (theResultCode == LoginHelper.CORRECT_LOGIN_INFO) {
             DBMemberTableHelper memberTable = new DBMemberTableHelper(this);
             String email = ((EditText) findViewById(R.id.login_editText_email))
                     .getText()
@@ -264,16 +262,16 @@ public class LoginActivity extends AppCompatActivity implements PostWebServiceTa
             if (memberTable.insertMember(email, password)) {
                 ProfileHelper.checkProfileExistance(this, email);
             };
-        } else if (resultCode == LoginHelper.ACCOUNT_FOUND_BUT_LOGIN_ERROR) {
+        } else if (theResultCode == LoginHelper.ACCOUNT_FOUND_BUT_LOGIN_ERROR) {
             DBMemberTableHelper memberTable = new DBMemberTableHelper(this);
             memberTable.deleteData();
             memberTable.close();
 
             initializeLoginForm();
             Toast.makeText(this, "Auto Login Error. Please Login Again.", Toast.LENGTH_SHORT).show();
-        } else if (resultCode == LoginHelper.INCORRECT_PASSWORD) {
+        } else if (theResultCode == LoginHelper.INCORRECT_PASSWORD) {
             Toast.makeText(this, "Incorrect Password", Toast.LENGTH_SHORT).show();
-        } else if (resultCode == LoginHelper.NO_USERNAME_FOUND) {
+        } else if (theResultCode == LoginHelper.NO_USERNAME_FOUND) {
             Toast.makeText(this, "No Username Found", Toast.LENGTH_SHORT).show();
         }
     }
@@ -304,46 +302,46 @@ public class LoginActivity extends AppCompatActivity implements PostWebServiceTa
      */
     private class LoginAnimationListener implements Animation.AnimationListener {
         @Override
-        public void onAnimationStart(Animation animation) {}
+        public void onAnimationStart(Animation theAnimation) {}
 
         @Override
-        public void onAnimationEnd(Animation animation) {
-            editTextEmail.setAlpha(0f);
-            editTextEmail.setVisibility(View.VISIBLE);
+        public void onAnimationEnd(Animation theAnimation) {
+            mFieldEmail.setAlpha(0f);
+            mFieldEmail.setVisibility(View.VISIBLE);
 
-            editTextPassword.setAlpha(0f);
-            editTextPassword.setVisibility(View.VISIBLE);
+            mFieldPassword.setAlpha(0f);
+            mFieldPassword.setVisibility(View.VISIBLE);
 
-            btnSubmit.setAlpha(0f);
-            btnSubmit.setVisibility(View.VISIBLE);
+            mBtnSubmit.setAlpha(0f);
+            mBtnSubmit.setVisibility(View.VISIBLE);
 
-            textViewRegister.setAlpha(0f);
-            textViewRegister.setVisibility(View.VISIBLE);
+            mViewRegister.setAlpha(0f);
+            mViewRegister.setVisibility(View.VISIBLE);
 
             int transitionRate = 500;
 
-            editTextEmail.animate()
+            mFieldEmail.animate()
                     .alpha(1f)
                     .setDuration(transitionRate)
                     .setListener(null);
 
-            editTextPassword.animate()
+            mFieldPassword.animate()
                     .alpha(1f)
                     .setDuration(transitionRate)
                     .setListener(null);
 
-            btnSubmit.animate()
+            mBtnSubmit.animate()
                     .alpha(1f)
                     .setDuration(transitionRate)
                     .setListener(null);
 
-            textViewRegister.animate()
+            mViewRegister.animate()
                     .alpha(1f)
                     .setDuration(transitionRate)
                     .setListener(null);
         }
 
         @Override
-        public void onAnimationRepeat(Animation animation) {}
+        public void onAnimationRepeat(Animation theAnimation) {}
     }
 }

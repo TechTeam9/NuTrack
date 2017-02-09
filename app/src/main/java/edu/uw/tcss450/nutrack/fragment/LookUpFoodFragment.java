@@ -47,10 +47,6 @@ public class LookUpFoodFragment extends Fragment {
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
-
     private OnFragmentInteractionListener mListener;
 
     public LookUpFoodFragment() {
@@ -78,10 +74,6 @@ public class LookUpFoodFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
     }
 
     @Override
@@ -95,8 +87,8 @@ public class LookUpFoodFragment extends Fragment {
         return view;
     }
 
-    private void initializeSearchListener(View view) {
-        final SearchView searchView = (SearchView) view.findViewById(R.id.lookUp_searchView);
+    private void initializeSearchListener(View theView) {
+        final SearchView searchView = (SearchView) theView.findViewById(R.id.lookUp_searchView);
 
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
@@ -124,7 +116,7 @@ public class LookUpFoodFragment extends Fragment {
     }
 
 
-    private void initializeRecentSearchList(View view) {
+    private void initializeRecentSearchList(View theView) {
         DBRecentSearchTableHelper dbHelper = new DBRecentSearchTableHelper(getContext());
 
         Cursor foods = dbHelper.getAllFood();
@@ -156,10 +148,9 @@ public class LookUpFoodFragment extends Fragment {
             String formArray[] = {"food", "time"};
             int to[] = {R.id.recentSearch_textView_food, R.id.recentSearch_textView_time};
             SimpleAdapter adapter = new SimpleAdapter(getContext(), foodList, R.layout.list_view_recent_search_items, formArray, to);
-            ListView listView = (ListView) view.findViewById(R.id.lookUp_listView);
+            ListView listView = (ListView) theView.findViewById(R.id.lookUp_listView);
             listView.setAdapter(adapter);
         }
-
     }
 
     /**
@@ -253,12 +244,12 @@ public class LookUpFoodFragment extends Fragment {
 
 
     @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        if (context instanceof OnFragmentInteractionListener) {
-            mListener = (OnFragmentInteractionListener) context;
+    public void onAttach(Context theContext) {
+        super.onAttach(theContext);
+        if (theContext instanceof OnFragmentInteractionListener) {
+            mListener = (OnFragmentInteractionListener) theContext;
         } else {
-            throw new RuntimeException(context.toString()
+            throw new RuntimeException(theContext.toString()
                     + " must implement OnFragmentInteractionListener");
         }
     }

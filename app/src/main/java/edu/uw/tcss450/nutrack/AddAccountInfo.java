@@ -15,30 +15,25 @@ import java.net.URL;
 import java.net.URLEncoder;
 
 
-public class PostWebServiceTask extends AsyncTask<String, Void, String> {
-    private final String SERVICE = "_post.php";
+public class AddAccountInfo extends AsyncTask<String, Void, String> {
+    private final String SERVICE_URL = "account_info_post.php";
 
     private Context mContext;
 
     private RegistrationCompleted mCallback;
 
-    public PostWebServiceTask(Context context) {
+    public AddAccountInfo(Context context) {
         mContext = context;
         mCallback = (RegistrationCompleted) context;
     }
 
     @Override
     protected String doInBackground(String... strings) {
-        /*
-        if (strings.length != 3) {
-            throw new IllegalArgumentException("Two String arguments required.");
-        }
-        */
         String response = "";
         HttpURLConnection urlConnection = null;
         String url = strings[0];
         try {
-            URL urlObject = new URL(url + SERVICE);
+            URL urlObject = new URL(url + SERVICE_URL);
             urlConnection = (HttpURLConnection) urlObject.openConnection();
             urlConnection.setRequestMethod("POST");
             urlConnection.setDoOutput(true);

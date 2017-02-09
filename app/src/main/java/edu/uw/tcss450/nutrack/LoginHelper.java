@@ -2,21 +2,7 @@ package edu.uw.tcss450.nutrack;
 
 import android.content.Context;
 import android.database.Cursor;
-import android.os.AsyncTask;
 import android.view.View;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.BufferedReader;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.net.URLEncoder;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 import edu.uw.tcss450.nutrack.DBHelper.DBMemberTableHelper;
 import edu.uw.tcss450.nutrack.model.Account;
@@ -60,26 +46,26 @@ public class LoginHelper {
     }
 
     private static void autoVerifyAccount(Account theAccount, Context theContext) {
-        final String baseUrl = "http://cssgate.insttech.washington.edu/~mhl325/login_verification";
+        final String baseUrl = "http://cssgate.insttech.washington.edu/~mhl325/";
 
-        GetWebServiceTask task = new GetWebServiceTask(theContext);
+        getAccountInfo task = new getAccountInfo(theContext);
         task.execute(baseUrl, theAccount.getUsername(), theAccount.getPassword(), "0");
     }
 
     public static void verifyAccount(Account theAccount, Context theContext) {
-        final String baseUrl = "http://cssgate.insttech.washington.edu/~mhl325/login_verification";
+        final String baseUrl = "http://cssgate.insttech.washington.edu/~mhl325/";
 
-        GetWebServiceTask task = new GetWebServiceTask(theContext);
+        getAccountInfo task = new getAccountInfo(theContext);
         task.execute(baseUrl, theAccount.getUsername(), theAccount.getPassword(), "1");
     }
 
     public static void addNewAccount(Account theAccount, Context theContext) {
-        final String baseUrl = "http://cssgate.insttech.washington.edu/~mhl325/registration_verification";
+        final String baseUrl = "http://cssgate.insttech.washington.edu/~mhl325/";
 
         //SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         //Date date = new Date();
 
-        PostWebServiceTask task = new PostWebServiceTask(theContext);
+        AddAccountInfo task = new AddAccountInfo(theContext);
         task.execute(baseUrl, theAccount.getUsername(), theAccount.getPassword());
     }
 

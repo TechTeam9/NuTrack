@@ -119,14 +119,14 @@ public class ProfileSetupActivity extends AppCompatActivity implements AvatorSel
     }
 
     @Override
-    public void onFragmentInteraction(Uri uri) {
+    public void onFragmentInteraction(Uri theUri) {
 
     }
 
     @Override
-    public void onInsertProfileCompleted(String result) {
+    public void onInsertProfileCompleted(String theResult) {
         try {
-            JSONObject jsonObject = new JSONObject(result);
+            JSONObject jsonObject = new JSONObject(theResult);
             int resultCode = jsonObject.getInt("result_code");
             if (resultCode == ProfileHelper.INSERT_SUCCESS) {
                 startMainActivity();
