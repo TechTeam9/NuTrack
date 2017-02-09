@@ -16,6 +16,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import edu.uw.tcss450.nutrack.DBHelper.DBMemberTableHelper;
 import edu.uw.tcss450.nutrack.GetWebServiceTask;
 import edu.uw.tcss450.nutrack.LoginHelper;
@@ -62,6 +65,7 @@ public class LoginActivity extends AppCompatActivity implements PostWebServiceTa
      */
     private AlertDialog myRegistrationDialog;
 
+    private String mEmail;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -174,6 +178,7 @@ public class LoginActivity extends AppCompatActivity implements PostWebServiceTa
 
     private void startProfileSetupActivity() {
         Intent intent = new Intent(this, ProfileSetupActivity.class);
+        intent.putExtra("email", mEmail);
         finish();
         startActivity(intent);
     }
@@ -229,7 +234,8 @@ public class LoginActivity extends AppCompatActivity implements PostWebServiceTa
             if (insertNewMemberData(email, password)) {
                 myRegistrationDialog.dismiss();
 
-                startMainActivity();
+                mEmail = email;
+                startProfileSetupActivity();
             }
 
         } else if (resultCode == LoginHelper.EMAIL_ALREADY_EXIST){
@@ -244,7 +250,8 @@ public class LoginActivity extends AppCompatActivity implements PostWebServiceTa
      * @param resultCode
      */
     @Override
-    public void onLoginCompleted(int resultCode) {
+    public void onLoginCompleted(int resultCode, String theEmail) {
+        mEmail = theEmail;
         if (resultCode == LoginHelper.CORRECT_LOGIN_INFO) {
             DBMemberTableHelper memberTable = new DBMemberTableHelper(this);
             String email = ((EditText) findViewById(R.id.login_editText_email))
@@ -255,7 +262,7 @@ public class LoginActivity extends AppCompatActivity implements PostWebServiceTa
                     .toString();
 
             if (memberTable.insertMember(email, password)) {
-                startMainActivity();
+                ProfileHelper.checkProfileExistance(this, email);
             };
         } else if (resultCode == LoginHelper.ACCOUNT_FOUND_BUT_LOGIN_ERROR) {
             DBMemberTableHelper memberTable = new DBMemberTableHelper(this);
@@ -272,14 +279,24 @@ public class LoginActivity extends AppCompatActivity implements PostWebServiceTa
     }
 
     @Override
-    public void onCheckProfileCompleted(int theResultCode, Profile theProfile) {
-        if (theResultCode == ProfileHelper.PROFILE_FOUND) {
-            startMainActivity();
-        } else if (theResultCode == ProfileHelper.NO_PROFILE_FOUND) {
-            startProfileSetupActivity();
-        } else {
-            Toast.makeText(this, "Oops, there is an unknown error", Toast.LENGTH_LONG);
+    public void onCheckProfileCompleted(String theResult) {
+        try {
+            JSONObject jsonObject = new JSONObject(theResult);
+            int resultCode = jsonObject.getInt("result_code");
+            if (resultCode == ProfileHelper.PROFILE_FOUND) {
+                startMainActivity();
+            } else if (resultCode == ProfileHelper.NO_PROFILE_FOUND) {
+                EditText fieldEmail = (EditText) findViewById(R.id.login_editText_email);
+                startProfileSetupActivity();
+            } else {
+                Toast.makeText(this, "Oops, there is an unknown error", Toast.LENGTH_LONG);
+            }
+
+        } catch (JSONException e) {
+            e.printStackTrace();
         }
+
+
     }
 
     /**

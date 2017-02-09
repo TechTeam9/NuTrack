@@ -467,11 +467,8 @@ public class AvatorSelectorFragment extends Fragment {
         mRightImage.startAnimation(rightAnim);
     }
 
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
-        }
+    public int getChosen() {
+        return mAvatarList[mAvatarImageIndex[1]];
     }
 
     @Override
