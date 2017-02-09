@@ -15,8 +15,17 @@ import android.widget.ImageView;
 import edu.uw.tcss450.nutrack.AvatorSelectorFragment;
 import edu.uw.tcss450.nutrack.R;
 
+/**
+ * @Author
+ * @version
+ * @since
+ */
 public class ProfileSetupActivity extends AppCompatActivity implements AvatorSelectorFragment.OnFragmentInteractionListener{
 
+    /**
+     *M
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

@@ -6,6 +6,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -24,37 +25,61 @@ import edu.uw.tcss450.nutrack.R;
 import edu.uw.tcss450.nutrack.model.Account;
 import edu.uw.tcss450.nutrack.model.Profile;
 
+/**
+ * @Author
+ * @version
+ * @since
+ */
 public class LoginActivity extends AppCompatActivity implements PostWebServiceTask.RegistrationCompleted, GetWebServiceTask.LoginCompleted, ProfileHelper.CheckProfileCompleted{
-    private ImageView mMainLogo;
 
-    private EditText mEditTextEmail;
+    /**
+     * The ImageView for the main logo of the application
+     */
+    private ImageView mainLogo;
 
-    private EditText mEditTextPassword;
+    /**
+     * The EditText for the email input
+     */
+    private EditText editTextEmail;
 
-    private EditText mEditTextComfirmPassword;
+    /**
+     * The EditText for the password input
+     */
+    private EditText editTextPassword;
 
-    private Button mBtnSubmit;
+    /**
+     * The Button for login
+     */
+    private Button btnSubmit;
 
-    private TextView mTextViewRegister;
+    /**
+     * The TextView for register option
+     */
+    private TextView textViewRegister;
 
-    private AlertDialog mRegistrationDialog;
+    /**
+     * The registration dialog
+     */
+    private AlertDialog myRegistrationDialog;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        mMainLogo = (ImageView) findViewById(R.id.NutrackLogo);
-        mEditTextEmail = (EditText) findViewById(R.id.login_editText_email);
-        mEditTextPassword = (EditText) findViewById(R.id.login_editText_password);
-        mBtnSubmit = (Button) findViewById(R.id.login_button_login);
-        mTextViewRegister = (TextView) findViewById(R.id.login_textView_register);
+        mainLogo = (ImageView) findViewById(R.id.NutrackLogo);
+        editTextEmail = (EditText) findViewById(R.id.login_editText_email);
+        editTextPassword = (EditText) findViewById(R.id.login_editText_password);
+        btnSubmit = (Button) findViewById(R.id.login_button_login);
+        textViewRegister = (TextView) findViewById(R.id.login_textView_register);
 
-        mEditTextEmail.setVisibility(View.GONE);
-        mEditTextPassword.setVisibility(View.GONE);
-        mBtnSubmit.setVisibility(View.GONE);
-        mTextViewRegister.setVisibility(View.GONE);
+        editTextEmail.setVisibility(View.GONE);
+        editTextPassword.setVisibility(View.GONE);
+        btnSubmit.setVisibility(View.GONE);
+        textViewRegister.setVisibility(View.GONE);
 
-        mTextViewRegister.setOnClickListener(new View.OnClickListener() {
+        textViewRegister.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View view) {
@@ -62,10 +87,10 @@ public class LoginActivity extends AppCompatActivity implements PostWebServiceTa
             }
         });
 
-        mBtnSubmit.setOnClickListener(new View.OnClickListener() {
+        btnSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Account account = new Account(mEditTextEmail.getText().toString(), mEditTextPassword.getText().toString());
+                Account account = new Account(editTextEmail.getText().toString(), editTextPassword.getText().toString());
                 loginAccount(account);
             }
         });
@@ -79,6 +104,9 @@ public class LoginActivity extends AppCompatActivity implements PostWebServiceTa
         }
     }
 
+    /**
+     * start the Login Form animation when called.
+     */
     private void initializeLoginForm() {
         final Animation moveMainLogoAnimation = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.move_logo);
         moveMainLogoAnimation.setFillAfter(true);
@@ -87,42 +115,44 @@ public class LoginActivity extends AppCompatActivity implements PostWebServiceTa
         new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
             @Override
             public void run() {
-                mMainLogo.startAnimation(moveMainLogoAnimation);
+                mainLogo.startAnimation(moveMainLogoAnimation);
             }
         }, 1000);
     }
 
-    // Codes for building a dialog.
+    /**
+     * Initialize and show the registration dialog when called.
+     */
     private void initializeRegistrationDialog() {
         AlertDialog.Builder mBuilder = new AlertDialog.Builder((LoginActivity.this));
         View mView = getLayoutInflater().inflate(R.layout.dialog_registration, null);
 
         mBuilder.setView(mView);
-        mRegistrationDialog = mBuilder.create();
-        mRegistrationDialog.setCanceledOnTouchOutside(false);
+        myRegistrationDialog = mBuilder.create();
+        myRegistrationDialog.setCanceledOnTouchOutside(false);
 
-        mRegistrationDialog.show();
+        myRegistrationDialog.show();
 
-        Button btnRegister = (Button) mRegistrationDialog.findViewById(R.id.registration_button_register);
+        Button btnRegister = (Button) myRegistrationDialog.findViewById(R.id.registration_button_register);
         btnRegister.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-            String email = ((EditText) mRegistrationDialog.findViewById(R.id.registration_editText_email))
+            String email = ((EditText) myRegistrationDialog.findViewById(R.id.registration_editText_email))
                     .getText()
                     .toString();
-            String password = ((EditText) mRegistrationDialog.findViewById(R.id.registration_editText_password))
+            String password = ((EditText) myRegistrationDialog.findViewById(R.id.registration_editText_password))
                     .getText()
                     .toString();
-            String confirmPassword = ((EditText) mRegistrationDialog.findViewById(R.id.registration_editText_comfirmPassword))
+            String confirmPassword = ((EditText) myRegistrationDialog.findViewById(R.id.registration_editText_comfirmPassword))
                     .getText()
                     .toString();
 
             if (email.isEmpty() || password.isEmpty() || confirmPassword.isEmpty()) {
-                TextView textViewError = (TextView) mRegistrationDialog.findViewById(R.id.registration_textView_error);
+                TextView textViewError = (TextView) myRegistrationDialog.findViewById(R.id.registration_textView_error);
                 textViewError.setText(R.string.all_fields_must_fill_in_error, null);
                 textViewError.setVisibility(View.VISIBLE);
             } else if (!password.equals(confirmPassword)) {
-                TextView textViewError = (TextView) mRegistrationDialog.findViewById(R.id.registration_textView_error);
+                TextView textViewError = (TextView) myRegistrationDialog.findViewById(R.id.registration_textView_error);
                 textViewError.setText(R.string.passwords_not_the_same_error);
                 textViewError.setVisibility(View.VISIBLE);
             } else {
@@ -133,24 +163,44 @@ public class LoginActivity extends AppCompatActivity implements PostWebServiceTa
         });
     }
 
+    /**
+     * When called, finish LoginActivity and start MainActivity.
+     */
     private void startMainActivity() {
         Intent intent = new Intent(this, MainActivity.class);
         finish();
         startActivity(intent);
     }
 
-    private void startProfileSetupActivity(String theEmail) {
-
+    private void startProfileSetupActivity() {
+        Intent intent = new Intent(this, ProfileSetupActivity.class);
+        finish();
+        startActivity(intent);
     }
 
+    /**
+     * Call LoginHelper to create a new account.
+     * @param theEmail
+     * @param thePassword
+     */
     private void createAccount(String theEmail, String thePassword) {
         LoginHelper.addNewAccount(new Account(theEmail, thePassword), this);
     }
 
+    /**
+     * Call LoginHelper to verify account and take appropriate actions according to the email and password.
+     * @param theAccount
+     */
     private void loginAccount(Account theAccount) {
         LoginHelper.verifyAccount(theAccount, this);
     }
 
+    /**
+     * Insert new account into application's local storage.
+     * @param theEmail
+     * @param thePassword
+     * @return
+     */
     private boolean insertNewMemberData(String theEmail, String thePassword) {
         DBMemberTableHelper memberTable = new DBMemberTableHelper(this);
 
@@ -162,29 +212,37 @@ public class LoginActivity extends AppCompatActivity implements PostWebServiceTa
         }
     }
 
+    /**
+     * After the registration process is completed.
+     * @param resultCode
+     */
     @Override
     public void onRegistrationCompleted(int resultCode) {
         if (resultCode == LoginHelper.REGISTRATION_SUCCESS) {
-            String email = ((EditText) mRegistrationDialog.findViewById(R.id.registration_editText_email))
+            String email = ((EditText) myRegistrationDialog.findViewById(R.id.registration_editText_email))
                     .getText()
                     .toString();
-            String password = ((EditText) mRegistrationDialog.findViewById(R.id.registration_editText_password))
+            String password = ((EditText) myRegistrationDialog.findViewById(R.id.registration_editText_password))
                     .getText()
                     .toString();
 
             if (insertNewMemberData(email, password)) {
-                mRegistrationDialog.dismiss();
+                myRegistrationDialog.dismiss();
 
-                startProfileSetupActivity(email);
+                startMainActivity();
             }
 
         } else if (resultCode == LoginHelper.EMAIL_ALREADY_EXIST){
-            TextView textViewError = (TextView) mRegistrationDialog.findViewById(R.id.registration_textView_error);
+            TextView textViewError = (TextView) myRegistrationDialog.findViewById(R.id.registration_textView_error);
             textViewError.setText(R.string.email_already_exist, null);
             textViewError.setVisibility(View.VISIBLE);
         }
     }
 
+    /**
+     * After the login process is completed.
+     * @param resultCode
+     */
     @Override
     public void onLoginCompleted(int resultCode) {
         if (resultCode == LoginHelper.CORRECT_LOGIN_INFO) {
@@ -215,71 +273,60 @@ public class LoginActivity extends AppCompatActivity implements PostWebServiceTa
 
     @Override
     public void onCheckProfileCompleted(int theResultCode, Profile theProfile) {
-        switch (theResultCode) {
-            case ProfileHelper.PROFILE_FOUND:
-
-
-
-
-                break;
-            case ProfileHelper.NO_PROFILE_FOUND:
-
-
-
-
-
-
-
-                break;
+        if (theResultCode == ProfileHelper.PROFILE_FOUND) {
+            startMainActivity();
+        } else if (theResultCode == ProfileHelper.NO_PROFILE_FOUND) {
+            startProfileSetupActivity();
+        } else {
+            Toast.makeText(this, "Oops, there is an unknown error", Toast.LENGTH_LONG);
         }
     }
 
-
+    /**
+     * Inner class that container the login animation.
+     */
     private class LoginAnimationListener implements Animation.AnimationListener {
         @Override
-        public void onAnimationStart(Animation animation) {
-        }
+        public void onAnimationStart(Animation animation) {}
 
         @Override
         public void onAnimationEnd(Animation animation) {
-            mEditTextEmail.setAlpha(0f);
-            mEditTextEmail.setVisibility(View.VISIBLE);
+            editTextEmail.setAlpha(0f);
+            editTextEmail.setVisibility(View.VISIBLE);
 
-            mEditTextPassword.setAlpha(0f);
-            mEditTextPassword.setVisibility(View.VISIBLE);
+            editTextPassword.setAlpha(0f);
+            editTextPassword.setVisibility(View.VISIBLE);
 
-            mBtnSubmit.setAlpha(0f);
-            mBtnSubmit.setVisibility(View.VISIBLE);
+            btnSubmit.setAlpha(0f);
+            btnSubmit.setVisibility(View.VISIBLE);
 
-            mTextViewRegister.setAlpha(0f);
-            mTextViewRegister.setVisibility(View.VISIBLE);
+            textViewRegister.setAlpha(0f);
+            textViewRegister.setVisibility(View.VISIBLE);
 
-            int transitionRate = getResources().getInteger(android.R.integer.config_mediumAnimTime);
+            int transitionRate = 500;
 
-            mEditTextEmail.animate()
+            editTextEmail.animate()
                     .alpha(1f)
                     .setDuration(transitionRate)
                     .setListener(null);
 
-            mEditTextPassword.animate()
+            editTextPassword.animate()
                     .alpha(1f)
                     .setDuration(transitionRate)
                     .setListener(null);
 
-            mBtnSubmit.animate()
+            btnSubmit.animate()
                     .alpha(1f)
                     .setDuration(transitionRate)
                     .setListener(null);
 
-            mTextViewRegister.animate()
+            textViewRegister.animate()
                     .alpha(1f)
                     .setDuration(transitionRate)
                     .setListener(null);
         }
 
         @Override
-        public void onAnimationRepeat(Animation animation) {
-
-        }
+        public void onAnimationRepeat(Animation animation) {}
     }
 }

@@ -33,35 +33,54 @@ import edu.uw.tcss450.nutrack.fragment.ProfileFragment;
 import edu.uw.tcss450.nutrack.fragment.SearchResultFragment;
 import edu.uw.tcss450.nutrack.fragment.SettingFragment;
 
+/**
+ * @Author
+ * @version
+ * @since
+ */
 public class MainActivity extends AppCompatActivity implements ProfileFragment.OnFragmentInteractionListener, LookUpFoodFragment.OnFragmentInteractionListener, MainFragment.OnFragmentInteractionListener, SettingFragment.OnFragmentInteractionListener, SearchResultFragment.OnFragmentInteractionListener{
 
-    private DrawerLayout mDrawer;
+    /**
+     * The layout that hold the navigation drawer.
+     */
+    private DrawerLayout myDrawer;
 
-    private Toolbar mToolbar;
+    /**
+     * The top tool bar.
+     */
+    private Toolbar myToolbar;
 
-    private NavigationView mNaviDrawer;
+    /**
+     * The navigation drawer.
+     */
+    private NavigationView myNaviDrawer;
 
-    private ActionBarDrawerToggle mDrawerToggle;
+    /**
+     * The toggle for expanding and collapsing the drawer.
+     */
+    private ActionBarDrawerToggle myDrawerToggle;
 
-    private SQLiteDatabase mDatabase;
-
+    /**
+     *
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        mToolbar = (Toolbar) findViewById(R.id.toolbar);
-        mToolbar.setTitleTextColor(Color.WHITE);
-        mToolbar.setTitle("Home");
+        myToolbar = (Toolbar) findViewById(R.id.toolbar);
+        myToolbar.setTitleTextColor(Color.WHITE);
+        myToolbar.setTitle("Home");
 
-        mNaviDrawer = (NavigationView) findViewById(R.id.naviView);
-        mDrawer = (DrawerLayout) findViewById(R.id.main_frame);
+        myNaviDrawer = (NavigationView) findViewById(R.id.naviView);
+        myDrawer = (DrawerLayout) findViewById(R.id.main_frame);
 
-        setSupportActionBar(mToolbar);
+        setSupportActionBar(myToolbar);
 
-        mDrawerToggle = setupDrawerToggle();
+        myDrawerToggle = setupDrawerToggle();
 
-        mDrawer.addDrawerListener(mDrawerToggle);
+        myDrawer.addDrawerListener(myDrawerToggle);
 
         initializeDrawerContent();
 
@@ -81,32 +100,47 @@ public class MainActivity extends AppCompatActivity implements ProfileFragment.O
 
     }
 
+    /**
+     *
+     * @param savedInstanceState
+     */
     @Override
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
-        mDrawerToggle.syncState();
+        myDrawerToggle.syncState();
     }
 
+    /**
+     *
+     * @param newConfig
+     */
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
-        mDrawerToggle.onConfigurationChanged(newConfig);
+        myDrawerToggle.onConfigurationChanged(newConfig);
     }
 
-
+    /**
+     *
+     * @param item
+     * @return
+     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-                mDrawer.openDrawer(GravityCompat.START);
+                myDrawer.openDrawer(GravityCompat.START);
                 return true;
         }
 
         return super.onOptionsItemSelected(item);
     }
 
+    /**
+     *
+     */
     public void initializeDrawerContent() {
-        mNaviDrawer.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+        myNaviDrawer.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 selectDrawerItem(item);
@@ -115,6 +149,9 @@ public class MainActivity extends AppCompatActivity implements ProfileFragment.O
         });
     }
 
+    /**
+     *
+     */
     public void initializeFloatingActionButton() {
         //Floating Menu Icon
         ImageView floatingMenuIcon = new ImageView(this);
@@ -153,6 +190,10 @@ public class MainActivity extends AppCompatActivity implements ProfileFragment.O
                 .build();
     }
 
+    /**
+     *
+     * @param menuItem
+     */
     public void selectDrawerItem(MenuItem menuItem) {
         Fragment fragment = null;
 
@@ -191,15 +232,24 @@ public class MainActivity extends AppCompatActivity implements ProfileFragment.O
             fragmentManager.beginTransaction().replace(R.id.flContent, fragment).commit();
         }
         menuItem.setChecked(true);
-        mToolbar.setTitle(menuItem.getTitle());
-        mDrawer.closeDrawers();
+        myToolbar.setTitle(menuItem.getTitle());
+        myDrawer.closeDrawers();
 
     }
 
+    /**
+     *
+     * @return
+     */
     private ActionBarDrawerToggle setupDrawerToggle() {
-        return new ActionBarDrawerToggle(this, mDrawer, mToolbar, R.string.drawer_open, R.string.drawer_close);
+        return new ActionBarDrawerToggle(this, myDrawer, myToolbar, R.string.drawer_open, R.string.drawer_close);
     }
 
+    /**
+     *
+     * @param theFoodName
+     * @param theFoodList
+     */
     @Override
     public void onFragmentInteraction(String theFoodName, ArrayList<String> theFoodList) {
         SearchResultFragment fragment = new SearchResultFragment();
