@@ -3,29 +3,29 @@ package edu.uw.tcss450.nutrack.model;
 import edu.uw.tcss450.nutrack.activity.LoginActivity;
 
 public class Account {
-    private String myUsername;
+    private String mUsername;
 
-    private String myPassword;
+    private String mPassword;
 
     public Account(String theUsername, String thePassword) {
-        myUsername = theUsername;
-        myPassword = thePassword;
+        mUsername = theUsername;
+        mPassword = thePassword;
     }
 
     public void setUsername(String theUsername) {
-        myUsername = theUsername;
+        mUsername = theUsername;
     }
 
-    public String getMyUsername() {
-        return myUsername;
+    public String getUsername() {
+        return mUsername;
     }
 
     public void setPassword(String thePassword) {
-        myPassword = thePassword;
+        mPassword = thePassword;
     }
 
     public String getPassword() {
-        return myPassword;
+        return mPassword;
     }
 
 }

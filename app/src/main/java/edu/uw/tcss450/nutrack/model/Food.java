@@ -9,45 +9,45 @@ import android.os.Parcelable;
 
 public class Food{
 
-    private int myId;
+    private int mId;
 
-    private String myName;
+    private String mName;
 
-    private double myCalorie;
+    private double mCalorie;
 
     public Food(int theId, String theName, double theCalorie) {
-        myId = theId;
-        myName = theName;
-        myCalorie = theCalorie;
+        mId = theId;
+        mName = theName;
+        mCalorie = theCalorie;
     }
 
     public Food() {
-        myId = 0;
-        myName = null;
-        myCalorie = 0;
+        mId = 0;
+        mName = null;
+        mCalorie = 0;
     }
 
     public void setId(int theId) {
-        myId = theId;
+        mId = theId;
     }
 
     public int getId() {
-        return myId;
+        return mId;
     }
 
     public void setName(String theName) {
-        myName = theName;
+        mName = theName;
     }
 
     public String getName() {
-        return myName;
+        return mName;
     }
 
     public void setCalorie(double theCalorie) {
-        myCalorie = theCalorie;
+        mCalorie = theCalorie;
     }
 
     public double getCalorie() {
-        return myCalorie;
+        return mCalorie;
     }
 }

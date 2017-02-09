@@ -48,8 +48,8 @@ public class FatSecretAPI {
             StringBuilder builder = new StringBuilder();
             BufferedReader reader = new BufferedReader(new InputStreamReader(api.getInputStream()));
             while ((line = reader.readLine()) != null) builder.append(line);
-            JSONObject food = new JSONObject(builder.toString());   // { first
-            foods = food.getJSONObject("foods");                    // { second
+            JSONObject food = new JSONObject(builder.toString());
+            foods = food.getJSONObject("foods");
         } catch (Exception exception) {
             Log.e("FatSecret Error", exception.toString());
             exception.printStackTrace();

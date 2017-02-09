@@ -19,10 +19,12 @@ import edu.uw.tcss450.nutrack.DBHelper.DBMemberTableHelper;
 import edu.uw.tcss450.nutrack.GetWebServiceTask;
 import edu.uw.tcss450.nutrack.LoginHelper;
 import edu.uw.tcss450.nutrack.PostWebServiceTask;
+import edu.uw.tcss450.nutrack.ProfileHelper;
 import edu.uw.tcss450.nutrack.R;
 import edu.uw.tcss450.nutrack.model.Account;
+import edu.uw.tcss450.nutrack.model.Profile;
 
-public class LoginActivity extends AppCompatActivity implements PostWebServiceTask.RegistrationCompleted, GetWebServiceTask.LoginCompleted{
+public class LoginActivity extends AppCompatActivity implements PostWebServiceTask.RegistrationCompleted, GetWebServiceTask.LoginCompleted, ProfileHelper.CheckProfileCompleted{
     private ImageView mMainLogo;
 
     private EditText mEditTextEmail;
@@ -137,6 +139,10 @@ public class LoginActivity extends AppCompatActivity implements PostWebServiceTa
         startActivity(intent);
     }
 
+    private void startProfileSetupActivity(String theEmail) {
+
+    }
+
     private void createAccount(String theEmail, String thePassword) {
         LoginHelper.addNewAccount(new Account(theEmail, thePassword), this);
     }
@@ -169,7 +175,7 @@ public class LoginActivity extends AppCompatActivity implements PostWebServiceTa
             if (insertNewMemberData(email, password)) {
                 mRegistrationDialog.dismiss();
 
-                startMainActivity();
+                startProfileSetupActivity(email);
             }
 
         } else if (resultCode == LoginHelper.EMAIL_ALREADY_EXIST){
@@ -204,6 +210,27 @@ public class LoginActivity extends AppCompatActivity implements PostWebServiceTa
             Toast.makeText(this, "Incorrect Password", Toast.LENGTH_SHORT).show();
         } else if (resultCode == LoginHelper.NO_USERNAME_FOUND) {
             Toast.makeText(this, "No Username Found", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    @Override
+    public void onCheckProfileCompleted(int theResultCode, Profile theProfile) {
+        switch (theResultCode) {
+            case ProfileHelper.PROFILE_FOUND:
+
+
+
+
+                break;
+            case ProfileHelper.NO_PROFILE_FOUND:
+
+
+
+
+
+
+
+                break;
         }
     }
 
