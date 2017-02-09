@@ -63,14 +63,14 @@ public class LoginHelper {
         final String baseUrl = "http://cssgate.insttech.washington.edu/~mhl325/login_verification";
 
         GetWebServiceTask task = new GetWebServiceTask(theContext);
-        task.execute(baseUrl, theAccount.getMyUsername(), theAccount.getPassword(), "0");
+        task.execute(baseUrl, theAccount.getUsername(), theAccount.getPassword(), "0");
     }
 
     public static void verifyAccount(Account theAccount, Context theContext) {
         final String baseUrl = "http://cssgate.insttech.washington.edu/~mhl325/login_verification";
 
         GetWebServiceTask task = new GetWebServiceTask(theContext);
-        task.execute(baseUrl, theAccount.getMyUsername(), theAccount.getPassword(), "1");
+        task.execute(baseUrl, theAccount.getUsername(), theAccount.getPassword(), "1");
     }
 
     public static void addNewAccount(Account theAccount, Context theContext) {
@@ -80,7 +80,7 @@ public class LoginHelper {
         //Date date = new Date();
 
         PostWebServiceTask task = new PostWebServiceTask(theContext);
-        task.execute(baseUrl, theAccount.getMyUsername(), theAccount.getPassword());
+        task.execute(baseUrl, theAccount.getUsername(), theAccount.getPassword());
     }
 
 
