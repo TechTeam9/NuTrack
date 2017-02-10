@@ -26,7 +26,7 @@ public class DBRecentSearchTableHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        String createTableQuery = "CREATE TABLE IF NOT EXISTS recent_search(food_name TEXT)";
+        String createTableQuery = "CREATE TABLE IF NOT EXISTS recent_search(food_name TEXT, search_time NUMERIC)";
         db.execSQL(createTableQuery);
     }
 
