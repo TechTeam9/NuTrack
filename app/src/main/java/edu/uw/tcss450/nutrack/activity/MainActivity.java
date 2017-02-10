@@ -34,10 +34,8 @@ import edu.uw.tcss450.nutrack.fragment.SettingFragment;
 
 /**
  * @Author
- * @version
- * @since
  */
-public class MainActivity extends AppCompatActivity implements ProfileFragment.OnFragmentInteractionListener, LookUpFoodFragment.OnFragmentInteractionListener, MainFragment.OnFragmentInteractionListener, SettingFragment.OnFragmentInteractionListener, SearchResultFragment.OnFragmentInteractionListener{
+public class MainActivity extends AppCompatActivity implements ProfileFragment.OnFragmentInteractionListener, LookUpFoodFragment.OnFragmentInteractionListener, MainFragment.OnFragmentInteractionListener, SettingFragment.OnFragmentInteractionListener, SearchResultFragment.OnFragmentInteractionListener {
 
     /**
      * The layout that hold the navigation drawer.
@@ -59,10 +57,6 @@ public class MainActivity extends AppCompatActivity implements ProfileFragment.O
      */
     private ActionBarDrawerToggle mDrawerToggle;
 
-    /**
-     *
-     * @param savedInstanceState
-     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -100,8 +94,9 @@ public class MainActivity extends AppCompatActivity implements ProfileFragment.O
     }
 
     /**
+     * Sets the initial state of the drawer.
      *
-     * @param savedInstanceState
+     * @param savedInstanceState the saved instance state
      */
     @Override
     protected void onPostCreate(Bundle savedInstanceState) {
@@ -110,6 +105,7 @@ public class MainActivity extends AppCompatActivity implements ProfileFragment.O
     }
 
     /**
+     * Toggles the state of the drawer. TODO: Check Please
      *
      * @param newConfig
      */
@@ -120,9 +116,10 @@ public class MainActivity extends AppCompatActivity implements ProfileFragment.O
     }
 
     /**
+     * TODO
      *
-     * @param item
-     * @return
+     * @param item the selected menu item
+     * @return true if successful and TODO
      */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -131,12 +128,11 @@ public class MainActivity extends AppCompatActivity implements ProfileFragment.O
                 mDrawer.openDrawer(GravityCompat.START);
                 return true;
         }
-
         return super.onOptionsItemSelected(item);
     }
 
     /**
-     *
+     * Initializes the Drawer content.
      */
     public void initializeDrawerContent() {
         mNaviDrawer.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
@@ -149,7 +145,7 @@ public class MainActivity extends AppCompatActivity implements ProfileFragment.O
     }
 
     /**
-     *
+     * Initializes the FAB.
      */
     public void initializeFloatingActionButton() {
         //Floating Menu Icon
@@ -190,14 +186,15 @@ public class MainActivity extends AppCompatActivity implements ProfileFragment.O
     }
 
     /**
+     * Allows the user to select a menu item from the slide out drawer.
      *
-     * @param theMenuItem
+     * @param theMenuItem the menu item selected by the user
      */
     public void selectDrawerItem(MenuItem theMenuItem) {
         Fragment fragment = null;
 
         Class fragmentClass = null;
-        switch(theMenuItem.getItemId()) {
+        switch (theMenuItem.getItemId()) {
             case R.id.nav_profile:
                 fragmentClass = ProfileFragment.class;
                 break;
@@ -212,7 +209,6 @@ public class MainActivity extends AppCompatActivity implements ProfileFragment.O
             case R.id.nav_sign_out:
                 userSignOut();
                 break;
-
             case R.id.nav_calories_calculator:
                 fragmentClass = LookUpFoodFragment.class;
                 break;
@@ -233,21 +229,23 @@ public class MainActivity extends AppCompatActivity implements ProfileFragment.O
         theMenuItem.setChecked(true);
         mToolbar.setTitle(theMenuItem.getTitle());
         mDrawer.closeDrawers();
-
     }
 
     /**
+     * Constructs a Drawer toggle to open and close the navigation drawer.
      *
-     * @return
+     * @return the created ActionBarDrawerToggle
      */
     private ActionBarDrawerToggle setupDrawerToggle() {
         return new ActionBarDrawerToggle(this, mDrawer, mToolbar, R.string.drawer_open, R.string.drawer_close);
     }
 
     /**
+     * Handles interactions from LookUpFoodFragment and passes along the food and food list to a
+     * new instance of SearchResultFragment.
      *
-     * @param theFoodName
-     * @param theFoodList
+     * @param theFoodName the name of the food item selected
+     * @param theFoodList the list of searched food items
      */
     @Override
     public void onFragmentInteraction(String theFoodName, ArrayList<String> theFoodList) {
@@ -264,6 +262,9 @@ public class MainActivity extends AppCompatActivity implements ProfileFragment.O
         transaction.commit();
     }
 
+    /**
+     * Cleans up after the user logs out.
+     */
     private void userSignOut() {
         DBMemberTableHelper dbMemberTableHelper = new DBMemberTableHelper(this);
         dbMemberTableHelper.deleteData();
@@ -274,7 +275,5 @@ public class MainActivity extends AppCompatActivity implements ProfileFragment.O
 
     @Override
     public void onFragmentInteraction(Uri theUri) {
-
     }
 }
-

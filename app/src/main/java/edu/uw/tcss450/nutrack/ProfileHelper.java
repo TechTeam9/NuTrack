@@ -2,10 +2,6 @@ package edu.uw.tcss450.nutrack;
 
 import android.content.Context;
 import android.os.AsyncTask;
-import android.util.Log;
-
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
@@ -17,39 +13,69 @@ import java.net.URLEncoder;
 
 import edu.uw.tcss450.nutrack.model.Profile;
 
-
+/**
+ * @Author
+ * @version
+ * @since
+ */
 public class ProfileHelper {
 
+    /** The URL of our backend. */
     private static final String BASE_URL = "http://cssgate.insttech.washington.edu/~mhl325/";
 
+    /** No profile found result indicator. */
     public static final int NO_PROFILE_FOUND = 14;
 
+    /** Profile found result indicator. */
     public static final int PROFILE_FOUND = 13;
 
+    /** Insert success result indicator. */
     public static final int INSERT_SUCCESS = 15;
 
+    /** Insert failed result indicator. */
     public static final int INSERT_FAILURE = 16;
 
-    public static void checkProfileExistance(Context theContext, String theEmail) {
+    /**
+     * Checks to see if the requested profile exists.
+     * @param theContext
+     * @param theEmail
+     */
+    public static void checkProfileExistence(Context theContext, String theEmail) {
         GetPersonalInfo getInfo = new GetPersonalInfo(theContext);
         getInfo.execute(theEmail);
     }
 
-
+    /**
+     * Inserts the profile into the database.
+     * @param theContext
+     * @param email
+     * @param theProfile
+     */
     public static void insertProfile(Context theContext, String email, Profile theProfile) {
         PostPersonalInfo postInfo = new PostPersonalInfo(theContext);
         postInfo.execute(email, theProfile);
     }
 
-
+    /**
+     *
+     */
     private static class GetPersonalInfo extends AsyncTask<String, Void, String> {
 
         private final CheckProfileCompleted mCallback;
 
+        /**
+         *
+         * @param theContext
+         */
         public GetPersonalInfo(Context theContext) {
             mCallback = (CheckProfileCompleted) theContext;
         }
 
+        /**
+         * Fetches the user's personal info from our web service.
+         * @param strings the email to pass to the backend
+         * @return the personal info from the back end or an error message
+         */
         @Override
         protected String doInBackground(String... strings) {
             String response = "";
@@ -63,7 +89,7 @@ public class ProfileHelper {
                 urlConnection = (HttpURLConnection) urlObject.openConnection();
                 InputStream content = urlConnection.getInputStream();
                 BufferedReader buffer = new BufferedReader(new InputStreamReader(content));
-                String s = "";
+                String s;
                 while ((s = buffer.readLine()) != null) {
                     response += s;
                 }
@@ -142,6 +168,7 @@ public class ProfileHelper {
     public interface CheckProfileCompleted {
         public void onCheckProfileCompleted(String result);
     }
+
 
     public interface InsertProfileCompleted {
         public void onInsertProfileCompleted(String result);

@@ -22,10 +22,8 @@ import edu.uw.tcss450.nutrack.model.Profile;
 
 /**
  * @Author
- * @version
- * @since
  */
-public class ProfileSetupActivity extends AppCompatActivity implements AvatorSelectorFragment.OnFragmentInteractionListener, ProfileHelper.InsertProfileCompleted{
+public class ProfileSetupActivity extends AppCompatActivity implements AvatorSelectorFragment.OnFragmentInteractionListener, ProfileHelper.InsertProfileCompleted {
 
     private char mGenderChosen;
 
@@ -34,7 +32,8 @@ public class ProfileSetupActivity extends AppCompatActivity implements AvatorSel
     private AvatorSelectorFragment mAvatorSelectorFragment;
 
     /**
-     *M
+     * M
+     *
      * @param savedInstanceState
      */
     @Override
@@ -90,6 +89,9 @@ public class ProfileSetupActivity extends AppCompatActivity implements AvatorSel
         startActivity(intent);
     }
 
+    /**
+     * 
+     */
     private void submitProfile() {
         TextInputEditText fieldName = (TextInputEditText) findViewById(R.id.profileSetup_editText_name);
         TextInputEditText fieldHeight = (TextInputEditText) findViewById(R.id.profileSetup_editText_height);
@@ -123,6 +125,11 @@ public class ProfileSetupActivity extends AppCompatActivity implements AvatorSel
 
     }
 
+    /**
+     * Starts the main activity after verifying the user account insert completed successfully.
+     *
+     * @param theResult the backend result indication
+     */
     @Override
     public void onInsertProfileCompleted(String theResult) {
         try {
@@ -135,11 +142,8 @@ public class ProfileSetupActivity extends AppCompatActivity implements AvatorSel
             } else {
                 Toast.makeText(this, "Oops, there is an unexpected error.", Toast.LENGTH_LONG);
             }
-
         } catch (JSONException e) {
             e.printStackTrace();
         }
-
-
     }
 }

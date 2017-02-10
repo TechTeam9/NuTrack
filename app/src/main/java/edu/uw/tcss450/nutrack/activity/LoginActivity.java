@@ -28,41 +28,42 @@ import edu.uw.tcss450.nutrack.model.Account;
 
 /**
  * @Author
- * @version
- * @since
  */
-public class LoginActivity extends AppCompatActivity implements AddAccountInfo.RegistrationCompleted, getAccountInfo.LoginCompleted, ProfileHelper.CheckProfileCompleted{
+public class LoginActivity extends AppCompatActivity implements AddAccountInfo.RegistrationCompleted, getAccountInfo.LoginCompleted, ProfileHelper.CheckProfileCompleted {
 
     /**
-     * The ImageView for the main logo of the application
+     * The ImageView for the main logo of the application.
      */
     private ImageView mMainLogo;
 
     /**
-     * The EditText for the email input
+     * The EditText for the email input.
      */
     private EditText mFieldEmail;
 
     /**
-     * The EditText for the password input
+     * The EditText for the password input.
      */
     private EditText mFieldPassword;
 
     /**
-     * The Button for login
+     * The Button for login.
      */
     private Button mBtnSubmit;
 
     /**
-     * The TextView for register option
+     * The TextView for register option.
      */
     private TextView mViewRegister;
 
     /**
-     * The registration dialog
+     * The registration dialog.
      */
     private AlertDialog mRegistrationDialog;
 
+    /**
+     * The email input.
+     */
     private String mEmail;
 
     @Override
@@ -107,7 +108,7 @@ public class LoginActivity extends AppCompatActivity implements AddAccountInfo.R
     }
 
     /**
-     * start the Login Form animation when called.
+     * Starts the Login Form animation.
      */
     private void initializeLoginForm() {
         final Animation moveMainLogoAnimation = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.move_logo);
@@ -123,7 +124,7 @@ public class LoginActivity extends AppCompatActivity implements AddAccountInfo.R
     }
 
     /**
-     * Initialize and show the registration dialog when called.
+     * Initializes and shows the registration dialog when called.
      */
     private void initializeRegistrationDialog() {
         AlertDialog.Builder mBuilder = new AlertDialog.Builder((LoginActivity.this));
@@ -158,7 +159,7 @@ public class LoginActivity extends AppCompatActivity implements AddAccountInfo.R
                     textViewError.setText(R.string.passwords_not_the_same_error);
                     textViewError.setVisibility(View.VISIBLE);
                 } else {
-                        createAccount(email, password);
+                    createAccount(email, password);
 
                 }
             }
@@ -166,7 +167,7 @@ public class LoginActivity extends AppCompatActivity implements AddAccountInfo.R
     }
 
     /**
-     * When called, finish LoginActivity and start MainActivity.
+     * Finishes LoginActivity and starts MainActivity.
      */
     private void startMainActivity() {
         Intent intent = new Intent(this, MainActivity.class);
@@ -174,6 +175,9 @@ public class LoginActivity extends AppCompatActivity implements AddAccountInfo.R
         startActivity(intent);
     }
 
+    /**
+     * Finishes LoginActivity and starts ProfileSetupActivity.
+     */
     private void startProfileSetupActivity() {
         Intent intent = new Intent(this, ProfileSetupActivity.class);
         intent.putExtra("email", mEmail);
@@ -182,27 +186,31 @@ public class LoginActivity extends AppCompatActivity implements AddAccountInfo.R
     }
 
     /**
-     * Call LoginHelper to create a new account.
-     * @param theEmail
-     * @param thePassword
+     * Calls LoginHelper to create a new account.
+     *
+     * @param theEmail    the entered user email
+     * @param thePassword the entered user password
      */
     private void createAccount(String theEmail, String thePassword) {
         LoginHelper.addNewAccount(new Account(theEmail, thePassword), this);
     }
 
     /**
-     * Call LoginHelper to verify account and take appropriate actions according to the email and password.
-     * @param theAccount
+     * Call LoginHelper to verify account and take appropriate actions according to the email
+     * and password.
+     *
+     * @param theAccount the user's account
      */
     private void loginAccount(Account theAccount) {
         LoginHelper.verifyAccount(theAccount, this);
     }
 
     /**
-     * Insert new account into application's local storage.
-     * @param theEmail
-     * @param thePassword
-     * @return
+     * Inserts a new account into application's local storage.
+     *
+     * @param theEmail    the user's email
+     * @param thePassword the user's password
+     * @return a pass or fail indicator
      */
     private boolean insertNewMemberData(String theEmail, String thePassword) {
         DBMemberTableHelper memberTable = new DBMemberTableHelper(this);
@@ -216,8 +224,10 @@ public class LoginActivity extends AppCompatActivity implements AddAccountInfo.R
     }
 
     /**
-     * After the registration process is completed.
-     * @param theResultCode
+     * Verifies registration info. Upon success starts the ProfileSetupActivity, upon failure
+     * informs the user of error.
+     *
+     * @param theResultCode the backend result indication
      */
     @Override
     public void onRegistrationCompleted(int theResultCode) {
@@ -236,7 +246,7 @@ public class LoginActivity extends AppCompatActivity implements AddAccountInfo.R
                 startProfileSetupActivity();
             }
 
-        } else if (theResultCode == LoginHelper.EMAIL_ALREADY_EXIST){
+        } else if (theResultCode == LoginHelper.EMAIL_ALREADY_EXIST) {
             TextView textViewError = (TextView) mRegistrationDialog.findViewById(R.id.registration_textView_error);
             textViewError.setText(R.string.email_already_exist, null);
             textViewError.setVisibility(View.VISIBLE);
@@ -244,8 +254,10 @@ public class LoginActivity extends AppCompatActivity implements AddAccountInfo.R
     }
 
     /**
-     * After the login process is completed.
-     * @param theResultCode
+     * Verifies login info. Upon success starts the ProfileSetupActivity, upon failure
+     * informs the user of error.
+     *
+     * @param theResultCode the backend result indication
      */
     @Override
     public void onLoginCompleted(int theResultCode, String theEmail) {
@@ -260,8 +272,8 @@ public class LoginActivity extends AppCompatActivity implements AddAccountInfo.R
                     .toString();
 
             if (memberTable.insertMember(email, password)) {
-                ProfileHelper.checkProfileExistance(this, email);
-            };
+                ProfileHelper.checkProfileExistence(this, email);
+            }
         } else if (theResultCode == LoginHelper.ACCOUNT_FOUND_BUT_LOGIN_ERROR) {
             DBMemberTableHelper memberTable = new DBMemberTableHelper(this);
             memberTable.deleteData();
@@ -276,6 +288,11 @@ public class LoginActivity extends AppCompatActivity implements AddAccountInfo.R
         }
     }
 
+    /**
+     * Checks to see that a profile has been setup for the user.
+     *
+     * @param theResult the backend result indication
+     */
     @Override
     public void onCheckProfileCompleted(String theResult) {
         try {
@@ -298,11 +315,12 @@ public class LoginActivity extends AppCompatActivity implements AddAccountInfo.R
     }
 
     /**
-     * Inner class that container the login animation.
+     * Inner class that contains the login animation.
      */
     private class LoginAnimationListener implements Animation.AnimationListener {
         @Override
-        public void onAnimationStart(Animation theAnimation) {}
+        public void onAnimationStart(Animation theAnimation) {
+        }
 
         @Override
         public void onAnimationEnd(Animation theAnimation) {
@@ -342,6 +360,7 @@ public class LoginActivity extends AppCompatActivity implements AddAccountInfo.R
         }
 
         @Override
-        public void onAnimationRepeat(Animation theAnimation) {}
+        public void onAnimationRepeat(Animation theAnimation) {
+        }
     }
 }
