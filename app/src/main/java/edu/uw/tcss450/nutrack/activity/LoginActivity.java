@@ -6,6 +6,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -264,6 +265,7 @@ public class LoginActivity extends AppCompatActivity implements AddAccountInfo.R
         mEmail = theEmail;
         if (theResultCode == LoginHelper.CORRECT_LOGIN_INFO) {
             DBMemberTableHelper memberTable = new DBMemberTableHelper(this);
+            // Need to fix this part, auto login dont't have editText.
             String email = ((EditText) findViewById(R.id.login_editText_email))
                     .getText()
                     .toString();
@@ -272,7 +274,7 @@ public class LoginActivity extends AppCompatActivity implements AddAccountInfo.R
                     .toString();
 
             if (memberTable.insertMember(email, password)) {
-                ProfileHelper.checkProfileExistence(this, email);
+                ProfileHelper.checkProfileExistence(this, theEmail);
             }
         } else if (theResultCode == LoginHelper.ACCOUNT_FOUND_BUT_LOGIN_ERROR) {
             DBMemberTableHelper memberTable = new DBMemberTableHelper(this);
@@ -298,6 +300,8 @@ public class LoginActivity extends AppCompatActivity implements AddAccountInfo.R
         try {
             JSONObject jsonObject = new JSONObject(theResult);
             int resultCode = jsonObject.getInt("result_code");
+            Log.d("Code", String.valueOf(resultCode));
+
             if (resultCode == ProfileHelper.PROFILE_FOUND) {
                 startMainActivity();
             } else if (resultCode == ProfileHelper.NO_PROFILE_FOUND) {

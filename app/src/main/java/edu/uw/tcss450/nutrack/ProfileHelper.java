@@ -2,6 +2,7 @@ package edu.uw.tcss450.nutrack;
 
 import android.content.Context;
 import android.os.AsyncTask;
+import android.util.Log;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
@@ -105,7 +106,6 @@ public class ProfileHelper {
 
         @Override
         protected void onPostExecute(String result) {
-            System.out.println(result);
             mCallback.onCheckProfileCompleted(result);
         }
 
