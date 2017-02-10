@@ -99,7 +99,7 @@ public class SearchResultFragment extends Fragment implements FoodDialogFragment
                 final String item = (String) parent.getItemAtPosition(position);
                 Log.d("SearchResultFragment", item);
                 listView.setClickable(false);
-                listView.setVisibility(View.INVISIBLE);
+//                listView.setVisibility(View.INVISIBLE);
                 onFragmentInteraction();
 
             }
