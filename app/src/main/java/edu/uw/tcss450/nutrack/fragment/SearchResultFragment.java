@@ -3,7 +3,9 @@ package edu.uw.tcss450.nutrack.fragment;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -100,7 +102,10 @@ public class SearchResultFragment extends Fragment implements FoodDialogFragment
                 Log.d("SearchResultFragment", item);
                 listView.setClickable(false);
 //                listView.setVisibility(View.INVISIBLE);
-                onFragmentInteraction();
+                FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+                DialogFragment foodInfoDialog = new FoodDialogFragment();
+                foodInfoDialog.show(fragmentManager, "food info dialog");
+                //onFragmentInteraction();
 
             }
         });
