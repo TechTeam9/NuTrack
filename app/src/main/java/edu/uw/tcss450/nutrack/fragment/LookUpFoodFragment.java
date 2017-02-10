@@ -2,17 +2,14 @@ package edu.uw.tcss450.nutrack.fragment;
 
 import android.content.Context;
 import android.database.Cursor;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
-import android.widget.SearchView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
+import android.widget.SearchView;
 import android.widget.SimpleAdapter;
 
 import org.json.JSONArray;
@@ -24,12 +21,10 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Map;
 
 import edu.uw.tcss450.nutrack.API.FatSecretAPI;
 import edu.uw.tcss450.nutrack.DBHelper.DBRecentSearchTableHelper;
 import edu.uw.tcss450.nutrack.R;
-import edu.uw.tcss450.nutrack.model.Food;
 
 
 /**
@@ -41,7 +36,6 @@ import edu.uw.tcss450.nutrack.model.Food;
  * create an instance of this fragment.
  */
 public class LookUpFoodFragment extends Fragment {
-
 
 
     private static final String ARG_PARAM1 = "param1";
@@ -79,7 +73,8 @@ public class LookUpFoodFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_look_up_food, container, false);;
+        View view = inflater.inflate(R.layout.fragment_look_up_food, container, false);
+        ;
 
         initializeSearchListener(view);
         initializeRecentSearchList(view);
@@ -155,8 +150,9 @@ public class LookUpFoodFragment extends Fragment {
 
     /**
      * Compare current time and searching time
+     *
      * @param theCurrentTime system current time
-     * @param theSearchTime time that doing search
+     * @param theSearchTime  time that doing search
      * @return a string that can tell how long ago did this search
      */
     private String compareTime(Date theCurrentTime, Date theSearchTime) {
@@ -186,19 +182,19 @@ public class LookUpFoodFragment extends Fragment {
 
         // FOR API USES!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         final FatSecretAPI mFatSecret = new FatSecretAPI();
-         new AsyncTask<String, String, String>() {
-             @Override
-             protected String doInBackground(String... arg0) {
-                 System.out.println("Starting to SearchFood");
+        new AsyncTask<String, String, String>() {
+            @Override
+            protected String doInBackground(String... arg0) {
+                System.out.println("Starting to SearchFood");
 
-                 JSONObject food = mFatSecret.searchFood(theFood);
-                 JSONArray FOODS_ARRAY;
-                 try {
-                     if (food != null) {
-                         FOODS_ARRAY = food.getJSONArray("food");
-                         if (FOODS_ARRAY != null) {
-                             for (int i = 0; i < FOODS_ARRAY.length(); i++) {
-                                 JSONObject food_items = FOODS_ARRAY.optJSONObject(i);
+                JSONObject food = mFatSecret.searchFood(theFood);
+                JSONArray FOODS_ARRAY;
+                try {
+                    if (food != null) {
+                        FOODS_ARRAY = food.getJSONArray("food");
+                        if (FOODS_ARRAY != null) {
+                            for (int i = 0; i < FOODS_ARRAY.length(); i++) {
+                                JSONObject food_items = FOODS_ARRAY.optJSONObject(i);
 
                                  /*
                                  String food_name = food_items.getString("food_name");
@@ -217,21 +213,21 @@ public class LookUpFoodFragment extends Fragment {
                                 // mItem.add(new Item(food_name, row[1].substring(1),
                                  //        "" + brand, food_id));
                                  */
-                                 //System.out.println(food_items.getString("food_name"));
-                                 //System.out.println(food_id);
+                                //System.out.println(food_items.getString("food_name"));
+                                //System.out.println(food_id);
 
-                                 foodsList.add(food_items.getString("food_name"));
-                             }
-                         }
-                     }
-                     goToResult(theFood, foodsList);
+                                foodsList.add(food_items.getString("food_name"));
+                            }
+                        }
+                    }
+                    goToResult(theFood, foodsList);
 
-                 } catch (JSONException exception) {
-                     return "Error";
-                 }
-                 return "";
-             }
-         }.execute();
+                } catch (JSONException exception) {
+                    return "Error";
+                }
+                return "";
+            }
+        }.execute();
 
 
     }

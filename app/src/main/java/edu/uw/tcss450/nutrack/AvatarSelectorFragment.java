@@ -19,10 +19,10 @@ import android.widget.ImageView;
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link AvatorSelectorFragment.OnFragmentInteractionListener} interface
+ * {@link AvatarSelectorFragment.OnFragmentInteractionListener} interface
  * to handle interaction events.
  */
-public class AvatorSelectorFragment extends Fragment {
+public class AvatarSelectorFragment extends Fragment {
 
     private static final int MALE_AVATAR[] = {R.drawable.avatar_m0, R.drawable.avatar_m1
             , R.drawable.avatar_m2, R.drawable.avatar_m3
@@ -84,7 +84,7 @@ public class AvatorSelectorFragment extends Fragment {
 
     private AlphaAnimation mFadeOutAnimation;
 
-    public AvatorSelectorFragment() {
+    public AvatarSelectorFragment() {
     }
 
 

@@ -15,7 +15,7 @@ import android.widget.Toast;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import edu.uw.tcss450.nutrack.AvatorSelectorFragment;
+import edu.uw.tcss450.nutrack.AvatarSelectorFragment;
 import edu.uw.tcss450.nutrack.ProfileHelper;
 import edu.uw.tcss450.nutrack.R;
 import edu.uw.tcss450.nutrack.model.Profile;
@@ -23,18 +23,26 @@ import edu.uw.tcss450.nutrack.model.Profile;
 /**
  * @Author
  */
-public class ProfileSetupActivity extends AppCompatActivity implements AvatorSelectorFragment.OnFragmentInteractionListener, ProfileHelper.InsertProfileCompleted {
-
+public class ProfileSetupActivity extends AppCompatActivity implements AvatarSelectorFragment.OnFragmentInteractionListener, ProfileHelper.InsertProfileCompleted {
+    /**
+     * The user's chosen gender.
+     */
     private char mGenderChosen;
 
+    /**
+     * The user's email.
+     */
     private String mEmail;
 
-    private AvatorSelectorFragment mAvatorSelectorFragment;
+    /**
+     * The avatar selector fragment.
+     */
+    private AvatarSelectorFragment mAvatarSelectorFragment;
 
     /**
-     * M
+     * Initializes the Activity and AvatarSelectorFragment.
      *
-     * @param savedInstanceState
+     * @param savedInstanceState the saved instance state
      */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,7 +53,7 @@ public class ProfileSetupActivity extends AppCompatActivity implements AvatorSel
 
         mEmail = intent.getStringExtra("email");
 
-        mAvatorSelectorFragment = new AvatorSelectorFragment();
+        mAvatarSelectorFragment = new AvatarSelectorFragment();
         final Button maleIcon = (Button) findViewById(R.id.profileSetup_button_male);
         final Button femaleIcon = (Button) findViewById(R.id.profileSetup_button_female);
 
@@ -53,7 +61,7 @@ public class ProfileSetupActivity extends AppCompatActivity implements AvatorSel
         maleIcon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mAvatorSelectorFragment.changeAvatarGender(AvatorSelectorFragment.MALE, femaleIcon);
+                mAvatarSelectorFragment.changeAvatarGender(AvatarSelectorFragment.MALE, femaleIcon);
                 maleIcon.setClickable(false);
                 mGenderChosen = 'm';
             }
@@ -63,7 +71,7 @@ public class ProfileSetupActivity extends AppCompatActivity implements AvatorSel
         femaleIcon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mAvatorSelectorFragment.changeAvatarGender(AvatorSelectorFragment.FEMALE, maleIcon);
+                mAvatarSelectorFragment.changeAvatarGender(AvatarSelectorFragment.FEMALE, maleIcon);
                 femaleIcon.setClickable(false);
                 mGenderChosen = 'f';
             }
@@ -71,7 +79,7 @@ public class ProfileSetupActivity extends AppCompatActivity implements AvatorSel
 
         FragmentManager fragmentManager = getFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.add(R.id.avatar_frame, mAvatorSelectorFragment, "Avator");
+        fragmentTransaction.add(R.id.avatar_frame, mAvatarSelectorFragment, "Avatar");
         fragmentTransaction.commit();
 
         Button btnSubmit = (Button) findViewById(R.id.profileSetup_button_submit);
@@ -84,13 +92,16 @@ public class ProfileSetupActivity extends AppCompatActivity implements AvatorSel
 
     }
 
+    /**
+     * Starts the MainActivity.
+     */
     private void startMainActivity() {
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
     }
 
     /**
-     * 
+     * Submits the user's profile.
      */
     private void submitProfile() {
         TextInputEditText fieldName = (TextInputEditText) findViewById(R.id.profileSetup_editText_name);
@@ -98,7 +109,7 @@ public class ProfileSetupActivity extends AppCompatActivity implements AvatorSel
         TextInputEditText fieldWeight = (TextInputEditText) findViewById(R.id.profileSetup_editText_weight);
         DatePicker datePicker = (DatePicker) findViewById(R.id.profileSetup_datePicker);
 
-        int avatarIconId = mAvatorSelectorFragment.getChosen();
+        int avatarIconId = mAvatarSelectorFragment.getChosen();
         String dateOfBirth = datePicker.getYear() + "-" + datePicker.getMonth() + "-" + datePicker.getDayOfMonth();
 
         Profile profile = new Profile(fieldName.getText().toString(), mGenderChosen
