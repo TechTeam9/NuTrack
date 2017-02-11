@@ -7,6 +7,9 @@ package edu.uw.tcss450.nutrack.model;
 
 public class Food {
 
+    /**
+     * 
+     */
     private int mId;
 
     private String mName;
