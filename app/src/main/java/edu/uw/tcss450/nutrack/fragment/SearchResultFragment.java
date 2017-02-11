@@ -34,14 +34,32 @@ import edu.uw.tcss450.nutrack.model.Food;
  */
 public class SearchResultFragment extends Fragment implements FoodDialogFragment.OnFragmentInteractionListener{
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
+    /**
+     * First parameter string.
+     */
     private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
 
+    /**
+     * Second parameter string.
+     */
+    private static final String ARG_PARAM2 = "param2";
+    /**
+     * First Parameter string.
+     */
     private String mParam1;
+    /**
+     * Second Parameter string.
+     */
     private String mParam2;
 
+    /**
+     * Array list store food Food.
+     */
     private ArrayList<String> myFoodList;
 
+    /**
+     * Fragment interaction listener.
+     */
     private OnFragmentInteractionListener mListener;
 
     public SearchResultFragment() {

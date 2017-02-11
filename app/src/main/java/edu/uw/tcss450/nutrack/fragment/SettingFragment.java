@@ -21,12 +21,27 @@ import edu.uw.tcss450.nutrack.R;
  */
 public class SettingFragment extends Fragment {
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
+    /**
+     * First parameter string.
+     */
     private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
 
+    /**
+     * Second parameter string.
+     */
+    private static final String ARG_PARAM2 = "param2";
+    /**
+     * First Parameter string.
+     */
     private String mParam1;
+    /**
+     * Second Parameter string.
+     */
     private String mParam2;
 
+    /**
+     * Fragment interaction listener.
+     */
     private OnFragmentInteractionListener mListener;
 
     public SettingFragment() {
@@ -70,7 +85,6 @@ public class SettingFragment extends Fragment {
 
 
     }
-
 
     public void onButtonPressed(Uri uri) {
         if (mListener != null) {

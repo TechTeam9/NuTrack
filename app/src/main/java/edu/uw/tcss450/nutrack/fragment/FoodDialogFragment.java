@@ -1,6 +1,5 @@
 package edu.uw.tcss450.nutrack.fragment;
 
-import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
@@ -23,15 +22,32 @@ import edu.uw.tcss450.nutrack.R;
  */
 public class FoodDialogFragment extends DialogFragment {
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
+    /**
+     * First parameter string.
+     */
     private static final String ARG_PARAM1 = "param1";
+
+    /**
+     * Second parameter string.
+     */
     private static final String ARG_PARAM2 = "param2";
-
-
+    /**
+     * First Parameter string.
+     */
     private String mParam1;
+    /**
+     * Second Parameter string.
+     */
     private String mParam2;
 
+    /**
+     * Fragment interaction listener.
+     */
     private OnFragmentInteractionListener mListener;
 
+    /**
+     * FoodDialogFragment constructor.
+     */
     public FoodDialogFragment() {
         // Required empty public constructor
     }
@@ -64,21 +80,28 @@ public class FoodDialogFragment extends DialogFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View v = inflater.inflate(R.layout.fragment_food_dialog, container, false);
-        View foodDetailsTV = v.findViewById(R.id.food_dialog_details);
+        final View view = inflater.inflate(R.layout.fragment_food_dialog, container, false);
+        View foodDetailsTV = view.findViewById(R.id.food_dialog_details);
 
         // Changing food nutrient information
-        ((TextView)foodDetailsTV).setText("WILL GET NUTRIENTS DATA");
+        ((TextView)foodDetailsTV).setText("More Coming Soon.....");
 
         // Buttons action
-        Button cancelButton = (Button)v.findViewById(R.id.dialog_cancel_button);
-        Button addButton = (Button)v.findViewById(R.id.dialog_add_button);
+        Button cancelButton = (Button)view.findViewById(R.id.dialog_cancel_button);
+        Button addButton = (Button)view.findViewById(R.id.dialog_add_button);
 
+        //Remove cancel button for now and will remove this line of code in the next version.
+        cancelButton.setVisibility(View.GONE);
+        addButton.setVisibility(View.GONE);
 
-        return v;
+        return view;
     }
 
 
+    /**
+     * Action when button pressed.
+     * @param uri uri.
+     */
     public void onButtonPressed(Uri uri) {
         if (mListener != null) {
             mListener.onFragmentInteraction();

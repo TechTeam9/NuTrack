@@ -2,6 +2,7 @@ package edu.uw.tcss450.nutrack.activity;
 
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.support.design.widget.TextInputEditText;
@@ -15,10 +16,15 @@ import android.widget.Toast;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import edu.uw.tcss450.nutrack.AvatarSelectorFragment;
-import edu.uw.tcss450.nutrack.ProfileHelper;
+import java.util.ArrayList;
+
+import edu.uw.tcss450.nutrack.fragment.AvatarSelectorFragment;
+import edu.uw.tcss450.nutrack.Helper.ProfileHelper;
 import edu.uw.tcss450.nutrack.R;
 import edu.uw.tcss450.nutrack.model.Profile;
+
+import static android.R.id.empty;
+import static android.media.CamcorderProfile.get;
 
 /**
  * Profile Setup activity for first time user login to provide their information.
@@ -104,36 +110,57 @@ public class ProfileSetupActivity extends AppCompatActivity implements AvatarSel
      * Submits the user's profile.
      */
     private void submitProfile() {
+        Context context = getApplicationContext();
         TextInputEditText fieldName = (TextInputEditText) findViewById(R.id.profileSetup_editText_name);
         TextInputEditText fieldHeight = (TextInputEditText) findViewById(R.id.profileSetup_editText_height);
         TextInputEditText fieldWeight = (TextInputEditText) findViewById(R.id.profileSetup_editText_weight);
         DatePicker datePicker = (DatePicker) findViewById(R.id.profileSetup_datePicker);
+        ArrayList<TextInputEditText> fields = new ArrayList<>();
+        String[] fieldsName = {"Name", "Height", "Weight"};
+        fields.add(fieldName);
+        fields.add(fieldHeight);
+        fields.add(fieldWeight);
+        String hint = "";
+        int emptyCount = 0;
+        for (int i = 0; i < fields.size(); i++) {
+            if (fields.get(i).getText().toString().isEmpty()) {
+                hint = hint + fieldsName[i] + ", ";
+                emptyCount++;
+            }
+        }
 
-        int avatarIconId = mAvatarSelectorFragment.getChosen();
-        String dateOfBirth = datePicker.getYear() + "-" + datePicker.getMonth() + "-" + datePicker.getDayOfMonth();
+        if (emptyCount > 0) {
+            hint = hint.substring(0, hint.length() - 2);
+            if (emptyCount == 1) {
+                hint = hint + " is ";
+            } else {
+                hint = hint + " are ";
+            }
+            Toast.makeText(context, hint + "empty!", Toast.LENGTH_SHORT).show();
+        } else {
+            int avatarIconId = mAvatarSelectorFragment.getChosen();
+            String dateOfBirth = datePicker.getYear() + "-" + datePicker.getMonth() + "-" + datePicker.getDayOfMonth();
 
-        Profile profile = new Profile(fieldName.getText().toString(), mGenderChosen
-                , dateOfBirth
-                , Double.parseDouble(fieldHeight.getText().toString())
-                , Double.parseDouble(fieldWeight.getText().toString())
-                , avatarIconId);
-
-        System.out.println(mEmail);
-
-        System.out.println(fieldName.getText().toString());
-        System.out.println(mGenderChosen);
-        System.out.println(dateOfBirth);
-        System.out.println(Double.parseDouble(fieldHeight.getText().toString()));
-        System.out.println(Double.parseDouble(fieldWeight.getText().toString()));
-        System.out.println(avatarIconId);
+            Profile profile = new Profile(fieldName.getText().toString(), mGenderChosen
+                    , dateOfBirth
+                    , Double.parseDouble(fieldHeight.getText().toString())
+                    , Double.parseDouble(fieldWeight.getText().toString())
+                    , avatarIconId);
 
 
-        ProfileHelper.insertProfile(this, mEmail, profile);
+
+            ProfileHelper.insertProfile(this, mEmail, profile);
+        }
     }
 
     @Override
     public void onFragmentInteraction(Uri theUri) {
 
+    }
+
+    @Override
+    public void onBackPressed() {
+        Toast.makeText(this, "Sorry, you have to finish your profile", Toast.LENGTH_LONG).show();
     }
 
     /**

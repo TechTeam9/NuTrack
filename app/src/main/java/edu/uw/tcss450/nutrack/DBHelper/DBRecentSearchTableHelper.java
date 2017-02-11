@@ -14,14 +14,31 @@ import java.util.Date;
  */
 public class DBRecentSearchTableHelper extends SQLiteOpenHelper {
 
+    /**
+     * Database name.
+     */
     private static final String DATABASE_NAME = "nutrack.db";
 
+    /**
+     * Table name.
+     */
     private static final String TABLE_NAME = "recent_search";
 
+    /**
+     * Food name column.
+     */
     private static final String COLUMN_FOOD_NAME = "food_name";
 
+    /**
+     * Time column.
+     */
     private static final String COLUMN_TIME = "search_time";
 
+    /**
+     * Constructor.
+     *
+     * @param context
+     */
     public DBRecentSearchTableHelper(Context context) {
         super(context, DATABASE_NAME, null, 1);
     }
@@ -44,6 +61,12 @@ public class DBRecentSearchTableHelper extends SQLiteOpenHelper {
         onCreate(db);
     }
 
+    /**
+     * Insert food.
+     *
+     * @param food name.
+     * @return true if add successfully, otherwise return false.
+     */
     public boolean insertFood(String food) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues foodName = new ContentValues();
@@ -59,6 +82,12 @@ public class DBRecentSearchTableHelper extends SQLiteOpenHelper {
         return true;
     }
 
+    /**
+     * Delete food.
+     *
+     * @param food name.
+     * @return true if delete successfully, otherwise return false.
+     */
     public boolean deleteFood(String food) {
         SQLiteDatabase db = this.getWritableDatabase();
         String[] foodArr = {food};
@@ -67,6 +96,11 @@ public class DBRecentSearchTableHelper extends SQLiteOpenHelper {
         return true;
     }
 
+    /**
+     * Delete all food.
+     *
+     * @return turn if delete successfully,otherewise return false.
+     */
     public boolean deleteAll() {
         SQLiteDatabase db = this.getWritableDatabase();
         db.delete(TABLE_NAME, null, null);
@@ -74,12 +108,20 @@ public class DBRecentSearchTableHelper extends SQLiteOpenHelper {
         return true;
     }
 
+    /**
+     * Get all food.
+     *
+     * @return cursor.
+     */
     public Cursor getAllFood() {
         SQLiteDatabase db = this.getReadableDatabase();
         return db.rawQuery("SELECT * FROM recent_search", null);
 
     }
 
+    /**
+     * Close database connection.
+     */
     public void closeDB() {
         this.close();
     }

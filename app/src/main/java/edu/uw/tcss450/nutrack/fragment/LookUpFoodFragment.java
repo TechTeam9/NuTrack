@@ -1,6 +1,5 @@
 package edu.uw.tcss450.nutrack.fragment;
 
-import android.app.Activity;
 import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
@@ -12,6 +11,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.SearchView;
 import android.widget.SimpleAdapter;
@@ -50,16 +50,30 @@ import edu.uw.tcss450.nutrack.R;
  * create an instance of this fragment.
  */
 public class LookUpFoodFragment extends Fragment {
-
+    /**
+     * The chosen food.
+     */
     private String mFood;
-
+    /**
+     * The current context.
+     */
     private Context mContext;
-
+    /**
+     * Parameter 1.
+     */
     private static final String ARG_PARAM1 = "param1";
+    /**
+     * Parameter 2.
+     */
     private static final String ARG_PARAM2 = "param2";
-
+    /**
+     * TheLookUpFoodFragment interaction listener.
+     */
     private OnFragmentInteractionListener mListener;
 
+    /**
+     * Constructs the LookUpFood fragment.
+     */
     public LookUpFoodFragment() {
         // Required empty public constructor
     }
@@ -90,7 +104,7 @@ public class LookUpFoodFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_look_up_food, container, false);
-        ;
+
         mContext = container.getContext();
         initializeSearchListener(view);
         initializeRecentSearchList(view);
@@ -98,6 +112,11 @@ public class LookUpFoodFragment extends Fragment {
         return view;
     }
 
+    /**
+     * Start searching listener.
+     *
+     * @param theView showing view.
+     */
     private void initializeSearchListener(View theView) {
         final SearchView searchView = (SearchView) theView.findViewById(R.id.lookUp_searchView);
 
@@ -123,10 +142,13 @@ public class LookUpFoodFragment extends Fragment {
 
             }
         });
-
     }
 
-
+    /**
+     * Start the Recent search record list.
+     *
+     * @param theView showing view.
+     */
     private void initializeRecentSearchList(View theView) {
         DBRecentSearchTableHelper dbHelper = new DBRecentSearchTableHelper(getContext());
 
@@ -154,13 +176,41 @@ public class LookUpFoodFragment extends Fragment {
                 foods.moveToPrevious();
             }
 
+            if (foods.isFirst()) {
+                Date currentTime = new Date();
+                SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                Date searchTime = null;
+                try {
+                    searchTime = dateFormat.parse(foods.getString(1));
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+
+                String timeDifference = compareTime(currentTime, searchTime);
+                HashMap<String, String> tempFood = new HashMap<>();
+                tempFood.put("food", foods.getString(0));
+                tempFood.put("time", timeDifference);
+                foodList.add(tempFood);
+                foods.moveToPrevious();
+            }
 
             //foodList.add(foods.getString(0));
             String formArray[] = {"food", "time"};
             int to[] = {R.id.recentSearch_textView_food, R.id.recentSearch_textView_time};
             SimpleAdapter adapter = new SimpleAdapter(getContext(), foodList, R.layout.list_view_recent_search_items, formArray, to);
-            ListView listView = (ListView) theView.findViewById(R.id.lookUp_listView);
+            final ListView listView = (ListView) theView.findViewById(R.id.lookUp_listView);
             listView.setAdapter(adapter);
+
+            listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, final View view,
+                                        int position, long id) {
+                    HashMap<String, Object> item = (HashMap<String, Object>) parent.getItemAtPosition(position);
+                    final String food = (String) item.get("food");
+                    searchFood(food);
+
+                }
+            });
         }
     }
 
@@ -191,6 +241,11 @@ public class LookUpFoodFragment extends Fragment {
         }
     }
 
+    /**
+     * Searches for the entered food via the FatSecret API.
+     *
+     * @param theFood The searched food.
+     */
     private void searchFood(final String theFood) {
         DBRecentSearchTableHelper dbHelper = new DBRecentSearchTableHelper(getContext());
         dbHelper.insertFood(theFood);
@@ -199,9 +254,15 @@ public class LookUpFoodFragment extends Fragment {
         final FatSecretAPI mFatSecret = new FatSecretAPI();
         mFatSecret.execute(theFood);
 
-
     }
 
+    /**
+     * Passes the food and food list back to the activity to be inorder to create a
+     * new instance of SearchResultFragment.
+     *
+     * @param theFoodName The searched food.
+     * @param theFoodList The food list.
+     */
     private void goToResult(String theFoodName, ArrayList<String> theFoodList) {
         mListener.onFragmentInteraction(theFoodName, theFoodList);
 
@@ -350,8 +411,9 @@ public class LookUpFoodFragment extends Fragment {
         }
 
         /**
+         * Generate a random number.
          *
-         * @return
+         * @return The number.
          */
         public String generateRandomNonce() {
             Random r = new Random();
@@ -363,11 +425,12 @@ public class LookUpFoodFragment extends Fragment {
         }
 
         /**
-         * Sign
-         * @param method
-         * @param uri
-         * @param params
-         * @return
+         * Sign.
+         *
+         * @param method The method of signing
+         * @param uri    The FatSecret uniform resource identifier
+         * @param params The necessary parameters
+         * @return Encoded URI, null on fail
          */
         private String sign(String method, String uri, String[] params) {
             String[] p = {method, Uri.encode(uri), Uri.encode(paramify(params))};
@@ -388,8 +451,9 @@ public class LookUpFoodFragment extends Fragment {
         }
 
         /**
+         * Generates Oauth parameters.
          *
-         * @return
+         * @return Oauth parameters.
          */
         public String[] generateOauthParams() {
             String[] baseString = {
@@ -405,9 +469,10 @@ public class LookUpFoodFragment extends Fragment {
         }
 
         /**
+         * Translates parameters.
          *
-         * @param theParam
-         * @return
+         * @param theParam the parameters to translate.
+         * @return the parameters joined with &
          */
         private String paramify(String[] theParam) {
             String[] param = Arrays.copyOf(theParam, theParam.length);
@@ -416,10 +481,11 @@ public class LookUpFoodFragment extends Fragment {
         }
 
         /**
+         * A simple join function.
          *
-         * @param theParam
-         * @param separator
-         * @return
+         * @param theParam  the parameters to be join
+         * @param separator the what to separate the parameters with
+         * @return the joined parameters
          */
         private String join(String[] theParam, String separator) {
             StringBuilder sb = new StringBuilder();
@@ -430,6 +496,5 @@ public class LookUpFoodFragment extends Fragment {
             }
             return sb.toString();
         }
-
     }
 }

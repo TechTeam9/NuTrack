@@ -4,9 +4,9 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.support.design.widget.TextInputEditText;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
@@ -19,13 +19,13 @@ import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
-import org.json.JSONObject;
+import org.w3c.dom.Text;
 
-import edu.uw.tcss450.nutrack.DBHelper.DBMemberTableHelper;
-import edu.uw.tcss450.nutrack.getAccountInfo;
-import edu.uw.tcss450.nutrack.LoginHelper;
-import edu.uw.tcss450.nutrack.AddAccountInfo;
-import edu.uw.tcss450.nutrack.ProfileHelper;
+import edu.uw.tcss450.nutrack.DBHelper.DBMemberInfoHelper;
+import edu.uw.tcss450.nutrack.API.getAccountInfo;
+import edu.uw.tcss450.nutrack.Helper.LoginHelper;
+import edu.uw.tcss450.nutrack.API.AddAccountInfo;
+import edu.uw.tcss450.nutrack.Helper.ProfileHelper;
 import edu.uw.tcss450.nutrack.R;
 import edu.uw.tcss450.nutrack.model.Account;
 import edu.uw.tcss450.nutrack.model.Profile;
@@ -71,6 +71,10 @@ public class LoginActivity extends AppCompatActivity implements AddAccountInfo.R
      */
     private String mEmail;
 
+    /**
+     * Builds and sets up LoginActivity.
+     * @param savedInstanceState the saved instance state.
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -98,8 +102,17 @@ public class LoginActivity extends AppCompatActivity implements AddAccountInfo.R
         mBtnSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View theView) {
-                Account account = new Account(mFieldEmail.getText().toString(), mFieldPassword.getText().toString());
-                loginAccount(account);
+                EditText fieldEmail = (EditText) findViewById(R.id.login_editText_email);
+                EditText fieldPassword = (EditText) findViewById(R.id.login_editText_password);
+
+                if (fieldEmail.getText().toString().isEmpty()) {
+                    showError("Email field cannot be empty.");
+                } else if (fieldPassword.getText().toString().isEmpty()) {
+                    showError("Password field cannot be empty.");
+                } else {
+                    Account account = new Account(mFieldEmail.getText().toString(), mFieldPassword.getText().toString());
+                    loginAccount(account);
+                }
             }
         });
 
@@ -110,6 +123,14 @@ public class LoginActivity extends AppCompatActivity implements AddAccountInfo.R
             default:
                 break;
         }
+    }
+
+    /**
+     * Pop out a toast to show user errors.
+     */
+    private void showError(String theMessage) {
+        Toast.makeText(this, theMessage, Toast.LENGTH_SHORT).show();
+
     }
 
     /**
@@ -136,7 +157,7 @@ public class LoginActivity extends AppCompatActivity implements AddAccountInfo.R
                 .findViewById(android.R.id.content)).getChildAt(0);
 
         AlertDialog.Builder mBuilder = new AlertDialog.Builder((LoginActivity.this));
-        View mView = getLayoutInflater().inflate(R.layout.dialog_registration, viewGroup);
+        View mView = getLayoutInflater().inflate(R.layout.dialog_registration, null);
 
         mBuilder.setView(mView);
         mRegistrationDialog = mBuilder.create();
@@ -225,7 +246,7 @@ public class LoginActivity extends AppCompatActivity implements AddAccountInfo.R
      * @return a pass or fail indicator
      */
     private boolean insertNewMemberData(String theEmail, String thePassword) {
-        DBMemberTableHelper memberTable = new DBMemberTableHelper(this);
+        DBMemberInfoHelper memberTable = new DBMemberInfoHelper(this);
 
         if (memberTable.insertMember(theEmail, thePassword)) {
             memberTable.close();
@@ -274,23 +295,19 @@ public class LoginActivity extends AppCompatActivity implements AddAccountInfo.R
      * @param theResultCode the backend result indication
      */
     @Override
-    public void onLoginCompleted(int theResultCode, String theEmail) {
+    public void onLoginCompleted(int theResultCode, String theEmail, String thePassword) {
         mEmail = theEmail;
         if (theResultCode == LoginHelper.CORRECT_LOGIN_INFO) {
-            DBMemberTableHelper memberTable = new DBMemberTableHelper(this);
-            // Need to fix this part, auto login dont't have editText.
-            String email = ((EditText) findViewById(R.id.login_editText_email))
-                    .getText()
-                    .toString();
-            String password = ((EditText) findViewById(R.id.login_editText_password))
-                    .getText()
-                    .toString();
+            DBMemberInfoHelper memberTable = new DBMemberInfoHelper(this);
 
-            if (memberTable.insertMember(email, password)) {
-                ProfileHelper.checkProfileExistence(this, theEmail);
+            if (memberTable.getMemberSize() == 0) {
+                memberTable.insertMember(theEmail, thePassword);
             }
+
+            ProfileHelper.checkProfileExistence(this, theEmail);
+
         } else if (theResultCode == LoginHelper.ACCOUNT_FOUND_BUT_LOGIN_ERROR) {
-            DBMemberTableHelper memberTable = new DBMemberTableHelper(this);
+            DBMemberInfoHelper memberTable = new DBMemberInfoHelper(this);
             memberTable.deleteData();
             memberTable.close();
 
@@ -311,7 +328,7 @@ public class LoginActivity extends AppCompatActivity implements AddAccountInfo.R
     @Override
     public void onCheckProfileCompleted(String theResult) {
         try {
-            JSONArray jsonArray =new JSONArray(theResult);
+            JSONArray jsonArray = new JSONArray(theResult);
             int resultCode = jsonArray.getJSONObject(0).getInt("result_code");
 
             if (resultCode == ProfileHelper.PROFILE_FOUND) {

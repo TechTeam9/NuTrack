@@ -7,13 +7,11 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import org.w3c.dom.Text;
-
-import edu.uw.tcss450.nutrack.ProfileHelper;
+import edu.uw.tcss450.nutrack.Helper.ProfileHelper;
 import edu.uw.tcss450.nutrack.R;
 import edu.uw.tcss450.nutrack.model.Profile;
 
@@ -28,13 +26,27 @@ import edu.uw.tcss450.nutrack.model.Profile;
  */
 public class ProfileFragment extends Fragment {
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
+    /**
+     * First parameter string.
+     */
     private static final String ARG_PARAM1 = "param1";
+
+    /**
+     * Second parameter string.
+     */
     private static final String ARG_PARAM2 = "param2";
-
-
+    /**
+     * First Parameter string.
+     */
     private String mParam1;
+    /**
+     * Second Parameter string.
+     */
     private String mParam2;
 
+    /**
+     * Fragment interaction listener.
+     */
     private OnFragmentInteractionListener mListener;
 
     public ProfileFragment() {
@@ -89,7 +101,7 @@ public class ProfileFragment extends Fragment {
     }
 
     /**
-     *
+     * Get personal info from database and put them in the textview.
      * @param theView
      */
     public void initializePersonalInfo(View theView) {
@@ -100,6 +112,7 @@ public class ProfileFragment extends Fragment {
         TextView viewDOB = (TextView) theView.findViewById(R.id.profile_textView_valueDoB);
         TextView viewHeight = (TextView) theView.findViewById(R.id.profile_textView_valueHeight);
         TextView viewWeight = (TextView) theView.findViewById(R.id.profile_textView_valueWeight);
+        ImageView imageAvatar =(ImageView) theView.findViewById(R.id.profile_imageView_avatar);
 
         viewName.setText(profile.getName());
         if (profile.getGender() == 'm') {
@@ -110,6 +123,8 @@ public class ProfileFragment extends Fragment {
         viewDOB.setText(profile.getDOB());
         viewHeight.setText(String.valueOf(profile.getHeight()));
         viewWeight.setText(String.valueOf(profile.getWeight()));
+
+        imageAvatar.setImageResource(profile.getAvatarId());
     }
 
     /*

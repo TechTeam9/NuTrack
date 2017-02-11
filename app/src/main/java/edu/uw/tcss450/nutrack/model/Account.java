@@ -45,7 +45,7 @@ public class Account {
     /**
      * Sets the user's password.
      *
-     * @param theUsername the user's password
+     * @param thePassword the user's password
      */
     public void setPassword(String thePassword) {
         mPassword = thePassword;

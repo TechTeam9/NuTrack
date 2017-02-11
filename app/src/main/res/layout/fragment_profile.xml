@@ -261,5 +261,6 @@
         android:layout_height="80dp"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="30dp"
-        android:background="@drawable/ic_person_black_48dp" />
+        android:background="@drawable/ic_person_black_48dp"
+        android:id="@+id/profile_imageView_avatar" />
 </RelativeLayout>

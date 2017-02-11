@@ -3,36 +3,20 @@ package edu.uw.tcss450.nutrack.fragment;
 import android.animation.AnimatorSet;
 import android.animation.ValueAnimator;
 import android.content.Context;
-import android.graphics.Color;
-import android.graphics.Point;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v4.animation.ValueAnimatorCompat;
 import android.support.v4.app.Fragment;
-import android.support.v4.widget.DrawerLayout;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AccelerateDecelerateInterpolator;
-import android.view.animation.ScaleAnimation;
-import android.widget.Button;
 import android.widget.CompoundButton;
-import android.widget.FrameLayout;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Switch;
-
-
-import com.oguzdev.circularfloatingactionmenu.library.FloatingActionButton;
-import com.oguzdev.circularfloatingactionmenu.library.FloatingActionMenu;
-import com.oguzdev.circularfloatingactionmenu.library.SubActionButton;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import az.plainpie.PieView;
-import az.plainpie.animation.PieAngleAnimation;
 import edu.uw.tcss450.nutrack.R;
 import lecho.lib.hellocharts.model.Axis;
 import lecho.lib.hellocharts.model.AxisValue;
@@ -41,8 +25,6 @@ import lecho.lib.hellocharts.model.ColumnChartData;
 import lecho.lib.hellocharts.model.SubcolumnValue;
 import lecho.lib.hellocharts.util.ChartUtils;
 import lecho.lib.hellocharts.view.ColumnChartView;
-
-import static android.R.attr.data;
 
 
 /**
@@ -55,14 +37,32 @@ import static android.R.attr.data;
  */
 public class MainFragment extends Fragment {
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
+    /**
+     * First parameter string.
+     */
     private static final String ARG_PARAM1 = "param1";
+
+    /**
+     * Second parameter string.
+     */
     private static final String ARG_PARAM2 = "param2";
-
-    private int graphHeight;
-
+    /**
+     * First Parameter string.
+     */
     private String mParam1;
+    /**
+     * Second Parameter string.
+     */
     private String mParam2;
 
+    /**
+     * height of the graph
+     */
+    private int mGraphHeight;
+
+    /**
+     * Fragment interaction listener.
+     */
     private OnFragmentInteractionListener mListener;
 
     public MainFragment() {
@@ -108,9 +108,10 @@ public class MainFragment extends Fragment {
         return view;
     }
 
-
-
-    //Column Chart for weight
+    /**
+     * Initializes the Column Chart for weight.
+     * @param view the view
+     */
     private void initializeWeightChart(final View view) {
         final ColumnChartView weightChart = (ColumnChartView) view.findViewById(R.id.main_weight_chart);
         weightChart.setInteractive(false);
@@ -164,11 +165,11 @@ public class MainFragment extends Fragment {
                 AnimatorSet set = new AnimatorSet();
 
                 if (isChecked) {
-                    slideAnimator = ValueAnimator.ofInt(weightChartFrame.getHeight(), graphHeight).setDuration(500);
+                    slideAnimator = ValueAnimator.ofInt(weightChartFrame.getHeight(), mGraphHeight).setDuration(500);
 
                 } else {
                     //********************Need to Fix***********************
-                    graphHeight = weightChartFrame.getHeight();
+                    mGraphHeight = weightChartFrame.getHeight();
                     //**************************************************
                     weightChart.animate().scaleY(0).setStartDelay(0);
                     slideAnimator = ValueAnimator.ofInt(weightChartFrame.getHeight(), weightChartTitle.getHeight()).setDuration(500);
@@ -194,6 +195,10 @@ public class MainFragment extends Fragment {
         });
     }
 
+    /**
+     * Initialize the calories chart.
+     * @param view the view
+     */
     private void initializeCaloriesChart(final View view) {
         final ColumnChartView weightChart = (ColumnChartView) view.findViewById(R.id.main_calorie_chart);
         weightChart.setInteractive(false);
@@ -235,8 +240,6 @@ public class MainFragment extends Fragment {
 
         weightChart.setColumnChartData(weightChartData);
 
-
-
         Switch weightChartSwitch = (Switch) view.findViewById(R.id.main_calorieChart_switch);
         weightChartSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -247,11 +250,11 @@ public class MainFragment extends Fragment {
                 AnimatorSet set = new AnimatorSet();
 
                 if (isChecked) {
-                    slideAnimator = ValueAnimator.ofInt(weightChartFrame.getHeight(), graphHeight).setDuration(500);
+                    slideAnimator = ValueAnimator.ofInt(weightChartFrame.getHeight(), mGraphHeight).setDuration(500);
 
                 } else {
                     //********************Need to Fix***********************
-                    graphHeight = weightChartFrame.getHeight();
+                    mGraphHeight = weightChartFrame.getHeight();
                     //**************************************************
                     weightChart.animate().scaleY(0).setStartDelay(0);
                     slideAnimator = ValueAnimator.ofInt(weightChartFrame.getHeight(), weightChartTitle.getHeight()).setDuration(500);

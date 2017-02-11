@@ -16,10 +16,11 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
-import edu.uw.tcss450.nutrack.DBHelper.DBMemberTableHelper;
+import edu.uw.tcss450.nutrack.DBHelper.DBMemberInfoHelper;
 import edu.uw.tcss450.nutrack.DBHelper.DBPersonalInfoTableHelper;
 import edu.uw.tcss450.nutrack.R;
 import edu.uw.tcss450.nutrack.fragment.LookUpFoodFragment;
@@ -53,7 +54,10 @@ public class MainActivity extends AppCompatActivity implements ProfileFragment.O
      * The toggle for expanding and collapsing the drawer.
      */
     private ActionBarDrawerToggle mDrawerToggle;
-
+    /**
+     * Builds and sets up MainActivity.
+     * @param savedInstanceState the saved instance state.
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -78,9 +82,7 @@ public class MainActivity extends AppCompatActivity implements ProfileFragment.O
         Fragment fragment = null;
         try {
             fragment = (Fragment) fragmentClass.newInstance();
-        } catch (InstantiationException e) {
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         FragmentTransaction fragmentTracs = getSupportFragmentManager().beginTransaction();
@@ -134,6 +136,11 @@ public class MainActivity extends AppCompatActivity implements ProfileFragment.O
                 return true;
             }
         });
+    }
+
+    @Override
+    public void onBackPressed() {
+        Toast.makeText(this, "Please use the sign out button to sign out. Thank you.", Toast.LENGTH_LONG).show();
     }
 
     /* SAVE THIS PART OF THE CODE FOR NEXT VERSION. NOT USING IT IN CURRENT VERSION
@@ -207,7 +214,7 @@ public class MainActivity extends AppCompatActivity implements ProfileFragment.O
                 fragmentClass = MainFragment.class;
         }
 
-        if (theMenuItem.getItemId() != R.id.nav_sign_out && theMenuItem.getItemId() != R.id.nav_settings) {
+        if (theMenuItem.getItemId() != R.id.nav_sign_out) {
             try {
                 fragment = (Fragment) fragmentClass.newInstance();
             } catch (Exception e) {
@@ -257,8 +264,8 @@ public class MainActivity extends AppCompatActivity implements ProfileFragment.O
      * Cleans up after the user logs out.
      */
     private void userSignOut() {
-        DBMemberTableHelper dbMemberTableHelper = new DBMemberTableHelper(this);
-        dbMemberTableHelper.deleteData();
+        DBMemberInfoHelper DBMemberInfoHelper = new DBMemberInfoHelper(this);
+        DBMemberInfoHelper.deleteData();
 
         DBPersonalInfoTableHelper dbPersonalInfoTableHelper = new DBPersonalInfoTableHelper(this);
         dbPersonalInfoTableHelper.deletePersonalInfo();
