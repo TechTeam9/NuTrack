@@ -1,13 +1,11 @@
 package edu.uw.tcss450.nutrack.model;
 
-import android.os.Parcel;
-import android.os.Parcelable;
-
 /**
+ * This model describes food items.
  * Created by Ming on 1/26/2017.
  */
 
-public class Food{
+public class Food {
 
     private int mId;
 
