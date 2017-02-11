@@ -9,7 +9,9 @@ import android.database.sqlite.SQLiteOpenHelper;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-
+/**
+ * Retrieving user searching record in database.
+ */
 public class DBRecentSearchTableHelper extends SQLiteOpenHelper {
 
     private static final String DATABASE_NAME = "nutrack.db";

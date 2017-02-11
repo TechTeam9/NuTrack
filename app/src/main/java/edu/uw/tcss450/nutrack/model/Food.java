@@ -4,7 +4,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 /**
- * Created by Ming on 1/26/2017.
+ * Food model class.
  */
 
 public class Food{

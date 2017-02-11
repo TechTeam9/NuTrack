@@ -10,15 +10,15 @@
         android:id="@+id/recentSearch_textView_food"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="20dp"
+        android:textSize="20sp"
         android:textColor="@color/black" />
 
     <TextView
         android:id="@+id/recentSearch_textView_time"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="right"
-        android:textSize="14dp"
+        android:gravity="end"
+        android:textSize="14sp"
 />
 
 </LinearLayout>

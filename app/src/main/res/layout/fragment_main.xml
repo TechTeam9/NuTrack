@@ -10,8 +10,6 @@
     android:background="@color/lightGrayBackground"
     tools:context="edu.uw.tcss450.nutrack.fragment.MainFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-
     <LinearLayout
         android:id="@+id/main_weightChart_frame"
         android:layout_width="match_parent"

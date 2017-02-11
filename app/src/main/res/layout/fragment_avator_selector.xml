@@ -5,7 +5,6 @@
     android:layout_height="wrap_content"
     tools:context="edu.uw.tcss450.nutrack.AvatarSelectorFragment">
 
-    <!-- TODO: Update blank fragment layout -->
     <ImageView
         android:layout_width="100dp"
         android:layout_height="100dp"

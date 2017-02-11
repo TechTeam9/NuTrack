@@ -29,7 +29,7 @@
             android:inputType="textPersonName"
             android:ems="10"
             android:id="@+id/registration_editText_email"
-            android:hint="Email" />
+            android:hint="@string/email" />
 
     </android.support.design.widget.TextInputLayout>
 
@@ -47,7 +47,7 @@
             android:inputType="textPersonName"
             android:ems="10"
             android:id="@+id/registration_editText_password"
-            android:hint="Password" />
+            android:hint="@string/password" />
 
     </android.support.design.widget.TextInputLayout>
 
@@ -65,7 +65,7 @@
             android:inputType="textPersonName"
             android:ems="10"
             android:id="@+id/registration_editText_comfirmPassword"
-            android:hint="Comfirm Password" />
+            android:hint="@string/comfirm_password" />
 
     </android.support.design.widget.TextInputLayout>
 

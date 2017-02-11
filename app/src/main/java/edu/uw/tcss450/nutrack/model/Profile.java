@@ -3,6 +3,9 @@ package edu.uw.tcss450.nutrack.model;
 
 import java.util.Date;
 
+/**
+ * Profile model class.
+ */
 public class Profile {
 
     private String mName;

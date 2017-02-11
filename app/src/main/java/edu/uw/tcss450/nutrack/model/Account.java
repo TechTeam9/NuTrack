@@ -2,6 +2,9 @@ package edu.uw.tcss450.nutrack.model;
 
 import edu.uw.tcss450.nutrack.activity.LoginActivity;
 
+/**
+ * Account model class.
+ */
 public class Account {
     private String mUsername;
 

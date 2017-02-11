@@ -13,7 +13,9 @@ import android.widget.TextView;
 
 import org.w3c.dom.Text;
 
+import edu.uw.tcss450.nutrack.ProfileHelper;
 import edu.uw.tcss450.nutrack.R;
+import edu.uw.tcss450.nutrack.model.Profile;
 
 
 /**
@@ -25,12 +27,11 @@ import edu.uw.tcss450.nutrack.R;
  * create an instance of this fragment.
  */
 public class ProfileFragment extends Fragment {
-    // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
-    // TODO: Rename and change types of parameters
+
     private String mParam1;
     private String mParam2;
 
@@ -48,7 +49,6 @@ public class ProfileFragment extends Fragment {
      * @param param2 Parameter 2.
      * @return A new instance of fragment ProfileFragment.
      */
-    // TODO: Rename and change types and number of parameters
     public static ProfileFragment newInstance(String param1, String param2) {
         ProfileFragment fragment = new ProfileFragment();
         Bundle args = new Bundle();
@@ -74,18 +74,45 @@ public class ProfileFragment extends Fragment {
 
         final LinearLayout nameFrame = (LinearLayout) view.findViewById(R.id.profile_frame_name);
 
+        /*
         nameFrame.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 activateEditMode(v);
             }
         });
+        */
 
-
+        initializePersonalInfo(view);
 
         return view;
     }
 
+    /**
+     *
+     * @param theView
+     */
+    public void initializePersonalInfo(View theView) {
+        Profile profile = ProfileHelper.getPersonalInfo(getContext());
+
+        TextView viewName = (TextView) theView.findViewById(R.id.profile_textView_valueName);
+        TextView viewGender = (TextView) theView.findViewById(R.id.profile_textView_valueGender);
+        TextView viewDOB = (TextView) theView.findViewById(R.id.profile_textView_valueDoB);
+        TextView viewHeight = (TextView) theView.findViewById(R.id.profile_textView_valueHeight);
+        TextView viewWeight = (TextView) theView.findViewById(R.id.profile_textView_valueWeight);
+
+        viewName.setText(profile.getName());
+        if (profile.getGender() == 'm') {
+            viewGender.setText("Male");
+        } else {
+            viewGender.setText("Female");
+        }
+        viewDOB.setText(profile.getDOB());
+        viewHeight.setText(String.valueOf(profile.getHeight()));
+        viewWeight.setText(String.valueOf(profile.getWeight()));
+    }
+
+    /*
     private void activateEditMode(View view) {
         TextView nameValue = (TextView) view.findViewById(R.id.profile_textView_valueName);
         EditText nameEdit = (EditText) view.findViewById(R.id.profile_editText_name);
@@ -118,8 +145,9 @@ public class ProfileFragment extends Fragment {
         DoBEdit.setVisibility(View.VISIBLE);
 
     }
+    */
 
-    // TODO: Rename method, update argument and hook method into UI event
+
     public void onButtonPressed(Uri uri) {
         if (mListener != null) {
             mListener.onFragmentInteraction(uri);
@@ -154,7 +182,6 @@ public class ProfileFragment extends Fragment {
      * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
     }
 }

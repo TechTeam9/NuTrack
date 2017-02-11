@@ -16,15 +16,11 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
-import android.widget.ImageView;
-
-import com.oguzdev.circularfloatingactionmenu.library.FloatingActionButton;
-import com.oguzdev.circularfloatingactionmenu.library.FloatingActionMenu;
-import com.oguzdev.circularfloatingactionmenu.library.SubActionButton;
 
 import java.util.ArrayList;
 
 import edu.uw.tcss450.nutrack.DBHelper.DBMemberTableHelper;
+import edu.uw.tcss450.nutrack.DBHelper.DBPersonalInfoTableHelper;
 import edu.uw.tcss450.nutrack.R;
 import edu.uw.tcss450.nutrack.fragment.LookUpFoodFragment;
 import edu.uw.tcss450.nutrack.fragment.MainFragment;
@@ -33,7 +29,8 @@ import edu.uw.tcss450.nutrack.fragment.SearchResultFragment;
 import edu.uw.tcss450.nutrack.fragment.SettingFragment;
 
 /**
- * @Author
+ * Main container holding all fragment activity.
+ * ProfileFragment, LookUpFoodFragment, SearchResultFragment, and SettingFragment.
  */
 public class MainActivity extends AppCompatActivity implements ProfileFragment.OnFragmentInteractionListener, LookUpFoodFragment.OnFragmentInteractionListener, MainFragment.OnFragmentInteractionListener, SettingFragment.OnFragmentInteractionListener, SearchResultFragment.OnFragmentInteractionListener {
 
@@ -89,7 +86,8 @@ public class MainActivity extends AppCompatActivity implements ProfileFragment.O
         FragmentTransaction fragmentTracs = getSupportFragmentManager().beginTransaction();
         fragmentTracs.add(R.id.flContent, fragment).commit();
 
-        initializeFloatingActionButton();
+
+        //initializeFloatingActionButton();
 
     }
 
@@ -105,9 +103,9 @@ public class MainActivity extends AppCompatActivity implements ProfileFragment.O
     }
 
     /**
-     * Toggles the state of the drawer. TODO: Check Please
+     * Toggles the state of the drawer.
      *
-     * @param newConfig
+     * @param newConfig configuration
      */
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
@@ -115,12 +113,6 @@ public class MainActivity extends AppCompatActivity implements ProfileFragment.O
         mDrawerToggle.onConfigurationChanged(newConfig);
     }
 
-    /**
-     * TODO
-     *
-     * @param item the selected menu item
-     * @return true if successful and TODO
-     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
@@ -144,52 +136,53 @@ public class MainActivity extends AppCompatActivity implements ProfileFragment.O
         });
     }
 
-    /**
-     * Initializes the FAB.
-     */
+    /* SAVE THIS PART OF THE CODE FOR NEXT VERSION. NOT USING IT IN CURRENT VERSION
     public void initializeFloatingActionButton() {
-        //Floating Menu Icon
-        ImageView floatingMenuIcon = new ImageView(this);
-        floatingMenuIcon.setImageResource(R.mipmap.ic_launcher);
+    //Floating Menu Icon
+    ImageView floatingMenuIcon = new ImageView(this);
+    floatingMenuIcon.setImageResource(R.mipmap.ic_launcher);
 
-        final FloatingActionButton actionButton = new FloatingActionButton.Builder(this)
-                .setContentView(floatingMenuIcon)
-                .build();
+    final FloatingActionButton actionButton = new FloatingActionButton.Builder(this)
+            .setContentView(floatingMenuIcon)
+            .build();
 
 
-        //Variable naming in here is not final yet, will rename after decide what button to add.
-        SubActionButton.Builder itemBuilder = new SubActionButton.Builder(this);
-        ImageView itemIcon1 = new ImageView(this);
-        itemIcon1.setImageResource(R.mipmap.ic_launcher);
+    //Variable naming in here is not final yet, will rename after decide what button to add.
+    SubActionButton.Builder itemBuilder = new SubActionButton.Builder(this);
+    ImageView itemIcon1 = new ImageView(this);
+    itemIcon1.setImageResource(R.mipmap.ic_launcher);
 
-        ImageView itemIcon2 = new ImageView(this);
-        itemIcon2.setImageResource(R.mipmap.ic_launcher);
+    ImageView itemIcon2 = new ImageView(this);
+    itemIcon2.setImageResource(R.mipmap.ic_launcher);
 
-        ImageView itemIcon3 = new ImageView(this);
-        itemIcon3.setImageResource(R.mipmap.ic_launcher);
+    ImageView itemIcon3 = new ImageView(this);
+    itemIcon3.setImageResource(R.mipmap.ic_launcher);
 
-        ImageView itemIcon4 = new ImageView(this);
-        itemIcon4.setImageResource(R.mipmap.ic_launcher);
+    ImageView itemIcon4 = new ImageView(this);
+    itemIcon4.setImageResource(R.mipmap.ic_launcher);
 
-        SubActionButton button1 = itemBuilder.setContentView(itemIcon1).build();
-        SubActionButton button2 = itemBuilder.setContentView(itemIcon2).build();
-        SubActionButton button3 = itemBuilder.setContentView(itemIcon3).build();
-        SubActionButton button4 = itemBuilder.setContentView(itemIcon4).build();
+    SubActionButton button1 = itemBuilder.setContentView(itemIcon1).build();
+    SubActionButton button2 = itemBuilder.setContentView(itemIcon2).build();
+    SubActionButton button3 = itemBuilder.setContentView(itemIcon3).build();
+    SubActionButton button4 = itemBuilder.setContentView(itemIcon4).build();
 
-        final FloatingActionMenu actionMenu = new FloatingActionMenu.Builder(this)
-                .addSubActionView(button1)
-                .addSubActionView(button2)
-                .addSubActionView(button3)
-                .addSubActionView(button4)
-                .attachTo(actionButton)
-                .build();
+
+    final FloatingActionMenu actionMenu = new FloatingActionMenu.Builder(this)
+            .addSubActionView(button1)
+            .addSubActionView(button2)
+            .addSubActionView(button3)
+            .addSubActionView(button4)
+            .attachTo(actionButton)
+            .build();
+
     }
+    */
 
     /**
-     * Allows the user to select a menu item from the slide out drawer.
-     *
-     * @param theMenuItem the menu item selected by the user
-     */
+    * Allows the user to select a menu item from the slide out drawer.
+    *
+    * @param theMenuItem the menu item selected by the user
+    */
     public void selectDrawerItem(MenuItem theMenuItem) {
         Fragment fragment = null;
 
@@ -202,9 +195,7 @@ public class MainActivity extends AppCompatActivity implements ProfileFragment.O
                 fragmentClass = MainFragment.class;
                 break;
             case R.id.nav_settings:
-                Intent intent = new Intent(this, ProfileSetupActivity.class);
-                startActivity(intent);
-                //fragmentClass = SettingFragment.class;
+                fragmentClass = SettingFragment.class;
                 break;
             case R.id.nav_sign_out:
                 userSignOut();
@@ -268,6 +259,9 @@ public class MainActivity extends AppCompatActivity implements ProfileFragment.O
     private void userSignOut() {
         DBMemberTableHelper dbMemberTableHelper = new DBMemberTableHelper(this);
         dbMemberTableHelper.deleteData();
+
+        DBPersonalInfoTableHelper dbPersonalInfoTableHelper = new DBPersonalInfoTableHelper(this);
+        dbPersonalInfoTableHelper.deletePersonalInfo();
 
         Intent intent = new Intent(this, LoginActivity.class);
         startActivity(intent);

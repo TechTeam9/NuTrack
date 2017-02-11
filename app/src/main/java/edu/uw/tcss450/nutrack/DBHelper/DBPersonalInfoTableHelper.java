@@ -9,7 +9,9 @@ import android.database.sqlite.SQLiteOpenHelper;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-
+/**
+ * Retrieving User personal data in database.
+ */
 public class DBPersonalInfoTableHelper  extends SQLiteOpenHelper {
 
     private static final String DATABASE_NAME = "nutrack.db";
@@ -22,7 +24,7 @@ public class DBPersonalInfoTableHelper  extends SQLiteOpenHelper {
 
     private static final String COLUMN_WEIGHT = "weight";
 
-    private static final String COLUMN_DOB = "DOB";
+    private static final String COLUMN_DOB = "date_of_birth";
 
     private static final String COLUMN_GENDER = "gender";
 
@@ -36,7 +38,7 @@ public class DBPersonalInfoTableHelper  extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         String createTableQuery = "CREATE TABLE IF NOT EXISTS personal_info(" +
                 "name TEXT," +
-                "gender char," +
+                "gender TEXT," +
                 "date_of_birth NUMERIC," +
                 "height REAL," +
                 "weight REAL," +
@@ -49,7 +51,7 @@ public class DBPersonalInfoTableHelper  extends SQLiteOpenHelper {
     public void onOpen(SQLiteDatabase db) {
         String createTableQuery = "CREATE TABLE IF NOT EXISTS personal_info(" +
                 "name TEXT," +
-                "gender char," +
+                "gender TEXT," +
                 "date_of_birth NUMERIC," +
                 "height REAL," +
                 "weight REAL," +
@@ -64,7 +66,7 @@ public class DBPersonalInfoTableHelper  extends SQLiteOpenHelper {
         onCreate(db);
     }
 
-    public boolean insertPersonalInfo(String theName, double theHeight, double theWeight, String theDOB, char theGender, int theAvatarId) {
+    public boolean insertPersonalInfo(String theName, char theGender, String theDOB, double theHeight, double theWeight, int theAvatarId) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues personalInfoValues = new ContentValues();
 

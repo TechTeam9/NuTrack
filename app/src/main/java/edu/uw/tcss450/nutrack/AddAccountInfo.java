@@ -14,7 +14,9 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
 
-
+/**
+ * Add account information into database.
+ */
 public class AddAccountInfo extends AsyncTask<String, Void, String> {
     private final String SERVICE_URL = "account_info_post.php";
 
@@ -60,6 +62,7 @@ public class AddAccountInfo extends AsyncTask<String, Void, String> {
 
         return response;
     }
+
     @Override
     protected void onPostExecute(String result) {
         try {

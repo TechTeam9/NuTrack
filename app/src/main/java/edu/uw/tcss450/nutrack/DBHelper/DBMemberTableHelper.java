@@ -9,12 +9,14 @@ import android.database.sqlite.SQLiteOpenHelper;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-
+/**
+ * Database helper class for connecting to member table in the database
+ */
 public class DBMemberTableHelper extends SQLiteOpenHelper {
 
     private static final String DATABASE_NAME = "nutrack.db";
 
-    private static final String TABLE_NAME = "memberTable";
+    private static final String TABLE_NAME = "account_info";
 
     private static final String COLUMN_EMAIL = "email";
 
@@ -28,7 +30,7 @@ public class DBMemberTableHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        String createTableQuery = "CREATE TABLE memberTable(" +
+        String createTableQuery = "CREATE TABLE account_info(" +
                                         "email TEXT PRIMARY KEY ASC," +
                                         "password TEXT," +
                                         "join_date NUMERIC" +
@@ -59,12 +61,12 @@ public class DBMemberTableHelper extends SQLiteOpenHelper {
 
     public Cursor getData() {
         SQLiteDatabase db = this.getReadableDatabase();
-        return db.rawQuery("SELECT * FROM memberTable", null);
+        return db.rawQuery("SELECT * FROM account_info", null);
     }
 
     public int getMemberSize() {
         SQLiteDatabase db = this.getReadableDatabase();
-        return db.rawQuery("SELECT * FROM memberTable", null).getCount();
+        return db.rawQuery("SELECT * FROM account_info", null).getCount();
     }
 
     public boolean deleteData() {

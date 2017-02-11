@@ -1,6 +1,7 @@
 package edu.uw.tcss450.nutrack;
 
 import android.content.Context;
+import android.database.Cursor;
 import android.os.AsyncTask;
 import android.util.Log;
 
@@ -12,12 +13,11 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
 
+import edu.uw.tcss450.nutrack.DBHelper.DBPersonalInfoTableHelper;
 import edu.uw.tcss450.nutrack.model.Profile;
 
 /**
- * @Author
- * @version
- * @since
+ * Profile activity helper that help checking, and inserting the profile in the database.
  */
 public class ProfileHelper {
 
@@ -38,8 +38,8 @@ public class ProfileHelper {
 
     /**
      * Checks to see if the requested profile exists.
-     * @param theContext
-     * @param theEmail
+     * @param theContext context
+     * @param theEmail user email
      */
     public static void checkProfileExistence(Context theContext, String theEmail) {
         GetPersonalInfo getInfo = new GetPersonalInfo(theContext);
@@ -48,17 +48,61 @@ public class ProfileHelper {
 
     /**
      * Inserts the profile into the database.
-     * @param theContext
-     * @param email
-     * @param theProfile
+     * @param theContext context
+     * @param email email
+     * @param theProfile Profile model
      */
     public static void insertProfile(Context theContext, String email, Profile theProfile) {
+        DBPersonalInfoTableHelper dbPersonalInfoTableHelper = new DBPersonalInfoTableHelper(theContext);
+        dbPersonalInfoTableHelper.insertPersonalInfo(theProfile.getName()
+                , theProfile.getGender(), theProfile.getDOB()
+                , theProfile.getHeight(), theProfile.getWeight()
+                , theProfile.getAvatarId());
+
         PostPersonalInfo postInfo = new PostPersonalInfo(theContext);
         postInfo.execute(email, theProfile);
     }
 
     /**
-     *
+     * Getting personal information
+     * @param theContext context
+     * @return a profile
+     */
+    public static Profile getPersonalInfo(Context theContext) {
+        DBPersonalInfoTableHelper dbHelper = new DBPersonalInfoTableHelper(theContext);
+        Cursor cursor = dbHelper.getPersonalInfo();
+        cursor.moveToFirst();
+        return new Profile(cursor.getString(0), cursor.getString(1).charAt(0), cursor.getString(2), cursor.getDouble(3), cursor.getDouble(4), cursor.getInt(5));
+    }
+
+    /**
+     * Checking profile.
+     * @param theContext context
+     * @return true or false
+     */
+    public static boolean hasProfile(Context theContext) {
+        DBPersonalInfoTableHelper dbHelper = new DBPersonalInfoTableHelper(theContext);
+        int size = dbHelper.getMemberSize();
+
+        if (size == 0) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    /**
+     * Insert profile into local.
+     * @param theContext context
+     * @param theProfile profile
+     */
+    public static void insertLocalProfile(Context theContext, Profile theProfile) {
+        DBPersonalInfoTableHelper dbHelper = new DBPersonalInfoTableHelper(theContext);
+        dbHelper.insertPersonalInfo(theProfile.getName(), theProfile.getGender(), theProfile.getDOB(), theProfile.getHeight(), theProfile.getWeight(), theProfile.getAvatarId());
+    }
+
+    /**
+     * Getting personal information.
      */
     private static class GetPersonalInfo extends AsyncTask<String, Void, String> {
 
@@ -111,6 +155,9 @@ public class ProfileHelper {
 
     }
 
+    /**
+     * Post personal information.
+     */
     private static class PostPersonalInfo extends  AsyncTask<Object, Void, String> {
 
         private final InsertProfileCompleted mCallback;
@@ -165,11 +212,16 @@ public class ProfileHelper {
         }
     }
 
+    /**
+     * Checking profile.
+     */
     public interface CheckProfileCompleted {
         public void onCheckProfileCompleted(String result);
     }
 
-
+    /**
+     * Insert profile.
+     */
     public interface InsertProfileCompleted {
         public void onInsertProfileCompleted(String result);
     }

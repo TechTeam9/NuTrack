@@ -8,6 +8,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
@@ -16,6 +17,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -26,9 +28,11 @@ import edu.uw.tcss450.nutrack.AddAccountInfo;
 import edu.uw.tcss450.nutrack.ProfileHelper;
 import edu.uw.tcss450.nutrack.R;
 import edu.uw.tcss450.nutrack.model.Account;
+import edu.uw.tcss450.nutrack.model.Profile;
 
 /**
- * @Author
+ * Provide a login activity when user open the app.
+ *
  */
 public class LoginActivity extends AppCompatActivity implements AddAccountInfo.RegistrationCompleted, getAccountInfo.LoginCompleted, ProfileHelper.CheckProfileCompleted {
 
@@ -128,8 +132,11 @@ public class LoginActivity extends AppCompatActivity implements AddAccountInfo.R
      * Initializes and shows the registration dialog when called.
      */
     private void initializeRegistrationDialog() {
+        final ViewGroup viewGroup = (ViewGroup) ((ViewGroup) this
+                .findViewById(android.R.id.content)).getChildAt(0);
+
         AlertDialog.Builder mBuilder = new AlertDialog.Builder((LoginActivity.this));
-        View mView = getLayoutInflater().inflate(R.layout.dialog_registration, null);
+        View mView = getLayoutInflater().inflate(R.layout.dialog_registration, viewGroup);
 
         mBuilder.setView(mView);
         mRegistrationDialog = mBuilder.create();
@@ -153,12 +160,16 @@ public class LoginActivity extends AppCompatActivity implements AddAccountInfo.R
 
                 if (email.isEmpty() || password.isEmpty() || confirmPassword.isEmpty()) {
                     TextView textViewError = (TextView) mRegistrationDialog.findViewById(R.id.registration_textView_error);
-                    textViewError.setText(R.string.all_fields_must_fill_in_error, null);
-                    textViewError.setVisibility(View.VISIBLE);
+                    if (textViewError != null) {
+                        textViewError.setText(R.string.all_fields_must_fill_in_error, null);
+                        textViewError.setVisibility(View.VISIBLE);
+                    }
                 } else if (!password.equals(confirmPassword)) {
                     TextView textViewError = (TextView) mRegistrationDialog.findViewById(R.id.registration_textView_error);
-                    textViewError.setText(R.string.passwords_not_the_same_error);
-                    textViewError.setVisibility(View.VISIBLE);
+                    if (textViewError != null) {
+                        textViewError.setText(R.string.passwords_not_the_same_error);
+                        textViewError.setVisibility(View.VISIBLE);
+                    }
                 } else {
                     createAccount(email, password);
 
@@ -249,8 +260,10 @@ public class LoginActivity extends AppCompatActivity implements AddAccountInfo.R
 
         } else if (theResultCode == LoginHelper.EMAIL_ALREADY_EXIST) {
             TextView textViewError = (TextView) mRegistrationDialog.findViewById(R.id.registration_textView_error);
-            textViewError.setText(R.string.email_already_exist, null);
-            textViewError.setVisibility(View.VISIBLE);
+            if (textViewError != null) {
+                textViewError.setText(R.string.email_already_exist, null);
+                textViewError.setVisibility(View.VISIBLE);
+            }
         }
     }
 
@@ -298,24 +311,29 @@ public class LoginActivity extends AppCompatActivity implements AddAccountInfo.R
     @Override
     public void onCheckProfileCompleted(String theResult) {
         try {
-            JSONObject jsonObject = new JSONObject(theResult);
-            int resultCode = jsonObject.getInt("result_code");
-            Log.d("Code", String.valueOf(resultCode));
+            JSONArray jsonArray =new JSONArray(theResult);
+            int resultCode = jsonArray.getJSONObject(0).getInt("result_code");
 
             if (resultCode == ProfileHelper.PROFILE_FOUND) {
+                if (!ProfileHelper.hasProfile(this)) {
+                    Profile profile = new Profile(jsonArray.getJSONObject(1).getString("name")
+                            , jsonArray.getJSONObject(1).getString("gender").charAt(0)
+                            , jsonArray.getJSONObject(1).getString("date_of_birth")
+                            , jsonArray.getJSONObject(1).getDouble("height")
+                            , jsonArray.getJSONObject(1).getDouble("weight")
+                            , jsonArray.getJSONObject(1).getInt("avatar_id"));
+                    ProfileHelper.insertLocalProfile(this, profile);
+                }
                 startMainActivity();
             } else if (resultCode == ProfileHelper.NO_PROFILE_FOUND) {
-                EditText fieldEmail = (EditText) findViewById(R.id.login_editText_email);
                 startProfileSetupActivity();
             } else {
-                Toast.makeText(this, "Oops, there is an unknown error", Toast.LENGTH_LONG);
+                Toast.makeText(this, "Oops, there is an unknown error", Toast.LENGTH_LONG).show();
             }
 
         } catch (JSONException e) {
             e.printStackTrace();
         }
-
-
     }
 
     /**

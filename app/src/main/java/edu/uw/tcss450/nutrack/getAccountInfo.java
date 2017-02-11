@@ -14,6 +14,9 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
+/**
+ * Retrieving account information from database.
+ */
 public class getAccountInfo extends AsyncTask<String, Void, String> {
 
     private final String SERVICE_URL = "account_info_get.php";

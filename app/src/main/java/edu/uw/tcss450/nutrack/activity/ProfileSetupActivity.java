@@ -21,7 +21,7 @@ import edu.uw.tcss450.nutrack.R;
 import edu.uw.tcss450.nutrack.model.Profile;
 
 /**
- * @Author
+ * Profile Setup activity for first time user login to provide their information.
  */
 public class ProfileSetupActivity extends AppCompatActivity implements AvatarSelectorFragment.OnFragmentInteractionListener, ProfileHelper.InsertProfileCompleted {
     /**
