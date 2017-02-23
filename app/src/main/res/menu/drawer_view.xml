@@ -1,22 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-    <group android:checkableBehavior="single">
+    <!--
+    <group
+        android:id="@+id/drawer_group_profile"
+        android:checkableBehavior="none">
         <item
             android:id="@+id/nav_profile"
             android:icon="@drawable/ic_account_circle_black_24dp"
             android:title="@string/profile" />
+    </group>
+    -->
+    <group
+        android:id="@+id/drawer_group_page"
+        android:checkableBehavior="none">
+        <item
+            android:id="@+id/nav_overview"
+            android:icon="@drawable/ic_account_circle_black_24dp"
+            android:title="@string/overview" />
 
         <item
-            android:id="@+id/nav_home"
-            android:icon="@drawable/ic_account_balance_black_36dp"
-            android:title="@string/home"
-            android:checked="true" />
+            android:id="@+id/nav_Daily_log"
+            android:icon="@drawable/ic_menu_send"
+            android:title="@string/daily_log" />
 
         <item
-            android:id="@+id/nav_calories_calculator"
-            android:icon="@drawable/ic_restaurant_black_36dp"
-            android:title="@string/nutrients"/>
+            android:id="@+id/nav_social"
+            android:icon="@drawable/ic_account_circle_black_24dp"
+            android:title="@string/social" />
+    </group>
 
+
+    <item android:title="Nutrient">
+        <menu>
+            <item
+                android:id="@+id/nav_add_food"
+                android:icon="@drawable/ic_restaurant_black_36dp"
+                android:title="@string/nutrients" />
+        </menu>
+    </item>
+
+    <group android:checkableBehavior="none"
+        android:id="@+id/drawer_group_others">
         <item
             android:id="@+id/nav_settings"
             android:icon="@drawable/ic_menu_manage"

@@ -195,10 +195,12 @@ public class MainActivity extends AppCompatActivity implements ProfileFragment.O
 
         Class fragmentClass = null;
         switch (theMenuItem.getItemId()) {
+            /*
             case R.id.nav_profile:
                 fragmentClass = ProfileFragment.class;
                 break;
-            case R.id.nav_home:
+                */
+            case R.id.nav_overview:
                 fragmentClass = MainFragment.class;
                 break;
             case R.id.nav_settings:
@@ -207,7 +209,7 @@ public class MainActivity extends AppCompatActivity implements ProfileFragment.O
             case R.id.nav_sign_out:
                 userSignOut();
                 break;
-            case R.id.nav_calories_calculator:
+            case R.id.nav_add_food:
                 fragmentClass = LookUpFoodFragment.class;
                 break;
             default:
@@ -227,6 +229,7 @@ public class MainActivity extends AppCompatActivity implements ProfileFragment.O
         theMenuItem.setChecked(true);
         mToolbar.setTitle(theMenuItem.getTitle());
         mDrawer.closeDrawers();
+
     }
 
     /**

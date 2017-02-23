@@ -42,6 +42,9 @@
     <string name="comfirm_password">Comfirm Password</string>
     <string name="recent_search">Recent Search</string>
     <string name="gender">Gender</string>
+    <string name="overview">Overview</string>
+    <string name="social">Social</string>
+    <string name="daily_log">Daily Log</string>
 
     <string-array name="list_view_labels">
         <item>Name</item>
