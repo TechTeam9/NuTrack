@@ -4,6 +4,7 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -112,7 +113,7 @@ public class ProfileFragment extends Fragment {
         TextView viewDOB = (TextView) theView.findViewById(R.id.profile_textView_valueDoB);
         TextView viewHeight = (TextView) theView.findViewById(R.id.profile_textView_valueHeight);
         TextView viewWeight = (TextView) theView.findViewById(R.id.profile_textView_valueWeight);
-        ImageView imageAvatar =(ImageView) theView.findViewById(R.id.profile_imageView_avatar);
+        ImageView imageAvatar = (ImageView) theView.findViewById(R.id.profile_imageView_avatar);
 
         viewName.setText(profile.getName());
         if (profile.getGender() == 'm') {
@@ -124,6 +125,7 @@ public class ProfileFragment extends Fragment {
         viewHeight.setText(String.valueOf(profile.getHeight()));
         viewWeight.setText(String.valueOf(profile.getWeight()));
 
+        Log.i("FRAG", "Well " + profile.getAvatarId());
         imageAvatar.setImageResource(profile.getAvatarId());
     }
 
