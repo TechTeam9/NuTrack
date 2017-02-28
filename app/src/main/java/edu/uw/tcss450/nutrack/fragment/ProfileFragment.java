@@ -3,11 +3,13 @@ package edu.uw.tcss450.nutrack.fragment;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -24,7 +26,7 @@ import edu.uw.tcss450.nutrack.model.Profile;
  * Use the {@link ProfileFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class ProfileFragment extends Fragment {
+public class ProfileFragment extends Fragment implements EditProfileDialogFragment.OnFragmentInteractionListener, View.OnClickListener{
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     /**
      * First parameter string.
@@ -43,6 +45,8 @@ public class ProfileFragment extends Fragment {
      * Second Parameter string.
      */
     private String mParam2;
+
+    private static View mView;
 
     /**
      * Fragment interaction listener.
@@ -82,22 +86,60 @@ public class ProfileFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        final View view = inflater.inflate(R.layout.fragment_profile, container, false);
+        mView = inflater.inflate(R.layout.fragment_profile, container, false);
 
-        final LinearLayout nameFrame = (LinearLayout) view.findViewById(R.id.profile_frame_name);
+        LinearLayout layout = (LinearLayout) mView.findViewById(R.id.profile_frame_name);
+        layout.setOnClickListener(this);
+        layout = (LinearLayout) mView.findViewById(R.id.profile_frame_gender);
+        layout.setOnClickListener(this);
+        layout = (LinearLayout) mView.findViewById(R.id.profile_frame_dob);
+        layout.setOnClickListener(this);
+        layout = (LinearLayout) mView.findViewById(R.id.profile_frame_height);
+        layout.setOnClickListener(this);
+        layout = (LinearLayout) mView.findViewById(R.id.profile_frame_weight);
+        layout.setOnClickListener(this);
 
-        /*
-        nameFrame.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                activateEditMode(v);
+        initializePersonalInfo(mView);
+        return mView;
+    }
+
+    @Override
+    public void onClick(View v) {
+
+        FragmentManager fragmentManger = getActivity().getSupportFragmentManager();
+        DialogFragment editProfileDialog = new EditProfileDialogFragment();
+        Bundle bundle = new Bundle();
+
+        if (mListener != null) {
+            Log.d("type", String.valueOf(v.getId()));
+            switch (v.getId()) {
+                case R.id.profile_frame_name:
+                    bundle.putInt("type", EditProfileDialogFragment.NAME_TYPE);
+                    break;
+                case R.id.profile_frame_gender:
+                    bundle.putInt("type", EditProfileDialogFragment.GENDER_TYPE);
+                    Log.d("type", "Gender");
+                    break;
+                case R.id.profile_frame_dob:
+                    bundle.putInt("type", EditProfileDialogFragment.DOB_TYPE);
+                    break;
+                case R.id.profile_frame_height:
+                    bundle.putInt("type", EditProfileDialogFragment.HEIGHT_TYPE);
+                    break;
+                case R.id.profile_frame_weight:
+                    bundle.putInt("type", EditProfileDialogFragment.WEIGHT_TYPE);
+                    break;
             }
-        });
-        */
+        }
 
-        initializePersonalInfo(view);
 
-        return view;
+        editProfileDialog.setArguments(bundle);
+        editProfileDialog.show(fragmentManger, "Edit Profile Dialog Fragment");
+    }
+
+    @Override
+    public void onFragmentInteraction() {
+
     }
 
     /**
@@ -107,24 +149,20 @@ public class ProfileFragment extends Fragment {
     public void initializePersonalInfo(View theView) {
         Profile profile = ProfileHelper.getPersonalInfo(getContext());
 
-        TextView viewName = (TextView) theView.findViewById(R.id.profile_textView_valueName);
-        TextView viewGender = (TextView) theView.findViewById(R.id.profile_textView_valueGender);
-        TextView viewDOB = (TextView) theView.findViewById(R.id.profile_textView_valueDoB);
-        TextView viewHeight = (TextView) theView.findViewById(R.id.profile_textView_valueHeight);
-        TextView viewWeight = (TextView) theView.findViewById(R.id.profile_textView_valueWeight);
-        ImageView imageAvatar =(ImageView) theView.findViewById(R.id.profile_imageView_avatar);
-
-        viewName.setText(profile.getName());
+        TextView textView = (TextView) theView.findViewById(R.id.profile_textView_valueName);
+        textView.setText(profile.getName());
+        textView = (TextView) theView.findViewById(R.id.profile_textView_valueGender);
         if (profile.getGender() == 'm') {
-            viewGender.setText("Male");
+            textView.setText("Male");
         } else {
-            viewGender.setText("Female");
+            textView.setText("Female");
         }
-        viewDOB.setText(profile.getDOB());
-        viewHeight.setText(String.valueOf(profile.getHeight()));
-        viewWeight.setText(String.valueOf(profile.getWeight()));
-
-        imageAvatar.setImageResource(profile.getAvatarId());
+        textView = (TextView) theView.findViewById(R.id.profile_textView_valueDoB);
+        textView.setText(profile.getDOB());
+        textView = (TextView) theView.findViewById(R.id.profile_textView_valueHeight);
+        textView.setText(String.valueOf(profile.getHeight()));
+        textView = (TextView) theView.findViewById(R.id.profile_textView_valueWeight);
+        textView.setText(String.valueOf(profile.getWeight()));
     }
 
     /*
@@ -185,6 +223,7 @@ public class ProfileFragment extends Fragment {
         super.onDetach();
         mListener = null;
     }
+
 
     /**
      * This interface must be implemented by activities that contain this

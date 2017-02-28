@@ -1,15 +1,30 @@
 package edu.uw.tcss450.nutrack.fragment;
 
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.net.URL;
+import java.net.URLConnection;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+import edu.uw.tcss450.nutrack.API.FatSecretHelper;
 import edu.uw.tcss450.nutrack.R;
 
 /**
@@ -71,8 +86,8 @@ public class FoodDialogFragment extends DialogFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
+            FatSecretAPI api = new FatSecretAPI();
+            api.execute(String.valueOf(getArguments().getInt("food_id")));
         }
     }
 
@@ -84,11 +99,11 @@ public class FoodDialogFragment extends DialogFragment {
         View foodDetailsTV = view.findViewById(R.id.food_dialog_details);
 
         // Changing food nutrient information
-        ((TextView)foodDetailsTV).setText("More Coming Soon.....");
+        ((TextView) foodDetailsTV).setText("More Coming Soon.....");
 
         // Buttons action
-        Button cancelButton = (Button)view.findViewById(R.id.dialog_cancel_button);
-        Button addButton = (Button)view.findViewById(R.id.dialog_add_button);
+        Button cancelButton = (Button) view.findViewById(R.id.dialog_cancel_button);
+        Button addButton = (Button) view.findViewById(R.id.dialog_add_button);
 
         //Remove cancel button for now and will remove this line of code in the next version.
         cancelButton.setVisibility(View.GONE);
@@ -100,6 +115,7 @@ public class FoodDialogFragment extends DialogFragment {
 
     /**
      * Action when button pressed.
+     *
      * @param uri uri.
      */
     public void onButtonPressed(Uri uri) {
@@ -137,5 +153,60 @@ public class FoodDialogFragment extends DialogFragment {
      */
     public interface OnFragmentInteractionListener {
         void onFragmentInteraction();
+    }
+
+    private class FatSecretAPI extends AsyncTask<String, Void, String> {
+
+        private final static String METHOD = "GET";
+
+        @Override
+        protected String doInBackground(String... strings) {
+            List<String> params = new ArrayList<>(Arrays.asList(FatSecretHelper.generateOauthParams()));
+            String[] template = new String[1];
+            String response = "";
+            params.add("method=food.get");
+            params.add("food_id=" + Uri.encode(strings[0]));
+            params.add("oauth_signature=" + FatSecretHelper.sign(METHOD, FatSecretHelper.URL, params.toArray(template)));
+
+            JSONObject foods = null;
+            try {
+                java.net.URL url = new URL(FatSecretHelper.URL + "?" + FatSecretHelper.paramify(params.toArray(template)));
+                URLConnection api = url.openConnection();
+                String line;
+                StringBuilder builder = new StringBuilder();
+                BufferedReader reader = new BufferedReader(new InputStreamReader(api.getInputStream()));
+                while ((line = reader.readLine()) != null) builder.append(line);
+                response = builder.toString();
+            } catch (Exception exception) {
+                Log.e("FatSecret Error", exception.toString());
+                exception.printStackTrace();
+            }
+
+            return response;
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            JSONObject jsonObject;
+            JSONArray jsonArray;
+
+            try {
+                if (result != null) {
+                    jsonObject = new JSONObject(result).getJSONObject("food").getJSONObject("servings");
+                    jsonArray = jsonObject.getJSONArray("serving");
+                    if (jsonArray != null) {
+                        for (int i = 0; i < jsonArray.length(); i++) {
+                            JSONObject servingObject = jsonArray.getJSONObject(i);
+                            System.out.println(servingObject.getInt("calories"));
+                        }
+                    }
+
+                }
+
+
+            } catch (JSONException exception) {
+                Log.e("API Error!", exception.getMessage());
+            }
+        }
     }
 }

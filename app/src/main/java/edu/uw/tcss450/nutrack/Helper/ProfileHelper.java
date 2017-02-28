@@ -82,9 +82,7 @@ public class ProfileHelper {
      */
     public static Profile getPersonalInfo(Context theContext) {
         DBPersonalInfoTableHelper dbHelper = new DBPersonalInfoTableHelper(theContext);
-        Cursor cursor = dbHelper.getPersonalInfo();
-        cursor.moveToFirst();
-        return new Profile(cursor.getString(0), cursor.getString(1).charAt(0), cursor.getString(2), cursor.getDouble(3), cursor.getDouble(4), cursor.getInt(5));
+        return dbHelper.getPersonalInfo();
     }
 
     /**
