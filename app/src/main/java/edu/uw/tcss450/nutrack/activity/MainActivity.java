@@ -1,5 +1,6 @@
 package edu.uw.tcss450.nutrack.activity;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Color;
@@ -15,13 +16,18 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
 
 import edu.uw.tcss450.nutrack.DBHelper.DBMemberInfoHelper;
 import edu.uw.tcss450.nutrack.DBHelper.DBPersonalInfoTableHelper;
+import edu.uw.tcss450.nutrack.Helper.ProfileHelper;
 import edu.uw.tcss450.nutrack.R;
 import edu.uw.tcss450.nutrack.fragment.EditProfileDialogFragment;
 import edu.uw.tcss450.nutrack.fragment.LookUpFoodFragment;
@@ -29,6 +35,9 @@ import edu.uw.tcss450.nutrack.fragment.MainFragment;
 import edu.uw.tcss450.nutrack.fragment.ProfileFragment;
 import edu.uw.tcss450.nutrack.fragment.SearchResultFragment;
 import edu.uw.tcss450.nutrack.fragment.SettingFragment;
+import edu.uw.tcss450.nutrack.model.Profile;
+
+import static edu.uw.tcss450.nutrack.R.id.naviView;
 
 /**
  * Main container holding all fragment activity.
@@ -38,7 +47,6 @@ public class MainActivity extends AppCompatActivity implements ProfileFragment.O
         LookUpFoodFragment.OnFragmentInteractionListener, MainFragment.OnFragmentInteractionListener,
         SettingFragment.OnFragmentInteractionListener, SearchResultFragment.OnFragmentInteractionListener,
         EditProfileDialogFragment.OnFragmentInteractionListener {
-
     /**
      * The layout that hold the navigation drawer.
      */
@@ -76,7 +84,7 @@ public class MainActivity extends AppCompatActivity implements ProfileFragment.O
         mToolbar.setTitleTextColor(Color.WHITE);
 
 
-        mNaviDrawer = (NavigationView) findViewById(R.id.naviView);
+        mNaviDrawer = (NavigationView) findViewById(naviView);
         mDrawer = (DrawerLayout) findViewById(R.id.main_frame);
 
         setSupportActionBar(mToolbar);
@@ -86,6 +94,7 @@ public class MainActivity extends AppCompatActivity implements ProfileFragment.O
         mDrawer.addDrawerListener(mDrawerToggle);
 
         initializeDrawerContent();
+
 
         Class fragmentClass = MainFragment.class;
         Fragment fragment = null;
@@ -97,7 +106,7 @@ public class MainActivity extends AppCompatActivity implements ProfileFragment.O
         FragmentTransaction fragmentTracs = getSupportFragmentManager().beginTransaction();
         fragmentTracs.add(R.id.flContent, fragment).commit();
 
-
+        initializeDrawerHeaderContent();
         //initializeFloatingActionButton();
 
     }
@@ -206,7 +215,6 @@ public class MainActivity extends AppCompatActivity implements ProfileFragment.O
 
         Class fragmentClass = null;
         switch (theMenuItem.getItemId()) {
-
             case R.id.nav_profile:
                 fragmentClass = ProfileFragment.class;
                 break;
@@ -295,5 +303,45 @@ public class MainActivity extends AppCompatActivity implements ProfileFragment.O
     @Override
     public void onFragmentInteraction(Uri uri) {
 
+    }
+
+    /**
+     * Switches out the current fragment for the profile fragment.
+     * Adrian
+     * @param view The current view.
+     */
+    public void goToProfile(View view){
+        Fragment fragment = null;
+        Class fragmentClass = ProfileFragment.class;
+        try {
+            fragment = (Fragment) fragmentClass.newInstance();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        fragmentManager.beginTransaction().replace(R.id.flContent, fragment).commit();
+    mToolbar.setTitle("Profile");
+    mDrawer.closeDrawers();
+    }
+
+    /**
+     * Initializes the user's image in the nav drawer.
+     * Trying to get this working and failing.
+     */
+    public void initializeDrawerHeaderContent() {
+        Context context = this;
+        View headerView = mNaviDrawer.getHeaderView(0);
+        Profile profile = ProfileHelper.getPersonalInfo(context);
+        //Account account = AccountHelper.getAccountInfo(context);
+
+        ImageView imageAvatar = (ImageView) headerView.findViewById(R.id.nav_avatar_image);
+        TextView name = (TextView) headerView.findViewById(R.id.name);
+        TextView email = (TextView) headerView.findViewById(R.id.name);
+
+        Log.i("WHAT", "avatar " + profile.getAvatarId());
+
+        imageAvatar.setImageResource(profile.getAvatarId());
+        name.setText(profile.getName());
+        //email.setText(account.getEmail());
     }
 }
