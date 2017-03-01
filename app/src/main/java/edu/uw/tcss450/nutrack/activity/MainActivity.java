@@ -103,9 +103,15 @@ public class MainActivity extends AppCompatActivity implements ProfileFragment.O
         } catch (Exception e) {
             e.printStackTrace();
         }
-        FragmentTransaction fragmentTracs = getSupportFragmentManager().beginTransaction();
-        fragmentTracs.add(R.id.flContent, fragment).commit();
 
+        //TEST
+        Fragment fragment2 = fragmentClass.newInstance();
+        // END TEST
+        FragmentTransaction fragmentTracs = getSupportFragmentManager().beginTransaction();
+        fragmentTracs.add(R.id.flContent, fragment);
+        fragmentTracs.add(R.id.flContent, fragment2);
+
+        fragmentTracs.commit();
         initializeDrawerHeaderContent();
         //initializeFloatingActionButton();
 
