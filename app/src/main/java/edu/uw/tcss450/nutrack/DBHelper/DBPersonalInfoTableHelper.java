@@ -5,8 +5,13 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.provider.ContactsContract;
 
 import java.util.Date;
+
+import edu.uw.tcss450.nutrack.model.Profile;
+
+import static android.R.attr.type;
 
 /**
  * Retrieving User personal data in database.
@@ -26,31 +31,31 @@ public class DBPersonalInfoTableHelper extends SQLiteOpenHelper {
     /**
      * Column Name.
      */
-    private static final String COLUMN_NAME = "name";
+    public static final String COLUMN_NAME = "name";
 
     /**
      * Column Height.
      */
-    private static final String COLUMN_HEIGHT = "height";
+    public static final String COLUMN_HEIGHT = "height";
 
     /**
      * Column Weight.
      */
-    private static final String COLUMN_WEIGHT = "weight";
+    public static final String COLUMN_WEIGHT = "weight";
 
     /**
      * Column Data of Birth.
      */
-    private static final String COLUMN_DOB = "date_of_birth";
+    public static final String COLUMN_DOB = "date_of_birth";
     /**
      * Column gender.
      */
-    private static final String COLUMN_GENDER = "gender";
+    public static final String COLUMN_GENDER = "gender";
 
     /**
      * Avatar id.
      */
-    private static final String COLUMN_AVATAR_ID = "avatar_id";
+    public static final String COLUMN_AVATAR_ID = "avatar_id";
 
     /**
      * Tables helper.
@@ -133,9 +138,13 @@ public class DBPersonalInfoTableHelper extends SQLiteOpenHelper {
      * Get personal information.
      * @return cursor.
      */
-    public Cursor getPersonalInfo() {
+    public Profile getPersonalInfo() {
         SQLiteDatabase db = this.getReadableDatabase();
-        return db.rawQuery("SELECT * FROM personal_info", null);
+        Cursor cursor = db.rawQuery("SELECT * FROM personal_info", null);
+        cursor.moveToFirst();
+        Profile profile = new Profile(cursor.getString(0), cursor.getString(1).charAt(0), cursor.getString(2), cursor.getDouble(3), cursor.getDouble(4), cursor.getInt(5));
+
+        return profile;
     }
 
     /**
@@ -144,6 +153,25 @@ public class DBPersonalInfoTableHelper extends SQLiteOpenHelper {
     public void deletePersonalInfo() {
         SQLiteDatabase db = this.getWritableDatabase();
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME);
+    }
+
+    public void editPersonalInfo(String theType, String theValue) {
+//        UPDATE Customers
+//        SET ContactName='Alfred Schmidt', City='Frankfurt'
+//        WHERE CustomerID=1;
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        db.execSQL("UPDATE "+ TABLE_NAME+
+                " SET " + theType + " = '" + theValue +
+                "' WHERE 1");
+    }
+
+    public void editPersonalInfoNonString(String theType, String theValue) {
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        db.execSQL("UPDATE "+ TABLE_NAME+
+                " SET " + theType + " = " + theValue +
+                " WHERE 1");
     }
 
     /**

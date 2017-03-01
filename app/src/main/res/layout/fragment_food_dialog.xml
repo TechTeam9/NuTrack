@@ -12,7 +12,8 @@
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:gravity="center"
-        android:text="@string/food_details" />
+        android:text="@string/food_details"
+        android:id="@+id/dialog_food_title" />
 
     <TextView
         android:id="@+id/food_dialog_details"

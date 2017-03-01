@@ -12,21 +12,22 @@
     -->
     <group
         android:id="@+id/drawer_group_page"
-        android:checkableBehavior="none">
+        android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_profile"
+            android:icon="@drawable/ic_account_circle_black_24dp"
+            android:title="@string/profile" />
+
         <item
             android:id="@+id/nav_overview"
-            android:icon="@drawable/ic_account_circle_black_24dp"
+            android:icon="@drawable/ic_insert_chart_black_24dp"
             android:title="@string/overview" />
 
         <item
             android:id="@+id/nav_Daily_log"
-            android:icon="@drawable/ic_menu_send"
+            android:icon="@drawable/ic_assignment_black_24dp"
             android:title="@string/daily_log" />
 
-        <item
-            android:id="@+id/nav_social"
-            android:icon="@drawable/ic_account_circle_black_24dp"
-            android:title="@string/social" />
     </group>
 
 
