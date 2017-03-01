@@ -4,6 +4,9 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
+import edu.uw.tcss450.nutrack.fragment.SearchFoodTabFragment;
+import edu.uw.tcss450.nutrack.fragment.SearchRecipeTabFragment;
+
 /**
  * Created by Ming on 2/25/2017.
  */

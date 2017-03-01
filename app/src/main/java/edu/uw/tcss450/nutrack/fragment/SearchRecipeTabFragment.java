@@ -1,11 +1,14 @@
-package edu.uw.tcss450.nutrack;
+package edu.uw.tcss450.nutrack.fragment;
 
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import edu.uw.tcss450.nutrack.R;
 
 
 /**
@@ -22,8 +25,11 @@ public class SearchRecipeTabFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_search_recipe_tab, container, false);
+        View view = inflater.inflate(R.layout.fragment_search_recipe_tab, container, false);
+
+
+
+        return view;
     }
 
 }

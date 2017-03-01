@@ -195,10 +195,10 @@ public class FoodDialogFragment extends DialogFragment {
                     jsonObject = new JSONObject(result).getJSONObject("food").getJSONObject("servings");
                     jsonArray = jsonObject.getJSONArray("serving");
                     if (jsonArray != null) {
-                        for (int i = 0; i < jsonArray.length(); i++) {
-                            JSONObject servingObject = jsonArray.getJSONObject(i);
+                        //for (int i = 0; i < jsonArray.length(); i++) {
+                            JSONObject servingObject = jsonArray.getJSONObject(0);
                             System.out.println(servingObject.getInt("calories"));
-                        }
+                        //}
                     }
 
                 }

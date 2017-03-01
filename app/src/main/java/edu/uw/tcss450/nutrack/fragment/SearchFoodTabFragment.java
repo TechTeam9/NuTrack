@@ -1,4 +1,4 @@
-package edu.uw.tcss450.nutrack;
+package edu.uw.tcss450.nutrack.fragment;
 
 
 import android.content.Context;
@@ -43,6 +43,7 @@ import javax.crypto.spec.SecretKeySpec;
 
 import edu.uw.tcss450.nutrack.API.FatSecretHelper;
 import edu.uw.tcss450.nutrack.DBHelper.DBRecentSearchTableHelper;
+import edu.uw.tcss450.nutrack.R;
 import edu.uw.tcss450.nutrack.fragment.FoodDialogFragment;
 import edu.uw.tcss450.nutrack.fragment.LookUpFoodFragment;
 
@@ -186,6 +187,8 @@ public class SearchFoodTabFragment extends Fragment {
                     searchFood(food);
                 }
             });
+        } else {
+            mListView = (ListView) theView.findViewById(R.id.lookUp_listView);
         }
     }
 
