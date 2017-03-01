@@ -343,5 +343,6 @@ public class MainActivity extends AppCompatActivity implements ProfileFragment.O
         imageAvatar.setImageResource(profile.getAvatarId());
         name.setText(profile.getName());
         //email.setText(account.getEmail());
+        //LAP TEST
     }
 }
