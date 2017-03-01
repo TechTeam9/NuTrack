@@ -149,20 +149,40 @@ public class ProfileFragment extends Fragment implements EditProfileDialogFragme
     public void initializePersonalInfo(View theView) {
         Profile profile = ProfileHelper.getPersonalInfo(getContext());
 
+//master
         TextView textView = (TextView) theView.findViewById(R.id.profile_textView_valueName);
         textView.setText(profile.getName());
         textView = (TextView) theView.findViewById(R.id.profile_textView_valueGender);
+//Adrian
+        //TextView viewName = (TextView) theView.findViewById(R.id.profile_textView_valueName);
+        //TextView viewGender = (TextView) theView.findViewById(R.id.profile_textView_valueGender);
+        //TextView viewDOB = (TextView) theView.findViewById(R.id.profile_textView_valueDoB);
+        //TextView viewHeight = (TextView) theView.findViewById(R.id.profile_textView_valueHeight);
+        //TextView viewWeight = (TextView) theView.findViewById(R.id.profile_textView_valueWeight);
+        //ImageView imageAvatar = (ImageView) theView.findViewById(R.id.profile_imageView_avatar);
+
+        //viewName.setText(profile.getName());
+//Adrian
         if (profile.getGender() == 'm') {
             textView.setText("Male");
         } else {
             textView.setText("Female");
         }
+//master
         textView = (TextView) theView.findViewById(R.id.profile_textView_valueDoB);
         textView.setText(profile.getDOB());
         textView = (TextView) theView.findViewById(R.id.profile_textView_valueHeight);
         textView.setText(String.valueOf(profile.getHeight()));
         textView = (TextView) theView.findViewById(R.id.profile_textView_valueWeight);
         textView.setText(String.valueOf(profile.getWeight()));
+//Adrian
+        //viewDOB.setText(profile.getDOB());
+        //viewHeight.setText(String.valueOf(profile.getHeight()));
+        //viewWeight.setText(String.valueOf(profile.getWeight()));
+
+        //Log.i("FRAG", "Well " + profile.getAvatarId());
+        //imageAvatar.setImageResource(profile.getAvatarId());
+//Adrian
     }
 
     /*
