@@ -93,26 +93,38 @@ public class MainActivity extends AppCompatActivity implements ProfileFragment.O
 
         mDrawer.addDrawerListener(mDrawerToggle);
 
+        initializeDrawerHeaderContent();
         initializeDrawerContent();
 
+        /*
+        I am going to put these in a fragment later so we can switch out
+        the whole unit instead of dealing with all three of them.
+         */
+        //Class topFragmentClass = MainFragment.class;
+        Class topFragmentClass = DailyIntakeOverviewFragment.class;
+        Class middleFragmentClass = WeeklyIntakeOverviewFragment.class;
+        Class bottomFragmentClass = MonthlyWeightOverviewFragment.class;
 
-        Class fragmentClass = MainFragment.class;
-        Fragment fragment = null;
+        Fragment topFragment = null;
+        Fragment middleFragment = null;
+        Fragment bottomFragment = null;
+
         try {
-            fragment = (Fragment) fragmentClass.newInstance();
+            topFragment = (Fragment) topFragmentClass.newInstance();
+            middleFragment = (Fragment) middleFragmentClass.newInstance();
+            bottomFragment = (Fragment) bottomFragmentClass.newInstance();
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-        //TEST
-        Fragment fragment2 = fragmentClass.newInstance();
-        // END TEST
         FragmentTransaction fragmentTracs = getSupportFragmentManager().beginTransaction();
-        fragmentTracs.add(R.id.flContent, fragment);
-        fragmentTracs.add(R.id.flContent, fragment2);
+
+        fragmentTracs.add(R.id.flContentTop, topFragment);
+        fragmentTracs.add(R.id.flContentMiddle, middleFragment);
+        fragmentTracs.add(R.id.flContentBottom, bottomFragment);
 
         fragmentTracs.commit();
-        initializeDrawerHeaderContent();
+
         //initializeFloatingActionButton();
 
     }
@@ -249,7 +261,7 @@ public class MainActivity extends AppCompatActivity implements ProfileFragment.O
             }
 
             FragmentManager fragmentManager = getSupportFragmentManager();
-            fragmentManager.beginTransaction().replace(R.id.flContent, mFragment).commit();
+            fragmentManager.beginTransaction().replace(R.id.flContentTop, mFragment).commit();
         }
         theMenuItem.setChecked(true);
         mDrawer.closeDrawers();
@@ -282,7 +294,7 @@ public class MainActivity extends AppCompatActivity implements ProfileFragment.O
 
         FragmentTransaction transaction = getSupportFragmentManager()
                 .beginTransaction()
-                .replace(R.id.flContent, fragment);
+                .replace(R.id.flContentTop, fragment);
         // Commit the transaction
         transaction.commit();
     }
@@ -325,7 +337,7 @@ public class MainActivity extends AppCompatActivity implements ProfileFragment.O
             e.printStackTrace();
         }
         FragmentManager fragmentManager = getSupportFragmentManager();
-        fragmentManager.beginTransaction().replace(R.id.flContent, fragment).commit();
+        fragmentManager.beginTransaction().replace(R.id.flContentTop, fragment).commit();
     mToolbar.setTitle("Profile");
     mDrawer.closeDrawers();
     }
