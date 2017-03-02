@@ -36,14 +36,9 @@ dependencies {
     compile 'com.github.lecho:hellocharts-library:1.5.8@aar'
     compile 'com.github.PhilJay:MPAndroidChart:v3.0.1'
     compile 'com.github.zurche:plain-pie:v0.2.2'
+    compile 'devs.mulham.horizontalcalendar:horizontalcalendar:1.0.0'
     testCompile 'junit:junit:4.12'
 }
-
-
-
-
-
-
 
 
 
@@ -52,5 +47,6 @@ dependencies {
 allprojects {
     repositories {
         maven { url "https://jitpack.io" }
+        jcenter()
     }
 }
