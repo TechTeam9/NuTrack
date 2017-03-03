@@ -32,6 +32,7 @@ import edu.uw.tcss450.nutrack.R;
 import edu.uw.tcss450.nutrack.fragment.EditProfileDialogFragment;
 import edu.uw.tcss450.nutrack.fragment.LookUpFoodFragment;
 import edu.uw.tcss450.nutrack.fragment.MainFragment;
+import edu.uw.tcss450.nutrack.fragment.OverviewFragment;
 import edu.uw.tcss450.nutrack.fragment.ProfileFragment;
 import edu.uw.tcss450.nutrack.fragment.SearchResultFragment;
 import edu.uw.tcss450.nutrack.fragment.SettingFragment;
@@ -46,7 +47,7 @@ import static edu.uw.tcss450.nutrack.R.id.naviView;
 public class MainActivity extends AppCompatActivity implements ProfileFragment.OnFragmentInteractionListener,
         LookUpFoodFragment.OnFragmentInteractionListener, MainFragment.OnFragmentInteractionListener,
         SettingFragment.OnFragmentInteractionListener, SearchResultFragment.OnFragmentInteractionListener,
-        EditProfileDialogFragment.OnFragmentInteractionListener {
+        EditProfileDialogFragment.OnFragmentInteractionListener, OverviewFragment.OnFragmentInteractionListener {
     /**
      * The layout that hold the navigation drawer.
      */
@@ -100,28 +101,31 @@ public class MainActivity extends AppCompatActivity implements ProfileFragment.O
         I am going to put these in a fragment later so we can switch out
         the whole unit instead of dealing with all three of them.
          */
-        //Class topFragmentClass = MainFragment.class;
-        Class topFragmentClass = DailyIntakeOverviewFragment.class;
-        Class middleFragmentClass = WeeklyIntakeOverviewFragment.class;
-        Class bottomFragmentClass = MonthlyWeightOverviewFragment.class;
+        Class theFragmentClass = OverviewFragment.class;
+        //Class topFragmentClass = DailyIntakeOverviewFragment.class;
+        //Class middleFragmentClass = WeeklyIntakeOverviewFragment.class;
+        //Class bottomFragmentClass = MonthlyWeightOverviewFragment.class;
 
-        Fragment topFragment = null;
-        Fragment middleFragment = null;
-        Fragment bottomFragment = null;
+        Fragment theFragment = null;
+        //Fragment topFragment = null;
+        //Fragment middleFragment = null;
+        //Fragment bottomFragment = null;
 
         try {
-            topFragment = (Fragment) topFragmentClass.newInstance();
-            middleFragment = (Fragment) middleFragmentClass.newInstance();
-            bottomFragment = (Fragment) bottomFragmentClass.newInstance();
+            theFragment = (Fragment) theFragmentClass.newInstance();
+            //topFragment = (Fragment) topFragmentClass.newInstance();
+            //middleFragment = (Fragment) middleFragmentClass.newInstance();
+            //bottomFragment = (Fragment) bottomFragmentClass.newInstance();
         } catch (Exception e) {
             e.printStackTrace();
         }
 
         FragmentTransaction fragmentTracs = getSupportFragmentManager().beginTransaction();
 
-        fragmentTracs.add(R.id.flContentTop, topFragment);
-        fragmentTracs.add(R.id.flContentMiddle, middleFragment);
-        fragmentTracs.add(R.id.flContentBottom, bottomFragment);
+        fragmentTracs.add(R.id.flContent, theFragment);
+        //fragmentTracs.add(R.id.flContentTop, topFragment);
+        //fragmentTracs.add(R.id.flContentMiddle, middleFragment);
+        //fragmentTracs.add(R.id.flContentBottom, bottomFragment);
 
         fragmentTracs.commit();
 
@@ -261,7 +265,7 @@ public class MainActivity extends AppCompatActivity implements ProfileFragment.O
             }
 
             FragmentManager fragmentManager = getSupportFragmentManager();
-            fragmentManager.beginTransaction().replace(R.id.flContentTop, mFragment).commit();
+            fragmentManager.beginTransaction().replace(R.id.flContent, mFragment).commit();
         }
         theMenuItem.setChecked(true);
         mDrawer.closeDrawers();
@@ -294,7 +298,7 @@ public class MainActivity extends AppCompatActivity implements ProfileFragment.O
 
         FragmentTransaction transaction = getSupportFragmentManager()
                 .beginTransaction()
-                .replace(R.id.flContentTop, fragment);
+                .replace(R.id.flContent, fragment);
         // Commit the transaction
         transaction.commit();
     }
@@ -337,7 +341,7 @@ public class MainActivity extends AppCompatActivity implements ProfileFragment.O
             e.printStackTrace();
         }
         FragmentManager fragmentManager = getSupportFragmentManager();
-        fragmentManager.beginTransaction().replace(R.id.flContentTop, fragment).commit();
+        fragmentManager.beginTransaction().replace(R.id.flContent, fragment).commit();
     mToolbar.setTitle("Profile");
     mDrawer.closeDrawers();
     }
