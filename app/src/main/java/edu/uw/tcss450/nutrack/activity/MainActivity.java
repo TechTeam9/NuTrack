@@ -237,18 +237,22 @@ public class MainActivity extends AppCompatActivity implements ProfileFragment.O
      */
     public void selectDrawerItem(MenuItem theMenuItem) {
         mFragment = null;
+        Fragment newMiddleFragment = null;
+        Fragment newBottomFragment = null;
 
-        Class fragmentClass = null;
+        Class[] fragmentClasses = new Class[3];
 
         switch (theMenuItem.getItemId()) {
-            case R.id.nav_profile:
-                fragmentClass = ProfileFragment.class;
-                break;
             case R.id.nav_overview:
-                fragmentClass = DailyIntakeOverviewFragment.class;
+                fragmentClasses[0] = DailyIntakeOverviewFragment.class;
+                fragmentClasses[1] = WeeklyIntakeOverviewFragment.class;
+                fragmentClasses[2] = MonthlyWeightOverviewFragment.class;
+                break;
+            case R.id.nav_profile:
+                fragmentClasses[0] = ProfileFragment.class;
                 break;
             case R.id.nav_settings:
-                fragmentClass = SettingFragment.class;
+                fragmentClasses[0] = SettingFragment.class;
                 break;
             case R.id.nav_sign_out:
                 userSignOut();
@@ -258,29 +262,45 @@ public class MainActivity extends AppCompatActivity implements ProfileFragment.O
                 startActivity(intent);
                 break;
             default:
-                fragmentClass = MainFragment.class;
+                fragmentClasses[0] = MainFragment.class;
         }
 
         if (theMenuItem.getItemId() != R.id.nav_sign_out && theMenuItem.getItemId() != R.id.nav_add_food) {
             try {
-                mFragment = (Fragment) fragmentClass.newInstance();
+                mFragment = (Fragment) fragmentClasses[0].newInstance();
             } catch (Exception e) {
                 e.printStackTrace();
             }
 
             FragmentManager fragmentManager = getSupportFragmentManager();
-            fragmentManager.beginTransaction().replace(R.id.flContentTop, mFragment).commit();
+            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+            fragmentTransaction.replace(R.id.flContentTop, mFragment);
+            // TO profile OR settings
             if (theMenuItem.getItemId() != R.id.nav_overview) {
-                Fragment middleFragment = fragmentManager.findFragmentByTag("middle");
-                Fragment bottomFragment = fragmentManager.findFragmentByTag("bottom");
-                if (middleFragment != null) {
-                    fragmentManager.beginTransaction().remove(middleFragment).commit();
-                    fragmentManager.beginTransaction().remove(bottomFragment).commit();
+                Fragment oldMiddleFragment = fragmentManager.findFragmentByTag("middle");
+                Fragment oldBottomFragment = fragmentManager.findFragmentByTag("bottom");
+                // FROM overview
+                if (oldMiddleFragment != null) {
+                    fragmentTransaction.remove(oldMiddleFragment);
+                    fragmentTransaction.remove(oldBottomFragment);
                 }
+                //FROM profile OR settings: Do nothing.
+            //TO overview
             } else {
-                fragmentManager.beginTransaction().add();
-                //fragmentManager.beginTransaction().add()
+                Fragment oldMiddleFragment = fragmentManager.findFragmentByTag("middle");
+                // FROM NOT overview
+                if (oldMiddleFragment == null) {
+                    try {
+                        newMiddleFragment = (Fragment) fragmentClasses[1].newInstance();
+                        newBottomFragment = (Fragment) fragmentClasses[2].newInstance();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    fragmentTransaction.add(R.id.flContentMiddle, newMiddleFragment, "middle");
+                    fragmentTransaction.add(R.id.flContentBottom, newBottomFragment,"bottom");
+                }
             }
+            fragmentTransaction.commit();
         }
         theMenuItem.setChecked(true);
         mDrawer.closeDrawers();
@@ -357,6 +377,14 @@ public class MainActivity extends AppCompatActivity implements ProfileFragment.O
         }
         FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction().replace(R.id.flContentTop, fragment).commit();
+        Fragment oldMiddleFragment = fragmentManager.findFragmentByTag("middle");
+        Fragment oldBottomFragment = fragmentManager.findFragmentByTag("bottom");
+        // FROM overview
+        if (oldMiddleFragment != null) {
+            fragmentManager.beginTransaction().remove(oldMiddleFragment).commit();
+            fragmentManager.beginTransaction().remove(oldBottomFragment).commit();
+        }
+        //FROM profile OR settings: Do nothing.
     mToolbar.setTitle("Profile");
     mDrawer.closeDrawers();
     }
