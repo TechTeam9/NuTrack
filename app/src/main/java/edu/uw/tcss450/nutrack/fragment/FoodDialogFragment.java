@@ -98,7 +98,7 @@ public class FoodDialogFragment extends DialogFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        final View mView = inflater.inflate(R.layout.fragment_food_dialog, container, false);
+        mView = inflater.inflate(R.layout.fragment_food_dialog, container, false);
 //        View foodDetailsTV = mView.findViewById(R.id.food_dialog_details);
 
         // Changing food nutrient information
@@ -114,8 +114,8 @@ public class FoodDialogFragment extends DialogFragment {
         Button addButton = (Button) mView.findViewById(R.id.dialog_add_button);
 
         //Remove cancel button for now and will remove this line of code in the next version.
-        cancelButton.setVisibility(mView.GONE);
-        addButton.setVisibility(mView.GONE);
+//        cancelButton.setVisibility(mView.GONE);
+//        addButton.setVisibility(mView.GONE);
 
         return mView;
     }
@@ -211,15 +211,14 @@ public class FoodDialogFragment extends DialogFragment {
                         int carbs = servingObject.getInt("carbohydrate");
                         int protein = servingObject.getInt("protein");
                         //}
-                        // TODO it crashes here........for using the view, it said null object
                         TextView calTV = (TextView) mView.findViewById(R.id.cal_food_result);
-//                        TextView fatTV = (TextView) mView.findViewById(R.id.fat_food_result);
-//                        TextView carbsTV = (TextView) mView.findViewById(R.id.carbs_food_result);
-//                        TextView proteinTV = (TextView) mView.findViewById(R.id.protein_food_result);
-                        calTV.setText(cal);
-//                        fatTV.setText(fat);
-//                        carbsTV.setText(carbs);
-//                        proteinTV.setText(protein);
+                        TextView fatTV = (TextView) mView.findViewById(R.id.fat_food_result);
+                        TextView carbsTV = (TextView) mView.findViewById(R.id.carbs_food_result);
+                        TextView proteinTV = (TextView) mView.findViewById(R.id.protein_food_result);
+                        calTV.setText(Integer.toString(cal));
+                        fatTV.setText(Integer.toString(fat));
+                        carbsTV.setText(Integer.toString(carbs));
+                        proteinTV.setText(Integer.toString(protein));
                         System.out.println("cal: " + cal + " fat: " + fat + " carbs: " + carbs + " protein: " + protein);
                     }
 
