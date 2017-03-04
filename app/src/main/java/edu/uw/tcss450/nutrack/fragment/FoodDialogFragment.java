@@ -47,6 +47,10 @@ public class FoodDialogFragment extends DialogFragment {
      */
     private static final String ARG_PARAM2 = "param2";
     /**
+     * FoodDialogFragment view.
+     */
+    public View mView;
+    /**
      * First Parameter string.
      */
     private String mParam1;
@@ -54,7 +58,6 @@ public class FoodDialogFragment extends DialogFragment {
      * Second Parameter string.
      */
     private String mParam2;
-
     /**
      * Fragment interaction listener.
      */
@@ -95,21 +98,26 @@ public class FoodDialogFragment extends DialogFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        final View view = inflater.inflate(R.layout.fragment_food_dialog, container, false);
-        View foodDetailsTV = view.findViewById(R.id.food_dialog_details);
+        final View mView = inflater.inflate(R.layout.fragment_food_dialog, container, false);
+//        View foodDetailsTV = mView.findViewById(R.id.food_dialog_details);
 
         // Changing food nutrient information
-        ((TextView) foodDetailsTV).setText("More Coming Soon.....");
+//        ((TextView) foodDetailsTV).setText("More Coming Soon.....");
 
+        //try to do it in onCreateView but still crash
+//        if (getArguments() != null) {
+//            FatSecretAPI api = new FatSecretAPI();
+//            api.execute(String.valueOf(getArguments().getInt("food_id")));
+//        }
         // Buttons action
-        Button cancelButton = (Button) view.findViewById(R.id.dialog_cancel_button);
-        Button addButton = (Button) view.findViewById(R.id.dialog_add_button);
+        Button cancelButton = (Button) mView.findViewById(R.id.dialog_cancel_button);
+        Button addButton = (Button) mView.findViewById(R.id.dialog_add_button);
 
         //Remove cancel button for now and will remove this line of code in the next version.
-        cancelButton.setVisibility(View.GONE);
-        addButton.setVisibility(View.GONE);
+        cancelButton.setVisibility(mView.GONE);
+        addButton.setVisibility(mView.GONE);
 
-        return view;
+        return mView;
     }
 
 
@@ -196,9 +204,23 @@ public class FoodDialogFragment extends DialogFragment {
                     jsonArray = jsonObject.getJSONArray("serving");
                     if (jsonArray != null) {
                         //for (int i = 0; i < jsonArray.length(); i++) {
-                            JSONObject servingObject = jsonArray.getJSONObject(0);
-                            System.out.println(servingObject.getInt("calories"));
+                        JSONObject servingObject = jsonArray.getJSONObject(0);
+//                        System.out.println(servingObject.getInt("calories"));
+                        int cal = servingObject.getInt("calories");
+                        int fat = servingObject.getInt("fat");
+                        int carbs = servingObject.getInt("carbohydrate");
+                        int protein = servingObject.getInt("protein");
                         //}
+                        // TODO it crashes here........for using the view, it said null object
+                        TextView calTV = (TextView) mView.findViewById(R.id.cal_food_result);
+//                        TextView fatTV = (TextView) mView.findViewById(R.id.fat_food_result);
+//                        TextView carbsTV = (TextView) mView.findViewById(R.id.carbs_food_result);
+//                        TextView proteinTV = (TextView) mView.findViewById(R.id.protein_food_result);
+                        calTV.setText(cal);
+//                        fatTV.setText(fat);
+//                        carbsTV.setText(carbs);
+//                        proteinTV.setText(protein);
+                        System.out.println("cal: " + cal + " fat: " + fat + " carbs: " + carbs + " protein: " + protein);
                     }
 
                 }

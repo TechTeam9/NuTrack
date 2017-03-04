@@ -57,6 +57,7 @@
                     android:text="Calories" />
 
                 <TextView
+                    android:id="@+id/cal_food_result"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -84,6 +85,7 @@
                     android:text="Fat" />
 
                 <TextView
+                    android:id="@+id/fat_food_result"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center_horizontal"
@@ -118,6 +120,7 @@
                     android:text="Carbs" />
 
                 <TextView
+                    android:id="@+id/carbs_food_result"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center_horizontal"
@@ -144,6 +147,7 @@
                     android:text="Protein" />
 
                 <TextView
+                    android:id="@+id/protein_food_result"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center_horizontal"
@@ -161,19 +165,22 @@
         android:visibility="invisible">
 
         <Button
+            android:id="@+id/btn_add_breakfast"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Add to Breakfast" />
 
         <Button
+            android:id="@+id/btn_add_lunch"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Add to Breakfast" />
+            android:text="Add to Lunch" />
 
         <Button
+            android:id="@+id/btn_add_dinner"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Add to Breakfast" />
+            android:text="Add to Dinner" />
 
     </LinearLayout>
 
