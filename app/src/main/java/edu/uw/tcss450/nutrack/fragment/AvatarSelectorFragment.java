@@ -1,4 +1,4 @@
-package edu.uw.tcss450.nutrack;
+package edu.uw.tcss450.nutrack.fragment;
 
 import android.animation.ObjectAnimator;
 import android.content.Context;
@@ -15,6 +15,8 @@ import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 
+import edu.uw.tcss450.nutrack.R;
+
 
 /**
  * A simple {@link Fragment} subclass.
@@ -23,71 +25,151 @@ import android.widget.ImageView;
  * to handle interaction events.
  */
 public class AvatarSelectorFragment extends Fragment {
-
+    /**
+     * An array of masculine avatars.
+     */
     private static final int MALE_AVATAR[] = {R.drawable.avatar_m0, R.drawable.avatar_m1
             , R.drawable.avatar_m2, R.drawable.avatar_m3
             , R.drawable.avatar_m4, R.drawable.avatar_m5
             , R.drawable.avatar_m6, R.drawable.avatar_m7
             , R.drawable.avatar_m8, R.drawable.avatar_m9};
-
+    /**
+     * An array of feminine avatars.
+     */
     private static final int FEMALE_AVATAR[] = {R.drawable.avatar_f0, R.drawable.avatar_f1
             , R.drawable.avatar_f2, R.drawable.avatar_f3
             , R.drawable.avatar_f4, R.drawable.avatar_f5
             , R.drawable.avatar_f6, R.drawable.avatar_f7
             , R.drawable.avatar_f8, R.drawable.avatar_f9};
-
+    /**
+     * Animation move speed.
+     */
     private static final int MOVE_SPEED = 300;
-
+    /**
+     * Animation fade speed.
+     */
     private static final int FADING_SPEED = 500;
-
+    /**
+     * Male indication value.
+     */
     public static final int MALE = 10;
-
+    /**
+     * Female indication value.
+     */
     public static final int FEMALE = 11;
-
+    /**
+     * A fragment listener.
+     */
     private OnFragmentInteractionListener mListener;
-
+    /**
+     * list of avatar id.
+     */
     private int mAvatarList[];
 
+    /**
+     * X position of left avatar.
+     */
     private Float mPositionLeftX;
 
+    /**
+     * X position of center avatar.
+     */
     private Float mPositionCenterX;
 
+    /**
+     * X position of right avatar.
+     */
     private Float mPositionRightX;
 
+    /**
+     * Y position of smaller avatar.
+     */
     private Float mSmallerPositionY;
 
+    /**
+     * Y position of bigger avatar.
+     */
     private Float mBiggerPositionY;
 
+    /**
+     * side avatar dimension.
+     */
     private Float mSideAvatarDim;
 
+    /**
+     * center avatar dimension
+     */
     private Float mCenterAvatarDim;
 
+    /**
+     * The left image in the avatar selector.
+     */
     private ImageView mLeftImage;
 
+    /**
+     * The center image in the avatar selector.
+     */
     private ImageView mCenterImage;
 
+    /**
+     * The right image in the avatar selector.
+     */
     private ImageView mRightImage;
 
+    /**
+     * The spare image in the avatar selector.
+     */
     private ImageView mSpareImage;
 
+    /**
+     * The left image ID in the avatar selector.
+     */
     private int mLeftImageId;
 
+    /**
+     * The center image ID in the avatar selector.
+     */
     private int mCenterImageId;
 
+    /**
+     * The right image ID in the avatar selector.
+     */
     private int mRightImageId;
 
+    /**
+     * The spare image ID in the avatar selector.
+     */
     private int mSpareImageId;
 
+    /**
+     * The index of the currently selected avatar.
+     */
     private int mAvatarImageIndex[];
 
+    /**
+     * The fade in animation.
+     */
     private AlphaAnimation mFadeInAnimation;
 
+    /**
+     * The fade out animation.
+     */
     private AlphaAnimation mFadeOutAnimation;
 
+    /**
+     * Constructs the AvatarSelector Fragment.
+     */
     public AvatarSelectorFragment() {
     }
 
-
+    /**
+     * Lays out and inflates the AvatarSelector Fragment.
+     *
+     * @param inflater           the AvatarSelector Fragment inflater
+     * @param container          the fragment container
+     * @param savedInstanceState the saved instance state
+     * @return the view
+     */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -102,7 +184,6 @@ public class AvatarSelectorFragment extends Fragment {
         mAvatarImageIndex[0] = 3;
         mAvatarImageIndex[1] = 4;
         mAvatarImageIndex[2] = 5;
-
 
 
         //Setup fadeIn and fadeOut animation.
@@ -184,7 +265,9 @@ public class AvatarSelectorFragment extends Fragment {
         return view;
     }
 
-
+    /**
+     * Shifts the avatars to the left.
+     */
     public void moveLeft() {
         //Id rotate left
         int tempId = mLeftImageId;
@@ -282,6 +365,9 @@ public class AvatarSelectorFragment extends Fragment {
 
     }
 
+    /**
+     * Shifts the avatars to the right.
+     */
     public void moveRight() {
         //Id rotate Right
         int tempId = mRightImageId;
@@ -379,6 +465,9 @@ public class AvatarSelectorFragment extends Fragment {
 
     }
 
+    /**
+     * Changes the gender of the available avatars.
+     */
     public void changeAvatarGender(final int theGender, final Button theButton) {
         int leftIndex = mAvatarImageIndex[0];
         int rightIndex = mAvatarImageIndex[2];
@@ -393,7 +482,6 @@ public class AvatarSelectorFragment extends Fragment {
             mAvatarList = FEMALE_AVATAR;
         }
 
-
         //Left Avatar
         final AlphaAnimation leftAnim;
         if (leftIndex == -1) {
@@ -404,7 +492,8 @@ public class AvatarSelectorFragment extends Fragment {
         leftAnim.setDuration(FADING_SPEED);
         leftAnim.setAnimationListener(new Animation.AnimationListener() {
             @Override
-            public void onAnimationStart(Animation animation) {}
+            public void onAnimationStart(Animation animation) {
+            }
 
             @Override
             public void onAnimationEnd(Animation animation) {
@@ -416,7 +505,8 @@ public class AvatarSelectorFragment extends Fragment {
             }
 
             @Override
-            public void onAnimationRepeat(Animation animation) {}
+            public void onAnimationRepeat(Animation animation) {
+            }
         });
         mLeftImage.startAnimation(leftAnim);
 
@@ -424,7 +514,8 @@ public class AvatarSelectorFragment extends Fragment {
         centerAnim.setDuration(FADING_SPEED);
         centerAnim.setAnimationListener(new Animation.AnimationListener() {
             @Override
-            public void onAnimationStart(Animation animation) {}
+            public void onAnimationStart(Animation animation) {
+            }
 
             @Override
             public void onAnimationEnd(Animation animation) {
@@ -435,7 +526,8 @@ public class AvatarSelectorFragment extends Fragment {
             }
 
             @Override
-            public void onAnimationRepeat(Animation animation) {}
+            public void onAnimationRepeat(Animation animation) {
+            }
         });
         mCenterImage.startAnimation(centerAnim);
 
@@ -448,7 +540,8 @@ public class AvatarSelectorFragment extends Fragment {
         rightAnim.setDuration(FADING_SPEED);
         rightAnim.setAnimationListener(new Animation.AnimationListener() {
             @Override
-            public void onAnimationStart(Animation animation) {}
+            public void onAnimationStart(Animation animation) {
+            }
 
             @Override
             public void onAnimationEnd(Animation animation) {
@@ -462,11 +555,17 @@ public class AvatarSelectorFragment extends Fragment {
             }
 
             @Override
-            public void onAnimationRepeat(Animation animation) {}
+            public void onAnimationRepeat(Animation animation) {
+            }
         });
         mRightImage.startAnimation(rightAnim);
     }
 
+    /**
+     * Chosen avator icon.
+     *
+     * @return an avator icon
+     */
     public int getChosen() {
         return mAvatarList[mAvatarImageIndex[1]];
     }
@@ -499,7 +598,6 @@ public class AvatarSelectorFragment extends Fragment {
      * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
     }
 }

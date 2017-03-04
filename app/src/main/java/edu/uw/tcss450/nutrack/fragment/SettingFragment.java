@@ -20,15 +20,28 @@ import edu.uw.tcss450.nutrack.R;
  * create an instance of this fragment.
  */
 public class SettingFragment extends Fragment {
-    // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
+    /**
+     * First parameter string.
+     */
     private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
 
-    // TODO: Rename and change types of parameters
+    /**
+     * Second parameter string.
+     */
+    private static final String ARG_PARAM2 = "param2";
+    /**
+     * First Parameter string.
+     */
     private String mParam1;
+    /**
+     * Second Parameter string.
+     */
     private String mParam2;
 
+    /**
+     * Fragment interaction listener.
+     */
     private OnFragmentInteractionListener mListener;
 
     public SettingFragment() {
@@ -43,7 +56,6 @@ public class SettingFragment extends Fragment {
      * @param param2 Parameter 2.
      * @return A new instance of fragment SettingFragment.
      */
-    // TODO: Rename and change types and number of parameters
     public static SettingFragment newInstance(String param1, String param2) {
         SettingFragment fragment = new SettingFragment();
         Bundle args = new Bundle();
@@ -74,8 +86,6 @@ public class SettingFragment extends Fragment {
 
     }
 
-
-    // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {
         if (mListener != null) {
             mListener.onFragmentInteraction(uri);
@@ -110,7 +120,6 @@ public class SettingFragment extends Fragment {
      * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
     }
 }

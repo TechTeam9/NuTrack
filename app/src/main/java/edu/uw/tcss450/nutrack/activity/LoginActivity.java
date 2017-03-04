@@ -4,10 +4,11 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.support.design.widget.TextInputEditText;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
@@ -16,19 +17,22 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.json.JSONArray;
 import org.json.JSONException;
-import org.json.JSONObject;
+import org.w3c.dom.Text;
 
-import edu.uw.tcss450.nutrack.DBHelper.DBMemberTableHelper;
-import edu.uw.tcss450.nutrack.getAccountInfo;
-import edu.uw.tcss450.nutrack.LoginHelper;
-import edu.uw.tcss450.nutrack.AddAccountInfo;
-import edu.uw.tcss450.nutrack.ProfileHelper;
+import edu.uw.tcss450.nutrack.DBHelper.DBMemberInfoHelper;
+import edu.uw.tcss450.nutrack.API.getAccountInfo;
+import edu.uw.tcss450.nutrack.Helper.LoginHelper;
+import edu.uw.tcss450.nutrack.API.AddAccountInfo;
+import edu.uw.tcss450.nutrack.Helper.ProfileHelper;
 import edu.uw.tcss450.nutrack.R;
 import edu.uw.tcss450.nutrack.model.Account;
+import edu.uw.tcss450.nutrack.model.Profile;
 
 /**
- * @Author
+ * Provide a login activity when user open the app.
+ *
  */
 public class LoginActivity extends AppCompatActivity implements AddAccountInfo.RegistrationCompleted, getAccountInfo.LoginCompleted, ProfileHelper.CheckProfileCompleted {
 
@@ -67,6 +71,10 @@ public class LoginActivity extends AppCompatActivity implements AddAccountInfo.R
      */
     private String mEmail;
 
+    /**
+     * Builds and sets up LoginActivity.
+     * @param savedInstanceState the saved instance state.
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -94,8 +102,17 @@ public class LoginActivity extends AppCompatActivity implements AddAccountInfo.R
         mBtnSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View theView) {
-                Account account = new Account(mFieldEmail.getText().toString(), mFieldPassword.getText().toString());
-                loginAccount(account);
+                EditText fieldEmail = (EditText) findViewById(R.id.login_editText_email);
+                EditText fieldPassword = (EditText) findViewById(R.id.login_editText_password);
+
+                if (fieldEmail.getText().toString().isEmpty()) {
+                    showError("Email field cannot be empty.");
+                } else if (fieldPassword.getText().toString().isEmpty()) {
+                    showError("Password field cannot be empty.");
+                } else {
+                    Account account = new Account(mFieldEmail.getText().toString(), mFieldPassword.getText().toString());
+                    loginAccount(account);
+                }
             }
         });
 
@@ -106,6 +123,14 @@ public class LoginActivity extends AppCompatActivity implements AddAccountInfo.R
             default:
                 break;
         }
+    }
+
+    /**
+     * Pop out a toast to show user errors.
+     */
+    private void showError(String theMessage) {
+        Toast.makeText(this, theMessage, Toast.LENGTH_SHORT).show();
+
     }
 
     /**
@@ -128,6 +153,9 @@ public class LoginActivity extends AppCompatActivity implements AddAccountInfo.R
      * Initializes and shows the registration dialog when called.
      */
     private void initializeRegistrationDialog() {
+        final ViewGroup viewGroup = (ViewGroup) ((ViewGroup) this
+                .findViewById(android.R.id.content)).getChildAt(0);
+
         AlertDialog.Builder mBuilder = new AlertDialog.Builder((LoginActivity.this));
         View mView = getLayoutInflater().inflate(R.layout.dialog_registration, null);
 
@@ -153,12 +181,16 @@ public class LoginActivity extends AppCompatActivity implements AddAccountInfo.R
 
                 if (email.isEmpty() || password.isEmpty() || confirmPassword.isEmpty()) {
                     TextView textViewError = (TextView) mRegistrationDialog.findViewById(R.id.registration_textView_error);
-                    textViewError.setText(R.string.all_fields_must_fill_in_error, null);
-                    textViewError.setVisibility(View.VISIBLE);
+                    if (textViewError != null) {
+                        textViewError.setText(R.string.all_fields_must_fill_in_error, null);
+                        textViewError.setVisibility(View.VISIBLE);
+                    }
                 } else if (!password.equals(confirmPassword)) {
                     TextView textViewError = (TextView) mRegistrationDialog.findViewById(R.id.registration_textView_error);
-                    textViewError.setText(R.string.passwords_not_the_same_error);
-                    textViewError.setVisibility(View.VISIBLE);
+                    if (textViewError != null) {
+                        textViewError.setText(R.string.passwords_not_the_same_error);
+                        textViewError.setVisibility(View.VISIBLE);
+                    }
                 } else {
                     createAccount(email, password);
 
@@ -214,7 +246,7 @@ public class LoginActivity extends AppCompatActivity implements AddAccountInfo.R
      * @return a pass or fail indicator
      */
     private boolean insertNewMemberData(String theEmail, String thePassword) {
-        DBMemberTableHelper memberTable = new DBMemberTableHelper(this);
+        DBMemberInfoHelper memberTable = new DBMemberInfoHelper(this);
 
         if (memberTable.insertMember(theEmail, thePassword)) {
             memberTable.close();
@@ -249,8 +281,10 @@ public class LoginActivity extends AppCompatActivity implements AddAccountInfo.R
 
         } else if (theResultCode == LoginHelper.EMAIL_ALREADY_EXIST) {
             TextView textViewError = (TextView) mRegistrationDialog.findViewById(R.id.registration_textView_error);
-            textViewError.setText(R.string.email_already_exist, null);
-            textViewError.setVisibility(View.VISIBLE);
+            if (textViewError != null) {
+                textViewError.setText(R.string.email_already_exist, null);
+                textViewError.setVisibility(View.VISIBLE);
+            }
         }
     }
 
@@ -261,23 +295,19 @@ public class LoginActivity extends AppCompatActivity implements AddAccountInfo.R
      * @param theResultCode the backend result indication
      */
     @Override
-    public void onLoginCompleted(int theResultCode, String theEmail) {
+    public void onLoginCompleted(int theResultCode, String theEmail, String thePassword) {
         mEmail = theEmail;
         if (theResultCode == LoginHelper.CORRECT_LOGIN_INFO) {
-            DBMemberTableHelper memberTable = new DBMemberTableHelper(this);
-            // Need to fix this part, auto login dont't have editText.
-            String email = ((EditText) findViewById(R.id.login_editText_email))
-                    .getText()
-                    .toString();
-            String password = ((EditText) findViewById(R.id.login_editText_password))
-                    .getText()
-                    .toString();
+            DBMemberInfoHelper memberTable = new DBMemberInfoHelper(this);
 
-            if (memberTable.insertMember(email, password)) {
-                ProfileHelper.checkProfileExistence(this, theEmail);
+            if (memberTable.getMemberSize() == 0) {
+                memberTable.insertMember(theEmail, thePassword);
             }
+
+            ProfileHelper.checkProfileExistence(this, theEmail);
+
         } else if (theResultCode == LoginHelper.ACCOUNT_FOUND_BUT_LOGIN_ERROR) {
-            DBMemberTableHelper memberTable = new DBMemberTableHelper(this);
+            DBMemberInfoHelper memberTable = new DBMemberInfoHelper(this);
             memberTable.deleteData();
             memberTable.close();
 
@@ -298,24 +328,29 @@ public class LoginActivity extends AppCompatActivity implements AddAccountInfo.R
     @Override
     public void onCheckProfileCompleted(String theResult) {
         try {
-            JSONObject jsonObject = new JSONObject(theResult);
-            int resultCode = jsonObject.getInt("result_code");
-            Log.d("Code", String.valueOf(resultCode));
+            JSONArray jsonArray = new JSONArray(theResult);
+            int resultCode = jsonArray.getJSONObject(0).getInt("result_code");
 
             if (resultCode == ProfileHelper.PROFILE_FOUND) {
+                if (!ProfileHelper.hasProfile(this)) {
+                    Profile profile = new Profile(jsonArray.getJSONObject(1).getString("name")
+                            , jsonArray.getJSONObject(1).getString("gender").charAt(0)
+                            , jsonArray.getJSONObject(1).getString("date_of_birth")
+                            , jsonArray.getJSONObject(1).getDouble("height")
+                            , jsonArray.getJSONObject(1).getDouble("weight")
+                            , jsonArray.getJSONObject(1).getInt("avatar_id"));
+                    ProfileHelper.insertLocalProfile(this, profile);
+                }
                 startMainActivity();
             } else if (resultCode == ProfileHelper.NO_PROFILE_FOUND) {
-                EditText fieldEmail = (EditText) findViewById(R.id.login_editText_email);
                 startProfileSetupActivity();
             } else {
-                Toast.makeText(this, "Oops, there is an unknown error", Toast.LENGTH_LONG);
+                Toast.makeText(this, "Oops, there is an unknown error", Toast.LENGTH_LONG).show();
             }
 
         } catch (JSONException e) {
             e.printStackTrace();
         }
-
-
     }
 
     /**

@@ -1,16 +1,30 @@
 package edu.uw.tcss450.nutrack.fragment;
 
-import android.content.Context;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.net.URL;
+import java.net.URLConnection;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+import edu.uw.tcss450.nutrack.API.FatSecretHelper;
 import edu.uw.tcss450.nutrack.R;
 
 /**
@@ -22,17 +36,36 @@ import edu.uw.tcss450.nutrack.R;
  * create an instance of this fragment.
  */
 public class FoodDialogFragment extends DialogFragment {
-    // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
+    /**
+     * First parameter string.
+     */
     private static final String ARG_PARAM1 = "param1";
+
+    /**
+     * Second parameter string.
+     */
     private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
+    /**
+     * FoodDialogFragment view.
+     */
+    public View mView;
+    /**
+     * First Parameter string.
+     */
     private String mParam1;
+    /**
+     * Second Parameter string.
+     */
     private String mParam2;
-
+    /**
+     * Fragment interaction listener.
+     */
     private OnFragmentInteractionListener mListener;
 
+    /**
+     * FoodDialogFragment constructor.
+     */
     public FoodDialogFragment() {
         // Required empty public constructor
     }
@@ -43,7 +76,6 @@ public class FoodDialogFragment extends DialogFragment {
      *
      * @return A new instance of fragment FoodDialogFragment.
      */
-    // TODO: Rename and change types and number of parameters
     public static FoodDialogFragment newInstance() {
         FoodDialogFragment fragment = new FoodDialogFragment();
         Bundle args = new Bundle();
@@ -57,8 +89,8 @@ public class FoodDialogFragment extends DialogFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
+            FatSecretAPI api = new FatSecretAPI();
+            api.execute(String.valueOf(getArguments().getInt("food_id")));
         }
     }
 
@@ -66,21 +98,34 @@ public class FoodDialogFragment extends DialogFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View v = inflater.inflate(R.layout.fragment_food_dialog, container, false);
-        View foodDetailsTV = v.findViewById(R.id.food_dialog_details);
+        final View mView = inflater.inflate(R.layout.fragment_food_dialog, container, false);
+//        View foodDetailsTV = mView.findViewById(R.id.food_dialog_details);
 
         // Changing food nutrient information
-        ((TextView)foodDetailsTV).setText("WILL GET NUTRIENTS DATA");
+//        ((TextView) foodDetailsTV).setText("More Coming Soon.....");
 
+        //try to do it in onCreateView but still crash
+//        if (getArguments() != null) {
+//            FatSecretAPI api = new FatSecretAPI();
+//            api.execute(String.valueOf(getArguments().getInt("food_id")));
+//        }
         // Buttons action
-        Button cancelButton = (Button)v.findViewById(R.id.dialog_cancel_button);
-        Button addButton = (Button)v.findViewById(R.id.dialog_add_button);
+        Button cancelButton = (Button) mView.findViewById(R.id.dialog_cancel_button);
+        Button addButton = (Button) mView.findViewById(R.id.dialog_add_button);
 
+        //Remove cancel button for now and will remove this line of code in the next version.
+        cancelButton.setVisibility(mView.GONE);
+        addButton.setVisibility(mView.GONE);
 
-        return v;
+        return mView;
     }
 
-    // TODO: Rename method, update argument and hook method into UI event
+
+    /**
+     * Action when button pressed.
+     *
+     * @param uri uri.
+     */
     public void onButtonPressed(Uri uri) {
         if (mListener != null) {
             mListener.onFragmentInteraction();
@@ -115,7 +160,75 @@ public class FoodDialogFragment extends DialogFragment {
      * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
         void onFragmentInteraction();
+    }
+
+    private class FatSecretAPI extends AsyncTask<String, Void, String> {
+
+        private final static String METHOD = "GET";
+
+        @Override
+        protected String doInBackground(String... strings) {
+            List<String> params = new ArrayList<>(Arrays.asList(FatSecretHelper.generateOauthParams()));
+            String[] template = new String[1];
+            String response = "";
+            params.add("method=food.get");
+            params.add("food_id=" + Uri.encode(strings[0]));
+            params.add("oauth_signature=" + FatSecretHelper.sign(METHOD, FatSecretHelper.URL, params.toArray(template)));
+
+            JSONObject foods = null;
+            try {
+                java.net.URL url = new URL(FatSecretHelper.URL + "?" + FatSecretHelper.paramify(params.toArray(template)));
+                URLConnection api = url.openConnection();
+                String line;
+                StringBuilder builder = new StringBuilder();
+                BufferedReader reader = new BufferedReader(new InputStreamReader(api.getInputStream()));
+                while ((line = reader.readLine()) != null) builder.append(line);
+                response = builder.toString();
+            } catch (Exception exception) {
+                Log.e("FatSecret Error", exception.toString());
+                exception.printStackTrace();
+            }
+
+            return response;
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            JSONObject jsonObject;
+            JSONArray jsonArray;
+
+            try {
+                if (result != null) {
+                    jsonObject = new JSONObject(result).getJSONObject("food").getJSONObject("servings");
+                    jsonArray = jsonObject.getJSONArray("serving");
+                    if (jsonArray != null) {
+                        //for (int i = 0; i < jsonArray.length(); i++) {
+                        JSONObject servingObject = jsonArray.getJSONObject(0);
+//                        System.out.println(servingObject.getInt("calories"));
+                        int cal = servingObject.getInt("calories");
+                        int fat = servingObject.getInt("fat");
+                        int carbs = servingObject.getInt("carbohydrate");
+                        int protein = servingObject.getInt("protein");
+                        //}
+                        // TODO it crashes here........for using the view, it said null object
+                        TextView calTV = (TextView) mView.findViewById(R.id.cal_food_result);
+//                        TextView fatTV = (TextView) mView.findViewById(R.id.fat_food_result);
+//                        TextView carbsTV = (TextView) mView.findViewById(R.id.carbs_food_result);
+//                        TextView proteinTV = (TextView) mView.findViewById(R.id.protein_food_result);
+                        calTV.setText(cal);
+//                        fatTV.setText(fat);
+//                        carbsTV.setText(carbs);
+//                        proteinTV.setText(protein);
+                        System.out.println("cal: " + cal + " fat: " + fat + " carbs: " + carbs + " protein: " + protein);
+                    }
+
+                }
+
+
+            } catch (JSONException exception) {
+                Log.e("API Error!", exception.getMessage());
+            }
+        }
     }
 }

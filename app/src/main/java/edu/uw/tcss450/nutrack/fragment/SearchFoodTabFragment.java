@@ -1,17 +1,21 @@
 package edu.uw.tcss450.nutrack.fragment;
 
+
 import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.SearchView;
 import android.widget.SimpleAdapter;
@@ -37,72 +41,45 @@ import javax.crypto.Mac;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
 
+import edu.uw.tcss450.nutrack.API.FatSecretHelper;
 import edu.uw.tcss450.nutrack.DBHelper.DBRecentSearchTableHelper;
 import edu.uw.tcss450.nutrack.R;
+import edu.uw.tcss450.nutrack.fragment.FoodDialogFragment;
+import edu.uw.tcss450.nutrack.fragment.LookUpFoodFragment;
 
 
 /**
  * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link LookUpFoodFragment.OnFragmentInteractionListener} interface
- * to handle interaction events.
- * Use the {@link LookUpFoodFragment#newInstance} factory method to
- * create an instance of this fragment.
  */
-public class LookUpFoodFragment extends Fragment {
+public class SearchFoodTabFragment extends Fragment {
     /**
      * The chosen food.
      */
     private String mFood;
+
     /**
      * The current context.
      */
     private Context mContext;
-    /**
-     * Parameter 1.
-     */
-    private static final String ARG_PARAM1 = "param1";
-    /**
-     * Parameter 2.
-     */
-    private static final String ARG_PARAM2 = "param2";
+
+    private ListView mListView;
+
+    private ArrayList<Integer> mFoodId;
+
     /**
      * TheLookUpFoodFragment interaction listener.
      */
-    private OnFragmentInteractionListener mListener;
+    private LookUpFoodFragment.OnFragmentInteractionListener mListener;
 
-    /**
-     * Constructs the LookUpFood fragment.
-     */
-    public LookUpFoodFragment() {
+    public SearchFoodTabFragment() {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment CaloriesCalculator.
-     */
-    public static LookUpFoodFragment newInstance(String param1, String param2) {
-        LookUpFoodFragment fragment = new LookUpFoodFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
         View view = inflater.inflate(R.layout.fragment_look_up_food, container, false);
 
         mContext = container.getContext();
@@ -198,19 +175,20 @@ public class LookUpFoodFragment extends Fragment {
             String formArray[] = {"food", "time"};
             int to[] = {R.id.recentSearch_textView_food, R.id.recentSearch_textView_time};
             SimpleAdapter adapter = new SimpleAdapter(getContext(), foodList, R.layout.list_view_recent_search_items, formArray, to);
-            final ListView listView = (ListView) theView.findViewById(R.id.lookUp_listView);
-            listView.setAdapter(adapter);
+            mListView = (ListView) theView.findViewById(R.id.lookUp_listView);
+            mListView.setAdapter(adapter);
 
-            listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, final View view,
                                         int position, long id) {
                     HashMap<String, Object> item = (HashMap<String, Object>) parent.getItemAtPosition(position);
                     final String food = (String) item.get("food");
                     searchFood(food);
-
                 }
             });
+        } else {
+            mListView = (ListView) theView.findViewById(R.id.lookUp_listView);
         }
     }
 
@@ -264,70 +242,47 @@ public class LookUpFoodFragment extends Fragment {
      * @param theFoodList The food list.
      */
     private void goToResult(String theFoodName, ArrayList<String> theFoodList) {
-        mListener.onFragmentInteraction(theFoodName, theFoodList);
+        mListView.setAdapter(new ArrayAdapter<String>(getContext(), android.R.layout.simple_list_item_1, theFoodList));
+//        listView.invalidate();
+        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, final View view,
+                                    int position, long id) {
+                final String item = (String) parent.getItemAtPosition(position);
+                mListView.setClickable(false);
+//                listView.setVisibility(View.INVISIBLE);
+                Bundle bundle = new Bundle();
+                bundle.putInt("food_id", mFoodId.get(position));
+                FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+                DialogFragment foodInfoDialog = new FoodDialogFragment();
+                foodInfoDialog.setArguments(bundle);
+                foodInfoDialog.show(fragmentManager, "food info dialog");
+                //onFragmentInteraction();
+
+            }
+        });
 
     }
 
-
-    @Override
-    public void onAttach(Context theContext) {
-        super.onAttach(theContext);
-        mContext = theContext;
-        if (theContext instanceof OnFragmentInteractionListener) {
-            mListener = (OnFragmentInteractionListener) theContext;
-        } else {
-            throw new RuntimeException(theContext.toString()
-                    + " must implement OnFragmentInteractionListener");
-        }
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        mListener = null;
-    }
-
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
-    public interface OnFragmentInteractionListener {
-        void onFragmentInteraction(String theFoodName, ArrayList<String> theFoodList);
-    }
 
     private class FatSecretAPI extends AsyncTask<String, Void, String> {
 
         private final static String METHOD = "GET";
 
-        private final static String CONSUMER_KEY = "aceffd6069f24bde9e9710dbcef45ea9";
-
-        private final static String SECRET_KEY = "cc2b625f2d0a49509c0745e8e434b008";
-
-        private final static String URL = "http://platform.fatsecret.com/rest/server.api";
-
-        private final static String SIGNATURE_METHOD = "HMAC-SHA1";
-
-        private final static String HMAC_SHA1_ALGORITHM = "HmacSHA1";
 
 
         @Override
         protected String doInBackground(String... strings) {
-            List<String> params = new ArrayList<>(Arrays.asList(generateOauthParams()));
+            List<String> params = new ArrayList<>(Arrays.asList(FatSecretHelper.generateOauthParams()));
             String[] template = new String[1];
             String response = "";
             params.add("method=foods.search");
             params.add("search_expression=" + Uri.encode(strings[0]));
-            params.add("oauth_signature=" + sign(METHOD, URL, params.toArray(template)));
+            params.add("oauth_signature=" + FatSecretHelper.sign(METHOD, FatSecretHelper.URL, params.toArray(template)));
 
             JSONObject foods = null;
             try {
-                java.net.URL url = new URL(URL + "?" + paramify(params.toArray(template)));
+                java.net.URL url = new URL(FatSecretHelper.URL + "?" + FatSecretHelper.paramify(params.toArray(template)));
                 URLConnection api = url.openConnection();
                 String line;
                 StringBuilder builder = new StringBuilder();
@@ -345,6 +300,7 @@ public class LookUpFoodFragment extends Fragment {
         @Override
         protected void onPostExecute(String result) {
             final ArrayList<String> foodsList = new ArrayList<>();
+            mFoodId = new ArrayList<>();
             JSONObject jsonObject;
             JSONArray FOODS_ARRAY;
             try {
@@ -355,27 +311,8 @@ public class LookUpFoodFragment extends Fragment {
                         for (int i = 0; i < FOODS_ARRAY.length(); i++) {
                             JSONObject food_items = FOODS_ARRAY.optJSONObject(i);
 
-                                 /*
-                                 String food_name = food_items.getString("food_name");
-                                 String food_description = food_items.getString("food_description");
-                                 String[] row = food_description.split("-");
-                                 String id = food_items.getString("food_type");
-
-                                 if (id.equals("Brand")) {
-                                     brand = food_items.getString("brand_name");
-                                 }
-                                 if (id.equals("Generic")) {
-                                     brand = "Generic";
-                                 }
-
-                                 String food_id = food_items.getString("food_id");
-                                // mItem.add(new Item(food_name, row[1].substring(1),
-                                 //        "" + brand, food_id));
-                                 */
-                            //System.out.println(food_items.getString("food_name"));
-                            //System.out.println(food_id);
-
                             foodsList.add(food_items.getString("food_name"));
+                            mFoodId.add(food_items.getInt("food_id"));
                         }
                     }
                 }
@@ -384,117 +321,6 @@ public class LookUpFoodFragment extends Fragment {
             } catch (JSONException exception) {
                 Log.e("API Error!", exception.getMessage());
             }
-        }
-
-        public JSONObject searchFood(String searchFood) {
-            List<String> params = new ArrayList<>(Arrays.asList(generateOauthParams()));
-            String[] template = new String[1];
-            params.add("method=foods.search");
-            params.add("search_expression=" + Uri.encode(searchFood));
-            params.add("oauth_signature=" + sign(METHOD, URL, params.toArray(template)));
-
-            JSONObject foods = null;
-            try {
-                URL url = new URL(URL + "?" + paramify(params.toArray(template)));
-                URLConnection api = url.openConnection();
-                String line;
-                StringBuilder builder = new StringBuilder();
-                BufferedReader reader = new BufferedReader(new InputStreamReader(api.getInputStream()));
-                while ((line = reader.readLine()) != null) builder.append(line);
-                JSONObject food = new JSONObject(builder.toString());
-                foods = food.getJSONObject("foods");
-            } catch (Exception exception) {
-                Log.e("FatSecret Error", exception.toString());
-                exception.printStackTrace();
-            }
-            return foods;
-        }
-
-        /**
-         * Generate a random number.
-         *
-         * @return The number.
-         */
-        public String generateRandomNonce() {
-            Random r = new Random();
-            StringBuffer n = new StringBuffer();
-            for (int i = 0; i < r.nextInt(8) + 2; i++) {
-                n.append(r.nextInt(26) + 'a');
-            }
-            return n.toString();
-        }
-
-        /**
-         * Sign.
-         *
-         * @param method The method of signing
-         * @param uri    The FatSecret uniform resource identifier
-         * @param params The necessary parameters
-         * @return Encoded URI, null on fail
-         */
-        private String sign(String method, String uri, String[] params) {
-            String[] p = {method, Uri.encode(uri), Uri.encode(paramify(params))};
-            String s = join(p, "&");
-            String tempSK = SECRET_KEY + "&";
-            SecretKey sk = new SecretKeySpec(tempSK.getBytes(), HMAC_SHA1_ALGORITHM);
-            try {
-                Mac m = Mac.getInstance(HMAC_SHA1_ALGORITHM);
-                m.init(sk);
-                return Uri.encode(new String(Base64.encode(m.doFinal(s.getBytes()), Base64.DEFAULT)).trim());
-            } catch (java.security.NoSuchAlgorithmException e) {
-                Log.w("FatSecret_TEST FAIL", e.getMessage());
-                return null;
-            } catch (java.security.InvalidKeyException e) {
-                Log.w("FatSecret_TEST FAIL", e.getMessage());
-                return null;
-            }
-        }
-
-        /**
-         * Generates Oauth parameters.
-         *
-         * @return Oauth parameters.
-         */
-        public String[] generateOauthParams() {
-            String[] baseString = {
-                    "oauth_consumer_key=" + CONSUMER_KEY,
-                    "oauth_signature_method=" + SIGNATURE_METHOD,
-                    "oauth_timestamp=" + new Long(System.currentTimeMillis() / 1000).toString(),
-                    "oauth_nonce=" + generateRandomNonce(),
-                    "oauth_version=1.0",
-                    "format=json"
-            };
-
-            return baseString;
-        }
-
-        /**
-         * Translates parameters.
-         *
-         * @param theParam the parameters to translate.
-         * @return the parameters joined with &
-         */
-        private String paramify(String[] theParam) {
-            String[] param = Arrays.copyOf(theParam, theParam.length);
-            Arrays.sort(param);
-            return join(param, "&");
-        }
-
-        /**
-         * A simple join function.
-         *
-         * @param theParam  the parameters to be join
-         * @param separator the what to separate the parameters with
-         * @return the joined parameters
-         */
-        private String join(String[] theParam, String separator) {
-            StringBuilder sb = new StringBuilder();
-            for (int i = 0; i < theParam.length; i++) {
-                if (i > 0)
-                    sb.append(separator);
-                sb.append(theParam[i]);
-            }
-            return sb.toString();
         }
     }
 }

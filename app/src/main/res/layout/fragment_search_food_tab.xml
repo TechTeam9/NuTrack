@@ -1,11 +1,12 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/lightGrayBackground"
     android:orientation="vertical"
     android:weightSum="1"
-    tools:context="edu.uw.tcss450.nutrack.fragment.LookUpFoodFragment">
+    tools:context="edu.uw.tcss450.nutrack.fragment.SearchFoodTabFragment">
 
 
     <SearchView
@@ -41,4 +42,15 @@
         android:layout_weight="1"
         android:background="@android:color/white"
         android:elevation="2dp" />
-</LinearLayout>
+
+    <ListView
+        android:id="@+id/search_result_listView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_weight="1"
+        android:background="@android:color/white"
+        android:elevation="2dp" />
+</RelativeLayout>

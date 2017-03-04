@@ -8,18 +8,22 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import edu.uw.tcss450.nutrack.R;
+import java.util.Calendar;
+import java.util.Date;
 
+import devs.mulham.horizontalcalendar.HorizontalCalendar;
+import devs.mulham.horizontalcalendar.HorizontalCalendarListener;
+import edu.uw.tcss450.nutrack.R;
 
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link CaloriesCalculator.OnFragmentInteractionListener} interface
+ * {@link DailyLogFragment.OnFragmentInteractionListener} interface
  * to handle interaction events.
- * Use the {@link CaloriesCalculator#newInstance} factory method to
+ * Use the {@link DailyLogFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class CaloriesCalculator extends Fragment {
+public class DailyLogFragment extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -31,7 +35,7 @@ public class CaloriesCalculator extends Fragment {
 
     private OnFragmentInteractionListener mListener;
 
-    public CaloriesCalculator() {
+    public DailyLogFragment() {
         // Required empty public constructor
     }
 
@@ -41,11 +45,11 @@ public class CaloriesCalculator extends Fragment {
      *
      * @param param1 Parameter 1.
      * @param param2 Parameter 2.
-     * @return A new instance of fragment CaloriesCalculator.
+     * @return A new instance of fragment DailyLogFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static CaloriesCalculator newInstance(String param1, String param2) {
-        CaloriesCalculator fragment = new CaloriesCalculator();
+    public static DailyLogFragment newInstance(String param1, String param2) {
+        DailyLogFragment fragment = new DailyLogFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -65,8 +69,28 @@ public class CaloriesCalculator extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_calories_calculator, container, false);
+        View view = inflater.inflate(R.layout.fragment_daily_log, container, false);
+
+        //Beware of API < 24
+        Calendar endDate = Calendar.getInstance();
+        endDate.add(Calendar.MONTH, 1);
+
+        Calendar startDate = Calendar.getInstance();
+        startDate.add(Calendar.MONTH, -1);
+
+        HorizontalCalendar horizontalCalendar = new HorizontalCalendar.Builder(view, R.id.calendarView)
+                .startDate(startDate.getTime())
+                .endDate(endDate.getTime())
+                .build();
+
+        horizontalCalendar.setCalendarListener(new HorizontalCalendarListener() {
+            @Override
+            public void onDateSelected(Date date, int position) {
+                //do something
+            }
+        });
+
+        return view;
     }
 
     // TODO: Rename method, update argument and hook method into UI event

@@ -3,9 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    tools:context="edu.uw.tcss450.nutrack.AvatarSelectorFragment">
+    tools:context="edu.uw.tcss450.nutrack.fragment.AvatarSelectorFragment">
 
-    <!-- TODO: Update blank fragment layout -->
     <ImageView
         android:layout_width="100dp"
         android:layout_height="100dp"

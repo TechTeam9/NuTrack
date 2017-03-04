@@ -18,8 +18,10 @@
             </intent-filter>
         </activity>
         <activity android:name=".activity.MainActivity" />
-        <activity android:name=".activity.ProfileSetupActivity"
+        <activity
+            android:name=".activity.ProfileSetupActivity"
             android:windowSoftInputMode="stateAlwaysHidden" />
+        <activity android:name=".activity.NutrientActivity"></activity>
     </application>
 
 </manifest>

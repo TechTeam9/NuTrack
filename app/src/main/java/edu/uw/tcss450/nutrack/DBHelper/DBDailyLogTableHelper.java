@@ -10,10 +10,10 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
- * Retrieving user searching record in database.
+ * Created by Ming on 2/28/2017.
  */
-public class DBRecentSearchTableHelper extends SQLiteOpenHelper {
 
+public class DBDailyLogTableHelper extends SQLiteOpenHelper {
     /**
      * Database name.
      */
@@ -39,7 +39,7 @@ public class DBRecentSearchTableHelper extends SQLiteOpenHelper {
      *
      * @param context
      */
-    public DBRecentSearchTableHelper(Context context) {
+    public DBDailyLogTableHelper(Context context) {
         super(context, DATABASE_NAME, null, 1);
     }
 
@@ -125,6 +125,5 @@ public class DBRecentSearchTableHelper extends SQLiteOpenHelper {
     public void closeDB() {
         this.close();
     }
+
 }
-
-

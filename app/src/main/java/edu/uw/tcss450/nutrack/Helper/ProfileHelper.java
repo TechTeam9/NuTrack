@@ -1,8 +1,8 @@
-package edu.uw.tcss450.nutrack;
+package edu.uw.tcss450.nutrack.Helper;
 
 import android.content.Context;
+import android.database.Cursor;
 import android.os.AsyncTask;
-import android.util.Log;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
@@ -12,34 +12,44 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
 
+import edu.uw.tcss450.nutrack.DBHelper.DBPersonalInfoTableHelper;
 import edu.uw.tcss450.nutrack.model.Profile;
 
 /**
- * @Author
- * @version
- * @since
+ * Profile activity helper that help checking, and inserting the profile in the database.
  */
 public class ProfileHelper {
 
-    /** The URL of our backend. */
+    /**
+     * The URL of our backend.
+     */
     private static final String BASE_URL = "http://cssgate.insttech.washington.edu/~mhl325/";
 
-    /** No profile found result indicator. */
+    /**
+     * No profile found result indicator.
+     */
     public static final int NO_PROFILE_FOUND = 14;
 
-    /** Profile found result indicator. */
+    /**
+     * Profile found result indicator.
+     */
     public static final int PROFILE_FOUND = 13;
 
-    /** Insert success result indicator. */
+    /**
+     * Insert success result indicator.
+     */
     public static final int INSERT_SUCCESS = 15;
 
-    /** Insert failed result indicator. */
+    /**
+     * Insert failed result indicator.
+     */
     public static final int INSERT_FAILURE = 16;
 
     /**
      * Checks to see if the requested profile exists.
-     * @param theContext
-     * @param theEmail
+     *
+     * @param theContext context
+     * @param theEmail   user email
      */
     public static void checkProfileExistence(Context theContext, String theEmail) {
         GetPersonalInfo getInfo = new GetPersonalInfo(theContext);
@@ -48,24 +58,70 @@ public class ProfileHelper {
 
     /**
      * Inserts the profile into the database.
-     * @param theContext
-     * @param email
-     * @param theProfile
+     *
+     * @param theContext context
+     * @param email      email
+     * @param theProfile Profile model
      */
     public static void insertProfile(Context theContext, String email, Profile theProfile) {
+        DBPersonalInfoTableHelper dbPersonalInfoTableHelper = new DBPersonalInfoTableHelper(theContext);
+        dbPersonalInfoTableHelper.insertPersonalInfo(theProfile.getName()
+                , theProfile.getGender(), theProfile.getDOB()
+                , theProfile.getHeight(), theProfile.getWeight()
+                , theProfile.getAvatarId());
+        dbPersonalInfoTableHelper.close();
         PostPersonalInfo postInfo = new PostPersonalInfo(theContext);
         postInfo.execute(email, theProfile);
     }
 
     /**
+     * Getting personal information
      *
+     * @param theContext context
+     * @return a profile
+     */
+    public static Profile getPersonalInfo(Context theContext) {
+        DBPersonalInfoTableHelper dbHelper = new DBPersonalInfoTableHelper(theContext);
+        return dbHelper.getPersonalInfo();
+    }
+
+    /**
+     * Checking profile.
+     *
+     * @param theContext context
+     * @return true or false
+     */
+    public static boolean hasProfile(Context theContext) {
+        DBPersonalInfoTableHelper dbHelper = new DBPersonalInfoTableHelper(theContext);
+        int size = dbHelper.getMemberSize();
+        dbHelper.close();
+        if (size == 0) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    /**
+     * Insert profile into local.
+     *
+     * @param theContext context
+     * @param theProfile profile
+     */
+    public static void insertLocalProfile(Context theContext, Profile theProfile) {
+        DBPersonalInfoTableHelper dbHelper = new DBPersonalInfoTableHelper(theContext);
+        dbHelper.insertPersonalInfo(theProfile.getName(), theProfile.getGender(), theProfile.getDOB(), theProfile.getHeight(), theProfile.getWeight(), theProfile.getAvatarId());
+        dbHelper.close();
+    }
+
+    /**
+     * Getting personal information.
      */
     private static class GetPersonalInfo extends AsyncTask<String, Void, String> {
 
         private final CheckProfileCompleted mCallback;
 
         /**
-         *
          * @param theContext
          */
         public GetPersonalInfo(Context theContext) {
@@ -74,6 +130,7 @@ public class ProfileHelper {
 
         /**
          * Fetches the user's personal info from our web service.
+         *
          * @param strings the email to pass to the backend
          * @return the personal info from the back end or an error message
          */
@@ -111,7 +168,10 @@ public class ProfileHelper {
 
     }
 
-    private static class PostPersonalInfo extends  AsyncTask<Object, Void, String> {
+    /**
+     * Post personal information.
+     */
+    private static class PostPersonalInfo extends AsyncTask<Object, Void, String> {
 
         private final InsertProfileCompleted mCallback;
 
@@ -165,11 +225,16 @@ public class ProfileHelper {
         }
     }
 
+    /**
+     * Checking profile.
+     */
     public interface CheckProfileCompleted {
         public void onCheckProfileCompleted(String result);
     }
 
-
+    /**
+     * Insert profile.
+     */
     public interface InsertProfileCompleted {
         public void onInsertProfileCompleted(String result);
     }

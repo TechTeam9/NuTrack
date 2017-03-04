@@ -6,7 +6,6 @@
     android:id="@+id/search_result_fragment"
     tools:context="edu.uw.tcss450.nutrack.fragment.SearchResultFragment">
 
-    <!-- TODO: Update blank fragment layout -->
     <TextView
         android:id="@+id/search_result_head"
         android:layout_width="match_parent"

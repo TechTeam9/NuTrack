@@ -24,26 +24,34 @@ import java.util.ArrayList;
 import edu.uw.tcss450.nutrack.R;
 import edu.uw.tcss450.nutrack.model.Food;
 
-/**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link SearchResultFragment.OnFragmentInteractionListener} interface
- * to handle interaction events.
- * Use the {@link SearchResultFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class SearchResultFragment extends Fragment implements FoodDialogFragment.OnFragmentInteractionListener{
-    // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
+    /**
+     * First parameter string.
+     */
     private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
 
-    // TODO: Rename and change types of parameters
+    /**
+     * Second parameter string.
+     */
+    private static final String ARG_PARAM2 = "param2";
+    /**
+     * First Parameter string.
+     */
     private String mParam1;
+    /**
+     * Second Parameter string.
+     */
     private String mParam2;
 
+    /**
+     * Array list store food Food.
+     */
     private ArrayList<String> myFoodList;
 
+    /**
+     * Fragment interaction listener.
+     */
     private OnFragmentInteractionListener mListener;
 
     public SearchResultFragment() {
@@ -58,7 +66,6 @@ public class SearchResultFragment extends Fragment implements FoodDialogFragment
      * @param param2 Parameter 2.
      * @return A new instance of fragment SearchResultFragment.
      */
-    // TODO: Rename and change types and number of parameters
     public static SearchResultFragment newInstance(String param1, String param2) {
         SearchResultFragment fragment = new SearchResultFragment();
         Bundle args = new Bundle();
@@ -91,9 +98,8 @@ public class SearchResultFragment extends Fragment implements FoodDialogFragment
         displayName.setText("Search Results for \"" + getArguments().getString("food_name") + "\"");
 
         myFoodList = getArguments().getStringArrayList("food_list");
-        System.out.println(getArguments().getString("Test"));
         listView.setAdapter(new ArrayAdapter<String>(getContext(), android.R.layout.simple_list_item_1, myFoodList));
-//        listView.invalidate();
+
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, final View view,
@@ -165,7 +171,6 @@ public class SearchResultFragment extends Fragment implements FoodDialogFragment
      * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
         void onFragmentInteraction(String theFoodName, ArrayList<String> foodList);
     }
 }
