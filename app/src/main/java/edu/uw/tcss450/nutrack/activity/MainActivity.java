@@ -254,7 +254,7 @@ public class MainActivity extends AppCompatActivity implements ProfileFragment.O
                 fragmentClasses[0] = ProfileFragment.class;
                 break;
             case R.id.nav_Daily_log:
-                fragmentClass = DailyLogFragment.class;
+                fragmentClasses[0] = DailyLogFragment.class;
                 break;
             case R.id.nav_settings:
                 fragmentClasses[0] = SettingFragment.class;

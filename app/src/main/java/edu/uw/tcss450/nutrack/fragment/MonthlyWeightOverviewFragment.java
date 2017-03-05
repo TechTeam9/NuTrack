@@ -1,6 +1,7 @@
 package edu.uw.tcss450.nutrack.fragment;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -8,7 +9,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import java.util.ArrayList;
+
 import edu.uw.tcss450.nutrack.R;
+import im.dacer.androidcharts.LineView;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -105,5 +109,19 @@ public class MonthlyWeightOverviewFragment extends Fragment {
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
+    }
+    public void initializeMonthyWeightGraph(View view) {
+        ArrayList dataLists = null;
+        dataLists.add(1);
+        dataLists.add(2);
+        ArrayList strList = null;
+        strList.add(0,1);
+        strList.add(1,2);
+        LineView lineView = (LineView) view.findViewById(R.id.line_view);
+        lineView.setDrawDotLine(false); //optional
+        lineView.setShowPopup(LineView.SHOW_POPUPS_MAXMIN_ONLY); //optional
+        lineView.setBottomTextList(strList);
+        lineView.setColorArray(new int[]{Color.BLACK,Color.GREEN,Color.GRAY,Color.CYAN});
+        lineView.setDataList(dataLists); //or lineView.setFloatDataList(floatDataLists)
     }
 }

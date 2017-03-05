@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import az.plainpie.PieView;
 import edu.uw.tcss450.nutrack.R;
 
 /**
@@ -107,5 +108,11 @@ public class DailyIntakeOverviewFragment extends Fragment {
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
+    }
+
+    public void initializeDailyCalorieChart(final View view) {
+        PieView pieView = (PieView) view.findViewById(R.id.pieView);
+        pieView.setPercentageBackgroundColor(getResources().getColor(R.color.colorPrimary));
+        pieView.setInnerText("A");
     }
 }
