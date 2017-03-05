@@ -8,7 +8,17 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import edu.uw.tcss450.nutrack.R;
+import lecho.lib.hellocharts.model.Axis;
+import lecho.lib.hellocharts.model.AxisValue;
+import lecho.lib.hellocharts.model.Column;
+import lecho.lib.hellocharts.model.ColumnChartData;
+import lecho.lib.hellocharts.model.SubcolumnValue;
+import lecho.lib.hellocharts.util.ChartUtils;
+import lecho.lib.hellocharts.view.ColumnChartView;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -27,6 +37,11 @@ public class WeeklyIntakeOverviewFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+
+    /**
+     * height of the graph
+     */
+    private int mGraphHeight;
 
     private OnFragmentInteractionListener mListener;
 
@@ -64,9 +79,10 @@ public class WeeklyIntakeOverviewFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_weekly_intake_overview, container, false);
+        final View view = inflater.inflate(R.layout.fragment_weekly_intake_overview, container, false);
+        initializeWeeklyCalorieChart(view);
+        return view;
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -106,5 +122,56 @@ public class WeeklyIntakeOverviewFragment extends Fragment {
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
+    }
+
+    /**
+     * Initialize the calories chart.
+     * @param view the view
+     */
+    private void initializeWeeklyCalorieChart(final View view) {
+        final ColumnChartView weightChart = (ColumnChartView) view.findViewById(R.id.weekly_intake_chart);
+        weightChart.setInteractive(false);
+        weightChart.setZoomEnabled(false);
+        weightChart.setClickable(false);
+
+        ColumnChartData weightChartData;
+        int numSubcolumns = 1;
+        int numColumns = 7;
+
+        List<Column> columns = new ArrayList<Column>();
+        List<SubcolumnValue> values;
+        for (int i = 0; i < numColumns; ++i) {
+
+            values = new ArrayList<SubcolumnValue>();
+            for (int j = 0; j < numSubcolumns; ++j) {
+                values.add(new SubcolumnValue((float) Math.random() * 50f + 5, ChartUtils.pickColor()));
+            }
+
+            Column column = new Column(values);
+            column.setHasLabels(true);
+            columns.add(column);
+        }
+
+
+        weightChartData = new ColumnChartData(columns);
+
+        //Set Axis
+        String[] labels = {"Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"};
+        List<AxisValue> axisXValueList = new ArrayList<AxisValue>();
+        Axis axisX = new Axis();
+
+        for (int i = 0; i < 7; i++) {
+            axisXValueList.add(new AxisValue(i).setLabel(labels[i]));
+        }
+        axisX.setValues(axisXValueList);
+
+        weightChartData.setAxisXBottom(axisX);
+
+        weightChart.setColumnChartData(weightChartData);
+
+        final View graphView = view.findViewById(R.id.weekly_intake_chart);
+        //********************Need to Fix***********************
+        mGraphHeight = graphView.getHeight();
+        //**************************************************
     }
 }

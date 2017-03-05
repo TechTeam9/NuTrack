@@ -100,40 +100,40 @@ public class MainActivity extends AppCompatActivity implements ProfileFragment.O
         initializeDrawerHeaderContent();
         initializeDrawerContent();
 
-        /*
-        I am going to put these in a fragment later so we can switch out
-        the whole unit instead of dealing with all three of them.
-         */
-        //Class theFragmentClass = WeeklyIntakeOverviewFragment.class;
-        Class topFragmentClass = DailyIntakeOverviewFragment.class;
-        Class middleFragmentClass = WeeklyIntakeOverviewFragment.class;
-        Class bottomFragmentClass = MonthlyWeightOverviewFragment.class;
+        if (savedInstanceState == null) {
+            /*
+            I am going to put these in a fragment later so we can switch out
+            the whole unit instead of dealing with all three of them.
+            */
+            //Class theFragmentClass = WeeklyIntakeOverviewFragment.class;
+            Class topFragmentClass = DailyIntakeOverviewFragment.class;
+            Class middleFragmentClass = WeeklyIntakeOverviewFragment.class;
+            Class bottomFragmentClass = MonthlyWeightOverviewFragment.class;
 
-        //Fragment theFragment = null;
-        Fragment topFragment = null;
-        Fragment middleFragment = null;
-        Fragment bottomFragment = null;
+            //Fragment theFragment = null;
+            Fragment topFragment = null;
+            Fragment middleFragment = null;
+            Fragment bottomFragment = null;
 
-        try {
-            //theFragment = (Fragment) theFragmentClass.newInstance();
-            topFragment = (Fragment) topFragmentClass.newInstance();
-            middleFragment = (Fragment) middleFragmentClass.newInstance();
-            bottomFragment = (Fragment) bottomFragmentClass.newInstance();
-        } catch (Exception e) {
-            e.printStackTrace();
+            try {
+                //theFragment = (Fragment) theFragmentClass.newInstance();
+                topFragment = (Fragment) topFragmentClass.newInstance();
+                middleFragment = (Fragment) middleFragmentClass.newInstance();
+                bottomFragment = (Fragment) bottomFragmentClass.newInstance();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            FragmentTransaction fragmentTracs = getSupportFragmentManager().beginTransaction();
+
+            //fragmentTracs.add(R.id.flContent, theFragment);
+            fragmentTracs.add(R.id.flContentTop, topFragment, "top");
+            fragmentTracs.add(R.id.flContentMiddle, middleFragment, "middle");
+            fragmentTracs.add(R.id.flContentBottom, bottomFragment,"bottom");
+
+            fragmentTracs.commit();
         }
-
-        FragmentTransaction fragmentTracs = getSupportFragmentManager().beginTransaction();
-
-        //fragmentTracs.add(R.id.flContent, theFragment);
-        fragmentTracs.add(R.id.flContentTop, topFragment, "top");
-        fragmentTracs.add(R.id.flContentMiddle, middleFragment, "middle");
-        fragmentTracs.add(R.id.flContentBottom, bottomFragment,"bottom");
-
-        fragmentTracs.commit();
-
         //initializeFloatingActionButton();
-
     }
 
     /**
