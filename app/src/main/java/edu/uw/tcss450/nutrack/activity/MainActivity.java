@@ -29,13 +29,16 @@ import edu.uw.tcss450.nutrack.DBHelper.DBMemberInfoHelper;
 import edu.uw.tcss450.nutrack.DBHelper.DBPersonalInfoTableHelper;
 import edu.uw.tcss450.nutrack.Helper.ProfileHelper;
 import edu.uw.tcss450.nutrack.R;
+import edu.uw.tcss450.nutrack.fragment.DailyIntakeOverviewFragment;
 import edu.uw.tcss450.nutrack.fragment.DailyLogFragment;
 import edu.uw.tcss450.nutrack.fragment.EditProfileDialogFragment;
 import edu.uw.tcss450.nutrack.fragment.LookUpFoodFragment;
 import edu.uw.tcss450.nutrack.fragment.MainFragment;
+import edu.uw.tcss450.nutrack.fragment.MonthlyWeightOverviewFragment;
 import edu.uw.tcss450.nutrack.fragment.ProfileFragment;
 import edu.uw.tcss450.nutrack.fragment.SearchResultFragment;
 import edu.uw.tcss450.nutrack.fragment.SettingFragment;
+import edu.uw.tcss450.nutrack.fragment.WeeklyIntakeOverviewFragment;
 import edu.uw.tcss450.nutrack.model.Profile;
 
 import static edu.uw.tcss450.nutrack.R.id.naviView;
@@ -47,7 +50,9 @@ import static edu.uw.tcss450.nutrack.R.id.naviView;
 public class MainActivity extends AppCompatActivity implements ProfileFragment.OnFragmentInteractionListener,
         LookUpFoodFragment.OnFragmentInteractionListener, MainFragment.OnFragmentInteractionListener,
         SettingFragment.OnFragmentInteractionListener, SearchResultFragment.OnFragmentInteractionListener,
-        EditProfileDialogFragment.OnFragmentInteractionListener, DailyLogFragment.OnFragmentInteractionListener {
+
+        EditProfileDialogFragment.OnFragmentInteractionListener, DailyIntakeOverviewFragment.OnFragmentInteractionListener,
+        WeeklyIntakeOverviewFragment.OnFragmentInteractionListener,MonthlyWeightOverviewFragment.OnFragmentInteractionListener, DailyLogFragment.OnFragmentInteractionListener {
     /**
      * The layout that hold the navigation drawer.
      */
@@ -94,28 +99,43 @@ public class MainActivity extends AppCompatActivity implements ProfileFragment.O
 
         mDrawer.addDrawerListener(mDrawerToggle);
 
+        initializeDrawerHeaderContent();
         initializeDrawerContent();
 
+        if (savedInstanceState == null) {
+            /*
+            I am going to put these in a fragment later so we can switch out
+            the whole unit instead of dealing with all three of them.
+            */
+            //Class theFragmentClass = WeeklyIntakeOverviewFragment.class;
+            Class topFragmentClass = DailyIntakeOverviewFragment.class;
+            Class middleFragmentClass = WeeklyIntakeOverviewFragment.class;
+            Class bottomFragmentClass = MonthlyWeightOverviewFragment.class;
 
-        Class fragmentClass = MainFragment.class;
-        Fragment fragment = null;
-        try {
-            fragment = (Fragment) fragmentClass.newInstance();
-        } catch (Exception e) {
-            e.printStackTrace();
+            //Fragment theFragment = null;
+            Fragment topFragment = null;
+            Fragment middleFragment = null;
+            Fragment bottomFragment = null;
+
+            try {
+                //theFragment = (Fragment) theFragmentClass.newInstance();
+                topFragment = (Fragment) topFragmentClass.newInstance();
+                middleFragment = (Fragment) middleFragmentClass.newInstance();
+                bottomFragment = (Fragment) bottomFragmentClass.newInstance();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            FragmentTransaction fragmentTracs = getSupportFragmentManager().beginTransaction();
+
+            //fragmentTracs.add(R.id.flContent, theFragment);
+            fragmentTracs.add(R.id.flContentTop, topFragment, "top");
+            fragmentTracs.add(R.id.flContentMiddle, middleFragment, "middle");
+            fragmentTracs.add(R.id.flContentBottom, bottomFragment,"bottom");
+
+            fragmentTracs.commit();
         }
-
-        //TEST
-        Fragment fragment2 = fragmentClass.newInstance();
-        // END TEST
-        FragmentTransaction fragmentTracs = getSupportFragmentManager().beginTransaction();
-        fragmentTracs.add(R.id.flContent, fragment);
-        fragmentTracs.add(R.id.flContent, fragment2);
-
-        fragmentTracs.commit();
-        initializeDrawerHeaderContent();
         //initializeFloatingActionButton();
-
     }
 
     /**
@@ -219,20 +239,25 @@ public class MainActivity extends AppCompatActivity implements ProfileFragment.O
      */
     public void selectDrawerItem(MenuItem theMenuItem) {
         mFragment = null;
+        Fragment newMiddleFragment = null;
+        Fragment newBottomFragment = null;
 
-        Class fragmentClass = null;
+        Class[] fragmentClasses = new Class[3];
+
         switch (theMenuItem.getItemId()) {
-            case R.id.nav_profile:
-                fragmentClass = ProfileFragment.class;
-                break;
             case R.id.nav_overview:
-                fragmentClass = MainFragment.class;
+                fragmentClasses[0] = DailyIntakeOverviewFragment.class;
+                fragmentClasses[1] = WeeklyIntakeOverviewFragment.class;
+                fragmentClasses[2] = MonthlyWeightOverviewFragment.class;
+                break;
+            case R.id.nav_profile:
+                fragmentClasses[0] = ProfileFragment.class;
                 break;
             case R.id.nav_Daily_log:
                 fragmentClass = DailyLogFragment.class;
                 break;
             case R.id.nav_settings:
-                fragmentClass = SettingFragment.class;
+                fragmentClasses[0] = SettingFragment.class;
                 break;
             case R.id.nav_sign_out:
                 userSignOut();
@@ -242,18 +267,45 @@ public class MainActivity extends AppCompatActivity implements ProfileFragment.O
                 startActivity(intent);
                 break;
             default:
-                fragmentClass = MainFragment.class;
+                fragmentClasses[0] = MainFragment.class;
         }
 
         if (theMenuItem.getItemId() != R.id.nav_sign_out && theMenuItem.getItemId() != R.id.nav_add_food) {
             try {
-                mFragment = (Fragment) fragmentClass.newInstance();
+                mFragment = (Fragment) fragmentClasses[0].newInstance();
             } catch (Exception e) {
                 e.printStackTrace();
             }
 
             FragmentManager fragmentManager = getSupportFragmentManager();
-            fragmentManager.beginTransaction().replace(R.id.flContent, mFragment).commit();
+            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+            fragmentTransaction.replace(R.id.flContentTop, mFragment);
+            // TO profile OR settings
+            if (theMenuItem.getItemId() != R.id.nav_overview) {
+                Fragment oldMiddleFragment = fragmentManager.findFragmentByTag("middle");
+                Fragment oldBottomFragment = fragmentManager.findFragmentByTag("bottom");
+                // FROM overview
+                if (oldMiddleFragment != null) {
+                    fragmentTransaction.remove(oldMiddleFragment);
+                    fragmentTransaction.remove(oldBottomFragment);
+                }
+                //FROM profile OR settings: Do nothing.
+            //TO overview
+            } else {
+                Fragment oldMiddleFragment = fragmentManager.findFragmentByTag("middle");
+                // FROM NOT overview
+                if (oldMiddleFragment == null) {
+                    try {
+                        newMiddleFragment = (Fragment) fragmentClasses[1].newInstance();
+                        newBottomFragment = (Fragment) fragmentClasses[2].newInstance();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    fragmentTransaction.add(R.id.flContentMiddle, newMiddleFragment, "middle");
+                    fragmentTransaction.add(R.id.flContentBottom, newBottomFragment,"bottom");
+                }
+            }
+            fragmentTransaction.commit();
         }
         theMenuItem.setChecked(true);
         mDrawer.closeDrawers();
@@ -286,7 +338,7 @@ public class MainActivity extends AppCompatActivity implements ProfileFragment.O
 
         FragmentTransaction transaction = getSupportFragmentManager()
                 .beginTransaction()
-                .replace(R.id.flContent, fragment);
+                .replace(R.id.flContentTop, fragment);
         // Commit the transaction
         transaction.commit();
     }
@@ -329,7 +381,15 @@ public class MainActivity extends AppCompatActivity implements ProfileFragment.O
             e.printStackTrace();
         }
         FragmentManager fragmentManager = getSupportFragmentManager();
-        fragmentManager.beginTransaction().replace(R.id.flContent, fragment).commit();
+        fragmentManager.beginTransaction().replace(R.id.flContentTop, fragment).commit();
+        Fragment oldMiddleFragment = fragmentManager.findFragmentByTag("middle");
+        Fragment oldBottomFragment = fragmentManager.findFragmentByTag("bottom");
+        // FROM overview
+        if (oldMiddleFragment != null) {
+            fragmentManager.beginTransaction().remove(oldMiddleFragment).commit();
+            fragmentManager.beginTransaction().remove(oldBottomFragment).commit();
+        }
+        //FROM profile OR settings: Do nothing.
     mToolbar.setTitle("Profile");
     mDrawer.closeDrawers();
     }

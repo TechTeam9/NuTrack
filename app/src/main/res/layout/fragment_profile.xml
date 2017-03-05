@@ -25,12 +25,18 @@
         android:layout_height="match_parent"
         android:orientation="vertical" >
 
-        <ImageView
+        <RelativeLayout
             android:id="@+id/imageView"
             android:layout_width="match_parent"
             android:layout_height="180dp"
-            android:background="@drawable/header_800p" />
-
+            android:background="@drawable/header_900p_custom" >
+            <ImageView
+                android:id="@+id/profile_imageView_avatar"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_centerInParent="true"
+                android:background="@drawable/ic_person_black_48dp" />
+        </RelativeLayout>
         <LinearLayout
             android:id="@+id/profile_frame_name"
             android:layout_width="match_parent"
@@ -212,16 +218,5 @@
 
             </LinearLayout>
         </LinearLayout>
-
-
     </LinearLayout>
-
-
-    <ImageView
-        android:id="@+id/profile_imageView_avatar"
-        android:layout_width="80dp"
-        android:layout_height="80dp"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="30dp"
-        android:background="@drawable/ic_person_black_48dp" />
 </LinearLayout>
