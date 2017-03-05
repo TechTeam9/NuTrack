@@ -1,28 +1,30 @@
 package edu.uw.tcss450.nutrack.fragment;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
-import java.util.ArrayList;
+import android.widget.Button;
+import android.widget.TextView;
 
 import edu.uw.tcss450.nutrack.R;
-import im.dacer.androidcharts.LineView;
+import edu.uw.tcss450.nutrack.database.DBDailyLog;
+import edu.uw.tcss450.nutrack.model.Food;
+import edu.uw.tcss450.nutrack.model.Recipe;
 
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link MonthlyWeightOverviewFragment.OnFragmentInteractionListener} interface
+ * {@link RecipeDialogFragment.OnFragmentInteractionListener} interface
  * to handle interaction events.
- * Use the {@link MonthlyWeightOverviewFragment#newInstance} factory method to
+ * Use the {@link RecipeDialogFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class MonthlyWeightOverviewFragment extends Fragment {
+public class RecipeDialogFragment extends DialogFragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -34,7 +36,12 @@ public class MonthlyWeightOverviewFragment extends Fragment {
 
     private OnFragmentInteractionListener mListener;
 
-    public MonthlyWeightOverviewFragment() {
+    private View mView;
+
+    private Recipe mRecipe;
+
+
+    public RecipeDialogFragment() {
         // Required empty public constructor
     }
 
@@ -44,11 +51,11 @@ public class MonthlyWeightOverviewFragment extends Fragment {
      *
      * @param param1 Parameter 1.
      * @param param2 Parameter 2.
-     * @return A new instance of fragment MonthlyWeightOverviewFragment.
+     * @return A new instance of fragment RecipeDialogFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static MonthlyWeightOverviewFragment newInstance(String param1, String param2) {
-        MonthlyWeightOverviewFragment fragment = new MonthlyWeightOverviewFragment();
+    public static RecipeDialogFragment newInstance(String param1, String param2) {
+        RecipeDialogFragment fragment = new RecipeDialogFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -60,23 +67,48 @@ public class MonthlyWeightOverviewFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
+            mRecipe = getArguments().getParcelable("recipe_info");
         }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_monthly_weight_overview, container, false);
-    }
+        mView = inflater.inflate(R.layout.fragment_recipe_dialog, container, false);
 
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
-        }
+        TextView dialogTitle = (TextView) mView.findViewById(R.id.dialog_recipe_title);
+        TextView caloriesResult = (TextView) mView.findViewById(R.id.calories_recipe_result);
+        TextView fatResult = (TextView) mView.findViewById(R.id.fat_recipe_result);
+        TextView carbsResult = (TextView) mView.findViewById(R.id.carbs_recipe_result);
+        TextView proteinResult = (TextView) mView.findViewById(R.id.protein_recipe_result);
+
+        dialogTitle.setText(mRecipe.getName());
+        caloriesResult.setText(String.valueOf(mRecipe.getCalorie().get(0)));
+        fatResult.setText(String.valueOf(mRecipe.getFat().get(0)));
+        carbsResult.setText(String.valueOf(mRecipe.getCarbs().get(0)));
+        proteinResult.setText(String.valueOf(mRecipe.getProtein().get(0)));
+
+
+        // Buttons action
+        Button addButton = (Button) mView.findViewById(R.id.dialog_add_button);
+        Button cancelButton = (Button) mView.findViewById(R.id.dialog_cancel_button);
+
+        addButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                DBDailyLog db = new DBDailyLog(getContext());
+                db.insertFood(mRecipe.getName(), mRecipe.getId(), "recipe", "breakfast");
+            }
+        });
+
+        cancelButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dismiss();
+            }
+        });
+
+        return mView;
     }
 
     @Override
@@ -108,20 +140,6 @@ public class MonthlyWeightOverviewFragment extends Fragment {
      */
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
-        void onFragmentInteraction(Uri uri);
-    }
-    public void initializeMonthlyWeightGraph(View view) {
-        ArrayList dataLists = null;
-        dataLists.add(1);
-        dataLists.add(2);
-        ArrayList strList = null;
-        strList.add(0,1);
-        strList.add(1,2);
-        LineView lineView = (LineView) view.findViewById(R.id.line_view);
-        lineView.setDrawDotLine(false); //optional
-        lineView.setShowPopup(LineView.SHOW_POPUPS_MAXMIN_ONLY); //optional
-        lineView.setBottomTextList(strList);
-        lineView.setColorArray(new int[]{Color.BLACK,Color.GREEN,Color.GRAY,Color.CYAN});
-        lineView.setDataList(dataLists); //or lineView.setFloatDataList(floatDataLists)
+        void onFragmentInteraction(Recipe theRecipe);
     }
 }

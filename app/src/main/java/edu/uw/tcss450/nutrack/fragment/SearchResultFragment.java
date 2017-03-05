@@ -24,7 +24,7 @@ import java.util.ArrayList;
 import edu.uw.tcss450.nutrack.R;
 import edu.uw.tcss450.nutrack.model.Food;
 
-public class SearchResultFragment extends Fragment implements FoodDialogFragment.OnFragmentInteractionListener{
+public class SearchResultFragment extends Fragment {
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     /**
      * First parameter string.
@@ -120,6 +120,7 @@ public class SearchResultFragment extends Fragment implements FoodDialogFragment
         return rootView;
     }
 
+    /*
     @Override
     public void onFragmentInteraction() {
         FragmentTransaction ft = getFragmentManager().beginTransaction();
@@ -134,6 +135,7 @@ public class SearchResultFragment extends Fragment implements FoodDialogFragment
         .addToBackStack(null);
         ft.commit();
     }
+    */
 
     @Override
     public void onStart() {

@@ -1,4 +1,4 @@
-package edu.uw.tcss450.nutrack.API;
+package edu.uw.tcss450.nutrack.api;
 
 import android.content.Context;
 import android.os.AsyncTask;
@@ -14,7 +14,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
 
-import edu.uw.tcss450.nutrack.Helper.LoginHelper;
+import edu.uw.tcss450.nutrack.helper.LoginHelper;
 
 /**
  * Add account information into database.

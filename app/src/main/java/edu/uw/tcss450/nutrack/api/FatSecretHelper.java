@@ -1,4 +1,4 @@
-package edu.uw.tcss450.nutrack.API;
+package edu.uw.tcss450.nutrack.api;
 
 import android.net.Uri;
 import android.util.Base64;

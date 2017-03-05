@@ -1,19 +1,28 @@
 package edu.uw.tcss450.nutrack.fragment;
 
 import android.content.Context;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ListAdapter;
+import android.widget.ListView;
+import android.widget.SimpleAdapter;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 
 import devs.mulham.horizontalcalendar.HorizontalCalendar;
 import devs.mulham.horizontalcalendar.HorizontalCalendarListener;
 import edu.uw.tcss450.nutrack.R;
+import edu.uw.tcss450.nutrack.database.DBDailyLog;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -34,6 +43,16 @@ public class DailyLogFragment extends Fragment {
     private String mParam2;
 
     private OnFragmentInteractionListener mListener;
+
+    private Date mSelectedDate;
+
+    private ArrayList<DailyLogFood> mBreakfastList;
+
+    private ArrayList<DailyLogFood> mLunchList;
+
+    private ArrayList<DailyLogFood> mDinnerList;
+
+    private ArrayList<DailyLogFood> mSnackList;
 
     public DailyLogFragment() {
         // Required empty public constructor
@@ -71,6 +90,12 @@ public class DailyLogFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_daily_log, container, false);
 
+        final ListView breakfastListView = (ListView) view.findViewById(R.id.breakfast_listView);
+        final ListView lunchListView = (ListView) view.findViewById(R.id.lunch_listView);
+        final ListView dinnerListView = (ListView) view.findViewById(R.id.dinner_listView);
+        final ListView snackListView = (ListView) view.findViewById(R.id.snack_listView);
+
+
         //Beware of API < 24
         Calendar endDate = Calendar.getInstance();
         endDate.add(Calendar.MONTH, 1);
@@ -90,7 +115,92 @@ public class DailyLogFragment extends Fragment {
             }
         });
 
+        //get list of food from database
+        ArrayList<HashMap<String, String>> foodList = new ArrayList<>();
+
+        DBDailyLog db = new DBDailyLog(getContext());
+
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        mSelectedDate = new Date();
+        System.out.println(dateFormat.format(mSelectedDate).toString());
+
+        ArrayList<HashMap<String, String>> breakfastContentList = new ArrayList<>();
+        ArrayList<HashMap<String, String>> LunchContentList = new ArrayList<>();
+        ArrayList<HashMap<String, String>> DinnerContentList = new ArrayList<>();
+        ArrayList<HashMap<String, String>> SnackContentList = new ArrayList<>();
+
+        mBreakfastList = new ArrayList<>();
+        mLunchList = new ArrayList<>();
+        mDinnerList = new ArrayList<>();
+        mSnackList = new ArrayList<>();
+
+        try {
+            Cursor cursor = db.getFoodByDate(dateFormat.format(mSelectedDate).toString());
+            if (cursor.getCount() != 0) {
+                cursor.moveToFirst();
+
+                System.out.println(cursor.getCount());
+                for (int i = 0; i < cursor.getCount(); i++) {
+                    System.out.println(mBreakfastList.size());
+
+                    DailyLogFood dailyLogFood = new DailyLogFood(cursor.getString(1), cursor.getString(3), cursor.getInt(0), cursor.getInt(2));
+                    HashMap<String, String> tempFood = new HashMap<>();
+                    tempFood.put("name", cursor.getString(1));
+                    tempFood.put("type", cursor.getString(3));
+
+                    switch (cursor.getString(4)) {
+                        case "breakfast":
+                            mBreakfastList.add(dailyLogFood);
+                            breakfastContentList.add(tempFood);
+                            break;
+                        case "lunch":
+                            mLunchList.add(dailyLogFood);
+                            LunchContentList.add(tempFood);
+                            break;
+                        case "dinner":
+                            mDinnerList.add(dailyLogFood);
+                            DinnerContentList.add(tempFood);
+                            break;
+                        case "snack":
+                            mSnackList.add(dailyLogFood);
+                            SnackContentList.add(tempFood);
+                            break;
+                    }
+                    cursor.moveToNext();
+                }
+
+            }
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+
+        SimpleAdapter adapter = new SimpleAdapter(getContext(), breakfastContentList, android.R.layout.two_line_list_item, new String[]{"name", "type"}, new int[]{android.R.id.text1, android.R.id.text2});
+        breakfastListView.setAdapter(adapter);
+        calculateListViewHeight(breakfastListView);
         return view;
+    }
+
+
+    private void calculateListViewHeight(ListView listView) {
+        ListAdapter adapter = listView.getAdapter();
+        if (adapter == null) {
+            return;
+        }
+
+        ViewGroup viewGroup = listView;
+        int finalHeight = 0;
+
+        for (int i = 0; i < adapter.getCount(); i++) {
+            View listItem = adapter.getView(i, null, viewGroup);
+            listItem.measure(0, 0);
+            finalHeight += listItem.getMeasuredHeight();
+        }
+
+        ViewGroup.LayoutParams par = listView.getLayoutParams();
+        par.height = finalHeight + (listView.getDividerHeight() * (adapter.getCount() - 1));
+        listView.setLayoutParams(par);
+        listView.requestLayout();
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -130,5 +240,38 @@ public class DailyLogFragment extends Fragment {
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
+    }
+
+    private class DailyLogFood {
+        private String mName;
+
+        private String mType;
+
+        private int mDailyLogId;
+
+        private int mId;
+
+        public DailyLogFood(String theName, String theType, int theDailyLogId, int theId) {
+            mName = theName;
+            mType = theType;
+            mDailyLogId = theDailyLogId;
+            mId = theId;
+        }
+
+        public String getName() {
+            return mName;
+        }
+
+        public String getType() {
+            return mType;
+        }
+
+        public int getDailyLogId() {
+            return mDailyLogId;
+        }
+
+        public int getId() {
+            return mId;
+        }
     }
 }

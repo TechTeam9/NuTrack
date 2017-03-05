@@ -37,8 +37,9 @@ import javax.crypto.Mac;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
 
-import edu.uw.tcss450.nutrack.DBHelper.DBRecentSearchTableHelper;
+import edu.uw.tcss450.nutrack.database.DBFoodRecentSearch;
 import edu.uw.tcss450.nutrack.R;
+import edu.uw.tcss450.nutrack.model.Food;
 
 
 /**
@@ -150,7 +151,7 @@ public class LookUpFoodFragment extends Fragment {
      * @param theView showing view.
      */
     private void initializeRecentSearchList(View theView) {
-        DBRecentSearchTableHelper dbHelper = new DBRecentSearchTableHelper(getContext());
+        DBFoodRecentSearch dbHelper = new DBFoodRecentSearch(getContext());
 
         Cursor foods = dbHelper.getAllFood();
         if (foods.getCount() != 0) {
@@ -247,7 +248,7 @@ public class LookUpFoodFragment extends Fragment {
      * @param theFood The searched food.
      */
     private void searchFood(final String theFood) {
-        DBRecentSearchTableHelper dbHelper = new DBRecentSearchTableHelper(getContext());
+        DBFoodRecentSearch dbHelper = new DBFoodRecentSearch(getContext());
         dbHelper.insertFood(theFood);
         mFood = theFood;
         // FOR API USES!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -299,6 +300,8 @@ public class LookUpFoodFragment extends Fragment {
      */
     public interface OnFragmentInteractionListener {
         void onFragmentInteraction(String theFoodName, ArrayList<String> theFoodList);
+
+        void onFragmentInteraction(Food mFood);
     }
 
     private class FatSecretAPI extends AsyncTask<String, Void, String> {

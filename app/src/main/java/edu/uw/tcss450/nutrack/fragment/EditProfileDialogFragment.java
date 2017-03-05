@@ -16,8 +16,8 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
-import edu.uw.tcss450.nutrack.DBHelper.DBPersonalInfoTableHelper;
-import edu.uw.tcss450.nutrack.Helper.ProfileHelper;
+import edu.uw.tcss450.nutrack.database.DBPersonalInfo;
+import edu.uw.tcss450.nutrack.helper.ProfileHelper;
 import edu.uw.tcss450.nutrack.R;
 import edu.uw.tcss450.nutrack.model.Profile;
 
@@ -76,14 +76,14 @@ public class EditProfileDialogFragment extends DialogFragment {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                DBPersonalInfoTableHelper dbHelper = new DBPersonalInfoTableHelper(getContext());
+                DBPersonalInfo dbHelper = new DBPersonalInfo(getContext());
 
                 switch (mType) {
                     case NAME_TYPE:
                         if (editText.getText().length() < 1) {
                             editText.setError("Field cannot be left blank.");
                         }
-                        dbHelper.editPersonalInfo(DBPersonalInfoTableHelper.COLUMN_NAME, editText.getText().toString());
+                        dbHelper.editPersonalInfo(DBPersonalInfo.COLUMN_NAME, editText.getText().toString());
                         break;
                     case GENDER_TYPE:
                         String value;
@@ -92,7 +92,7 @@ public class EditProfileDialogFragment extends DialogFragment {
                         } else {
                             value = "f";
                         }
-                        dbHelper.editPersonalInfo(DBPersonalInfoTableHelper.COLUMN_GENDER, value);
+                        dbHelper.editPersonalInfo(DBPersonalInfo.COLUMN_GENDER, value);
                         break;
                     case DOB_TYPE:
                         //-------------------------------------------------Need Add------------------------------------------------
@@ -101,13 +101,13 @@ public class EditProfileDialogFragment extends DialogFragment {
                         if (editText.getText().length() < 1) {
                             editText.setError("Field cannot be left blank.");
                         }
-                        dbHelper.editPersonalInfoNonString(DBPersonalInfoTableHelper.COLUMN_HEIGHT, editText.getText().toString());
+                        dbHelper.editPersonalInfoNonString(DBPersonalInfo.COLUMN_HEIGHT, editText.getText().toString());
                         break;
                     case WEIGHT_TYPE:
                         if (editText.getText().length() < 1) {
                             editText.setError("Field cannot be left blank.");
                         }
-                        dbHelper.editPersonalInfoNonString(DBPersonalInfoTableHelper.COLUMN_WEIGHT, editText.getText().toString());
+                        dbHelper.editPersonalInfoNonString(DBPersonalInfo.COLUMN_WEIGHT, editText.getText().toString());
                         break;
                     default:
                         textView.setText("Error");
@@ -132,7 +132,7 @@ public class EditProfileDialogFragment extends DialogFragment {
                     textView.setText("Name");
                     editText.setHint(profile.getName());
                     editText.setVisibility(View.VISIBLE);
-                    DBPersonalInfoTableHelper dbHelper = new DBPersonalInfoTableHelper(getContext());
+                    DBPersonalInfo dbHelper = new DBPersonalInfo(getContext());
                     break;
                 case GENDER_TYPE:
                     textView.setText("Gender");

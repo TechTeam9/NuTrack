@@ -3,6 +3,7 @@
     package="edu.uw.tcss450.nutrack">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.CAMERA" />
 
     <application
         android:allowBackup="true"
@@ -21,7 +22,8 @@
         <activity
             android:name=".activity.ProfileSetupActivity"
             android:windowSoftInputMode="stateAlwaysHidden" />
-        <activity android:name=".activity.NutrientActivity"></activity>
+        <activity android:name=".activity.NutrientActivity" />
+        <activity android:name=".activity.BarcodeScannerActivity"></activity>
     </application>
 
 </manifest>

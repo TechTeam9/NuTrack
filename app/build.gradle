@@ -37,9 +37,17 @@ dependencies {
     compile 'com.github.PhilJay:MPAndroidChart:v3.0.1'
     compile 'com.github.zurche:plain-pie:v0.2.2'
     compile 'devs.mulham.horizontalcalendar:horizontalcalendar:1.0.0'
-    compile 'com.github.HackPlan:AndroidCharts:cbf568bae3'
     testCompile 'junit:junit:4.12'
+
+    compile 'me.dm7.barcodescanner:zxing:1.9'
+    compile'com.github.HackPlan:AndroidCharts:cbf568bae3'
+
+
 }
+
+
+
+
 
 allprojects {
     repositories {

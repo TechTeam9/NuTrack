@@ -1,12 +1,11 @@
-package edu.uw.tcss450.nutrack.Helper;
+package edu.uw.tcss450.nutrack.helper;
 
 import android.content.Context;
 import android.database.Cursor;
-import android.view.View;
 
-import edu.uw.tcss450.nutrack.API.AddAccountInfo;
-import edu.uw.tcss450.nutrack.DBHelper.DBMemberInfoHelper;
-import edu.uw.tcss450.nutrack.API.getAccountInfo;
+import edu.uw.tcss450.nutrack.api.AddAccountInfo;
+import edu.uw.tcss450.nutrack.database.DBMemberInfo;
+import edu.uw.tcss450.nutrack.api.getAccountInfo;
 import edu.uw.tcss450.nutrack.model.Account;
 
 public class LoginHelper {
@@ -58,7 +57,7 @@ public class LoginHelper {
      */
     public static int autoVerifyAccountExistance(Context theContext) {
         int resultCode = ERROR;
-        DBMemberInfoHelper dbHelper = new DBMemberInfoHelper(theContext);
+        DBMemberInfo dbHelper = new DBMemberInfo(theContext);
         //NEED TO CHANGE COMPARE TO == AFTER COMPLETING LOGIN PAGE
         if (dbHelper.getMemberSize() >= 1) {
             Cursor accountInfo = dbHelper.getData();

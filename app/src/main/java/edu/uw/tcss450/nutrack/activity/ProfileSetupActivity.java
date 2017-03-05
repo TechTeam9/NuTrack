@@ -19,11 +19,10 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 
 import edu.uw.tcss450.nutrack.fragment.AvatarSelectorFragment;
-import edu.uw.tcss450.nutrack.Helper.ProfileHelper;
+import edu.uw.tcss450.nutrack.helper.ProfileHelper;
 import edu.uw.tcss450.nutrack.R;
 import edu.uw.tcss450.nutrack.model.Profile;
 
-import static android.R.id.empty;
 import static android.media.CamcorderProfile.get;
 
 /**

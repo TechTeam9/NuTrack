@@ -4,10 +4,10 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:tag="food_details"
-    tools:context="edu.uw.tcss450.nutrack.fragment.FoodDialogFragment">
+    tools:context="edu.uw.tcss450.nutrack.fragment.RecipeDialogFragment">
 
     <TextView
-        android:id="@+id/dialog_food_title"
+        android:id="@+id/dialog_recipe_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
@@ -15,16 +15,9 @@
         android:elevation="2dp"
         android:gravity="center"
         android:padding="20dp"
-        android:text="@string/food_details"
         android:textColor="@android:color/white"
         android:textSize="20sp"
         android:textStyle="bold" />
-
-    <!--<TextView
-        android:id="@+id/food_dialog_details"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="8" />-->
 
 
     <LinearLayout
@@ -32,12 +25,6 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-
-        <Spinner
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-        </Spinner>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -63,7 +50,7 @@
                     android:textStyle="bold" />
 
                 <TextView
-                    android:id="@+id/calories_food_result"
+                    android:id="@+id/calories_recipe_result"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -93,7 +80,7 @@
                     android:textStyle="bold" />
 
                 <TextView
-                    android:id="@+id/fat_food_result"
+                    android:id="@+id/fat_recipe_result"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center_horizontal"
@@ -130,7 +117,7 @@
                     android:textStyle="bold" />
 
                 <TextView
-                    android:id="@+id/carbs_food_result"
+                    android:id="@+id/carbs_recipe_result"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center_horizontal"
@@ -159,26 +146,14 @@
                     android:textStyle="bold" />
 
                 <TextView
-                    android:id="@+id/protein_food_result"
+                    android:id="@+id/protein_recipe_result"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center_horizontal"
                     android:textColor="@color/black" />
-
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>
-
-    <TextView
-        android:id="@+id/url_link"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:layout_weight="1"
-        android:clickable="true"
-        android:gravity="center"
-        android:text="@string/for_more_details_click_here"
-        android:textColor="@color/colorAccent" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -207,13 +182,6 @@
 
     </LinearLayout>
 
-    <DatePicker
-        android:id="@+id/foodDialog_datePicker"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:calendarViewShown="false"
-        android:datePickerMode="spinner"
-        android:gravity="center" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -225,16 +193,16 @@
             android:id="@+id/dialog_cancel_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:background="@android:color/transparent"
             android:text="@string/cancel"
-            android:textColor="@color/colorAccent"
-            android:background="@android:color/transparent" />
+            android:textColor="@color/colorAccent" />
 
         <Button
             android:id="@+id/dialog_add_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:background="@android:color/transparent"
             android:text="@string/add"
-            android:textColor="@color/colorAccent"
-            android:background="@android:color/transparent"/>
+            android:textColor="@color/colorAccent" />
     </LinearLayout>
 </LinearLayout>

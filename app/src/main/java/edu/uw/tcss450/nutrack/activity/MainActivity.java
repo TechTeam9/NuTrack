@@ -25,13 +25,12 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 
-import edu.uw.tcss450.nutrack.DBHelper.DBMemberInfoHelper;
-import edu.uw.tcss450.nutrack.DBHelper.DBPersonalInfoTableHelper;
-import edu.uw.tcss450.nutrack.Helper.ProfileHelper;
+import edu.uw.tcss450.nutrack.database.DBMemberInfo;
+import edu.uw.tcss450.nutrack.database.DBPersonalInfo;
+import edu.uw.tcss450.nutrack.helper.ProfileHelper;
 import edu.uw.tcss450.nutrack.R;
 import edu.uw.tcss450.nutrack.fragment.DailyLogFragment;
 import edu.uw.tcss450.nutrack.fragment.EditProfileDialogFragment;
-import edu.uw.tcss450.nutrack.fragment.LookUpFoodFragment;
 import edu.uw.tcss450.nutrack.fragment.MainFragment;
 import edu.uw.tcss450.nutrack.fragment.ProfileFragment;
 import edu.uw.tcss450.nutrack.fragment.SearchResultFragment;
@@ -44,8 +43,7 @@ import static edu.uw.tcss450.nutrack.R.id.naviView;
  * Main container holding all fragment activity.
  * ProfileFragment, LookUpFoodFragment, SearchResultFragment, and SettingFragment.
  */
-public class MainActivity extends AppCompatActivity implements ProfileFragment.OnFragmentInteractionListener,
-        LookUpFoodFragment.OnFragmentInteractionListener, MainFragment.OnFragmentInteractionListener,
+public class MainActivity extends AppCompatActivity implements ProfileFragment.OnFragmentInteractionListener, MainFragment.OnFragmentInteractionListener,
         SettingFragment.OnFragmentInteractionListener, SearchResultFragment.OnFragmentInteractionListener,
         EditProfileDialogFragment.OnFragmentInteractionListener, DailyLogFragment.OnFragmentInteractionListener {
     /**
@@ -105,12 +103,8 @@ public class MainActivity extends AppCompatActivity implements ProfileFragment.O
             e.printStackTrace();
         }
 
-        //TEST
-        Fragment fragment2 = fragmentClass.newInstance();
-        // END TEST
         FragmentTransaction fragmentTracs = getSupportFragmentManager().beginTransaction();
         fragmentTracs.add(R.id.flContent, fragment);
-        fragmentTracs.add(R.id.flContent, fragment2);
 
         fragmentTracs.commit();
         initializeDrawerHeaderContent();
@@ -295,11 +289,11 @@ public class MainActivity extends AppCompatActivity implements ProfileFragment.O
      * Cleans up after the user logs out.
      */
     private void userSignOut() {
-        DBMemberInfoHelper DBMemberInfoHelper = new DBMemberInfoHelper(this);
-        DBMemberInfoHelper.deleteData();
+        DBMemberInfo DBMemberInfo = new DBMemberInfo(this);
+        DBMemberInfo.deleteData();
 
-        DBPersonalInfoTableHelper dbPersonalInfoTableHelper = new DBPersonalInfoTableHelper(this);
-        dbPersonalInfoTableHelper.deletePersonalInfo();
+        DBPersonalInfo dbPersonalInfo = new DBPersonalInfo(this);
+        dbPersonalInfo.deletePersonalInfo();
 
         Intent intent = new Intent(this, LoginActivity.class);
         startActivity(intent);

@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
-import android.support.design.widget.TextInputEditText;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -19,13 +18,12 @@ import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
-import org.w3c.dom.Text;
 
-import edu.uw.tcss450.nutrack.DBHelper.DBMemberInfoHelper;
-import edu.uw.tcss450.nutrack.API.getAccountInfo;
-import edu.uw.tcss450.nutrack.Helper.LoginHelper;
-import edu.uw.tcss450.nutrack.API.AddAccountInfo;
-import edu.uw.tcss450.nutrack.Helper.ProfileHelper;
+import edu.uw.tcss450.nutrack.database.DBMemberInfo;
+import edu.uw.tcss450.nutrack.api.getAccountInfo;
+import edu.uw.tcss450.nutrack.helper.LoginHelper;
+import edu.uw.tcss450.nutrack.api.AddAccountInfo;
+import edu.uw.tcss450.nutrack.helper.ProfileHelper;
 import edu.uw.tcss450.nutrack.R;
 import edu.uw.tcss450.nutrack.model.Account;
 import edu.uw.tcss450.nutrack.model.Profile;
@@ -246,7 +244,7 @@ public class LoginActivity extends AppCompatActivity implements AddAccountInfo.R
      * @return a pass or fail indicator
      */
     private boolean insertNewMemberData(String theEmail, String thePassword) {
-        DBMemberInfoHelper memberTable = new DBMemberInfoHelper(this);
+        DBMemberInfo memberTable = new DBMemberInfo(this);
 
         if (memberTable.insertMember(theEmail, thePassword)) {
             memberTable.close();
@@ -298,7 +296,7 @@ public class LoginActivity extends AppCompatActivity implements AddAccountInfo.R
     public void onLoginCompleted(int theResultCode, String theEmail, String thePassword) {
         mEmail = theEmail;
         if (theResultCode == LoginHelper.CORRECT_LOGIN_INFO) {
-            DBMemberInfoHelper memberTable = new DBMemberInfoHelper(this);
+            DBMemberInfo memberTable = new DBMemberInfo(this);
 
             if (memberTable.getMemberSize() == 0) {
                 memberTable.insertMember(theEmail, thePassword);
@@ -307,7 +305,7 @@ public class LoginActivity extends AppCompatActivity implements AddAccountInfo.R
             ProfileHelper.checkProfileExistence(this, theEmail);
 
         } else if (theResultCode == LoginHelper.ACCOUNT_FOUND_BUT_LOGIN_ERROR) {
-            DBMemberInfoHelper memberTable = new DBMemberInfoHelper(this);
+            DBMemberInfo memberTable = new DBMemberInfo(this);
             memberTable.deleteData();
             memberTable.close();
 

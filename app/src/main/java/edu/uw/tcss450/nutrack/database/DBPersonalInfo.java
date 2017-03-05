@@ -1,22 +1,19 @@
-package edu.uw.tcss450.nutrack.DBHelper;
+package edu.uw.tcss450.nutrack.database;
 
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.provider.ContactsContract;
 
 import java.util.Date;
 
 import edu.uw.tcss450.nutrack.model.Profile;
 
-import static android.R.attr.type;
-
 /**
  * Retrieving User personal data in database.
  */
-public class DBPersonalInfoTableHelper extends SQLiteOpenHelper {
+public class DBPersonalInfo extends SQLiteOpenHelper {
 
     /**
      * Database name.
@@ -62,7 +59,7 @@ public class DBPersonalInfoTableHelper extends SQLiteOpenHelper {
      *
      * @param context context
      */
-    public DBPersonalInfoTableHelper(Context context) {
+    public DBPersonalInfo(Context context) {
         super(context, DATABASE_NAME, null, 1);
     }
 

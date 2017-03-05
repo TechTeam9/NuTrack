@@ -37,12 +37,14 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@color/colorPrimary"
+                    android:background="@color/colorAccent"
                     android:padding="10dp"
                     android:text="Breakfast"
-                    android:textSize="20sp" />
+                    android:textSize="20sp"
+                    android:textColor="@android:color/white"/>
 
                 <ListView
+                    android:id="@+id/breakfast_listView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
 
@@ -56,12 +58,14 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@color/colorPrimary"
+                    android:background="@color/colorAccent"
                     android:padding="10dp"
                     android:text="Lunch"
-                    android:textSize="20sp" />
+                    android:textSize="20sp"
+                    android:textColor="@android:color/white"/>
 
                 <ListView
+                    android:id="@+id/lunch_listView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
 
@@ -75,12 +79,14 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@color/colorPrimary"
+                    android:background="@color/colorAccent"
                     android:padding="10dp"
                     android:text="Dinner"
-                    android:textSize="20sp" />
+                    android:textSize="20sp"
+                    android:textColor="@android:color/white" />
 
                 <ListView
+                    android:id="@+id/dinner_listView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
 
@@ -94,12 +100,14 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@color/colorPrimary"
+                    android:background="@color/colorAccent"
                     android:padding="10dp"
                     android:text="Snack"
-                    android:textSize="20sp" />
+                    android:textSize="20sp"
+                    android:textColor="@android:color/white" />
 
                 <ListView
+                    android:id="@+id/snack_listView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
 

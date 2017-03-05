@@ -1,4 +1,4 @@
-package edu.uw.tcss450.nutrack.DBHelper;
+package edu.uw.tcss450.nutrack.database;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -10,10 +10,10 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
- * Created by Ming on 2/28/2017.
+ * Retrieving user searching record in database.
  */
+public class DBFoodRecentSearch extends SQLiteOpenHelper {
 
-public class DBDailyLogTableHelper extends SQLiteOpenHelper {
     /**
      * Database name.
      */
@@ -22,7 +22,7 @@ public class DBDailyLogTableHelper extends SQLiteOpenHelper {
     /**
      * Table name.
      */
-    private static final String TABLE_NAME = "recent_search";
+    private static final String TABLE_NAME = "food_recent_search";
 
     /**
      * Food name column.
@@ -39,19 +39,19 @@ public class DBDailyLogTableHelper extends SQLiteOpenHelper {
      *
      * @param context
      */
-    public DBDailyLogTableHelper(Context context) {
+    public DBFoodRecentSearch(Context context) {
         super(context, DATABASE_NAME, null, 1);
     }
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        String createTableQuery = "CREATE TABLE IF NOT EXISTS recent_search(food_name TEXT, search_time NUMERIC)";
+        String createTableQuery = "CREATE TABLE IF NOT EXISTS food_recent_search(food_name TEXT, search_time NUMERIC)";
         db.execSQL(createTableQuery);
     }
 
     @Override
     public void onOpen(SQLiteDatabase db) {
-        String createTableQuery = "CREATE TABLE IF NOT EXISTS recent_search(food_name TEXT, search_time NUMERIC)";
+        String createTableQuery = "CREATE TABLE IF NOT EXISTS food_recent_search(food_name TEXT, search_time NUMERIC)";
         db.execSQL(createTableQuery);
     }
 
@@ -115,15 +115,10 @@ public class DBDailyLogTableHelper extends SQLiteOpenHelper {
      */
     public Cursor getAllFood() {
         SQLiteDatabase db = this.getReadableDatabase();
-        return db.rawQuery("SELECT * FROM recent_search", null);
+        return db.rawQuery("SELECT * FROM food_recent_search", null);
 
-    }
-
-    /**
-     * Close database connection.
-     */
-    public void closeDB() {
-        this.close();
     }
 
 }
+
+

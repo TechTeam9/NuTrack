@@ -6,10 +6,7 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,6 +16,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.SearchView;
 import android.widget.SimpleAdapter;
+import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -35,17 +33,16 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Random;
 
-import javax.crypto.Mac;
-import javax.crypto.SecretKey;
-import javax.crypto.spec.SecretKeySpec;
-
-import edu.uw.tcss450.nutrack.API.FatSecretHelper;
-import edu.uw.tcss450.nutrack.DBHelper.DBRecentSearchTableHelper;
+import edu.uw.tcss450.nutrack.api.FatSecretHelper;
+import edu.uw.tcss450.nutrack.database.DBFoodRecentSearch;
 import edu.uw.tcss450.nutrack.R;
-import edu.uw.tcss450.nutrack.fragment.FoodDialogFragment;
-import edu.uw.tcss450.nutrack.fragment.LookUpFoodFragment;
+import edu.uw.tcss450.nutrack.activity.NutrientActivity;
+import edu.uw.tcss450.nutrack.database.DBRecipeRecentSearch;
+import edu.uw.tcss450.nutrack.helper.RecentSearchHelper;
+import edu.uw.tcss450.nutrack.model.Food;
+
+import static java.security.AccessController.getContext;
 
 
 /**
@@ -69,7 +66,7 @@ public class SearchFoodTabFragment extends Fragment {
     /**
      * TheLookUpFoodFragment interaction listener.
      */
-    private LookUpFoodFragment.OnFragmentInteractionListener mListener;
+    private SearchFoodTabFragment.OnFragmentInteractionListener mListener;
 
     public SearchFoodTabFragment() {
         // Required empty public constructor
@@ -80,7 +77,7 @@ public class SearchFoodTabFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        View view = inflater.inflate(R.layout.fragment_look_up_food, container, false);
+        View view = inflater.inflate(R.layout.fragment_search_food_tab, container, false);
 
         mContext = container.getContext();
         initializeSearchListener(view);
@@ -121,15 +118,27 @@ public class SearchFoodTabFragment extends Fragment {
         });
     }
 
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        if (context instanceof SearchFoodTabFragment.OnFragmentInteractionListener) {
+            mListener = (SearchFoodTabFragment.OnFragmentInteractionListener) context;
+        } else {
+            throw new RuntimeException(context.toString()
+                    + " must implement OnFragmentInteractionListener");
+        }
+    }
+
+
     /**
      * Start the Recent search record list.
      *
      * @param theView showing view.
      */
     private void initializeRecentSearchList(View theView) {
-        DBRecentSearchTableHelper dbHelper = new DBRecentSearchTableHelper(getContext());
+        RecentSearchHelper helper = new RecentSearchHelper(getContext());
+        Cursor foods = helper.getFoodRecentSearch();
 
-        Cursor foods = dbHelper.getAllFood();
         if (foods.getCount() != 0) {
             ArrayList<HashMap<String, String>> foodList = new ArrayList<>();
 
@@ -190,6 +199,8 @@ public class SearchFoodTabFragment extends Fragment {
         } else {
             mListView = (ListView) theView.findViewById(R.id.lookUp_listView);
         }
+
+        helper.close();
     }
 
     /**
@@ -225,11 +236,11 @@ public class SearchFoodTabFragment extends Fragment {
      * @param theFood The searched food.
      */
     private void searchFood(final String theFood) {
-        DBRecentSearchTableHelper dbHelper = new DBRecentSearchTableHelper(getContext());
-        dbHelper.insertFood(theFood);
+        RecentSearchHelper helper = new RecentSearchHelper(getContext());
+        helper.addFoodRecentSearch(theFood);
         mFood = theFood;
         // FOR API USES!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-        final FatSecretAPI mFatSecret = new FatSecretAPI();
+        final APIFoodSearch mFatSecret = new APIFoodSearch();
         mFatSecret.execute(theFood);
 
     }
@@ -252,12 +263,9 @@ public class SearchFoodTabFragment extends Fragment {
                 mListView.setClickable(false);
 //                listView.setVisibility(View.INVISIBLE);
                 Bundle bundle = new Bundle();
-                bundle.putInt("food_id", mFoodId.get(position));
-                FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-                DialogFragment foodInfoDialog = new FoodDialogFragment();
-                foodInfoDialog.setArguments(bundle);
-                foodInfoDialog.show(fragmentManager, "food info dialog");
-                //onFragmentInteraction();
+
+                final APIFoodGet mFatSecret = new APIFoodGet();
+                mFatSecret.execute(String.valueOf(mFoodId.get(position)));
 
             }
         });
@@ -265,10 +273,9 @@ public class SearchFoodTabFragment extends Fragment {
     }
 
 
-    private class FatSecretAPI extends AsyncTask<String, Void, String> {
+    private class APIFoodSearch extends AsyncTask<String, Void, String> {
 
         private final static String METHOD = "GET";
-
 
 
         @Override
@@ -322,5 +329,98 @@ public class SearchFoodTabFragment extends Fragment {
                 Log.e("API Error!", exception.getMessage());
             }
         }
+    }
+
+    private class APIFoodGet extends AsyncTask<String, Void, String> {
+
+        private final static String METHOD = "GET";
+
+        Food mFood = new Food();
+
+        @Override
+        protected String doInBackground(String... strings) {
+            List<String> params = new ArrayList<>(Arrays.asList(FatSecretHelper.generateOauthParams()));
+            String[] template = new String[1];
+            String response = "";
+            params.add("method=food.get");
+            params.add("food_id=" + Uri.encode(strings[0]));
+
+            params.add("oauth_signature=" + FatSecretHelper.sign(METHOD, FatSecretHelper.URL, params.toArray(template)));
+
+            JSONObject foods = null;
+            try {
+                java.net.URL url = new URL(FatSecretHelper.URL + "?" + FatSecretHelper.paramify(params.toArray(template)));
+                URLConnection api = url.openConnection();
+                String line;
+                StringBuilder builder = new StringBuilder();
+                BufferedReader reader = new BufferedReader(new InputStreamReader(api.getInputStream()));
+                while ((line = reader.readLine()) != null) builder.append(line);
+                response = builder.toString();
+            } catch (Exception exception) {
+                Log.e("FatSecret Error", exception.toString());
+                exception.printStackTrace();
+            }
+
+            return response;
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            JSONObject jsonObject;
+            JSONArray jsonArray;
+
+            ArrayList<Double> calorieList = new ArrayList<>();
+            ArrayList<Double> fatList = new ArrayList<>();
+            ArrayList<Double> carbsList = new ArrayList<>();
+            ArrayList<Double> proteinList = new ArrayList<>();
+            ArrayList<String> urlList = new ArrayList<>();
+
+            try {
+                if (result != null) {
+                    mFood.setId(new JSONObject(result).getJSONObject("food").getInt("food_id"));
+                    mFood.setName(new JSONObject(result).getJSONObject("food").getString("food_name"));
+
+                    jsonObject = new JSONObject(result).getJSONObject("food").getJSONObject("servings");
+                    JSONObject servingObject = jsonObject.optJSONObject("serving");
+                    if (servingObject != null) {
+                        calorieList.add(servingObject.getDouble("calories"));
+                        fatList.add(servingObject.getDouble("fat"));
+                        carbsList.add(servingObject.getDouble("carbohydrate"));
+                        proteinList.add(servingObject.getDouble("protein"));
+                        urlList.add(servingObject.getString("serving_url"));
+
+                    } else {
+                        jsonArray = jsonObject.getJSONArray("serving");
+                        if (jsonArray != null) {
+                            for (int i = 0; i < jsonArray.length(); i++) {
+                                JSONObject serving = jsonArray.getJSONObject(i);
+
+                                calorieList.add(serving.getDouble("calories"));
+                                fatList.add(serving.getDouble("fat"));
+                                carbsList.add(serving.getDouble("carbohydrate"));
+                                proteinList.add(serving.getDouble("protein"));
+                                urlList.add(serving.getString("serving_url"));
+                            }
+                        }
+                    }
+
+                    mFood.setCalorie(calorieList);
+                    mFood.setFat(fatList);
+                    mFood.setCarbs(carbsList);
+                    mFood.setProtein(proteinList);
+                    mFood.setmURL(urlList);
+
+                    mListener.onFragmentInteraction(mFood);
+                }
+
+            } catch (JSONException exception) {
+                Toast.makeText(getContext(), "Error fetching food info", Toast.LENGTH_LONG);
+                Log.e("API Error!", exception.getMessage());
+            }
+        }
+    }
+
+    public interface OnFragmentInteractionListener {
+        void onFragmentInteraction(Food theFood);
     }
 }

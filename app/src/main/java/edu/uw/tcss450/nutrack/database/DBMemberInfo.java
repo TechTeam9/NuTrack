@@ -1,4 +1,4 @@
-package edu.uw.tcss450.nutrack.DBHelper;
+package edu.uw.tcss450.nutrack.database;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -9,7 +9,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 /**
  * Database helper class for connecting to member table in the database
  */
-public class DBMemberInfoHelper extends SQLiteOpenHelper {
+public class DBMemberInfo extends SQLiteOpenHelper {
 
     /**
      * Join date column.
@@ -41,7 +41,7 @@ public class DBMemberInfoHelper extends SQLiteOpenHelper {
      *
      * @param context context
      */
-    public DBMemberInfoHelper(Context context) {
+    public DBMemberInfo(Context context) {
         super(context, DATABASE_NAME, null, 1);
     }
 

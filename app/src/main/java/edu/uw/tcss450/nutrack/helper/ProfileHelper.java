@@ -1,7 +1,6 @@
-package edu.uw.tcss450.nutrack.Helper;
+package edu.uw.tcss450.nutrack.helper;
 
 import android.content.Context;
-import android.database.Cursor;
 import android.os.AsyncTask;
 
 import java.io.BufferedReader;
@@ -12,7 +11,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
 
-import edu.uw.tcss450.nutrack.DBHelper.DBPersonalInfoTableHelper;
+import edu.uw.tcss450.nutrack.database.DBPersonalInfo;
 import edu.uw.tcss450.nutrack.model.Profile;
 
 /**
@@ -64,12 +63,12 @@ public class ProfileHelper {
      * @param theProfile Profile model
      */
     public static void insertProfile(Context theContext, String email, Profile theProfile) {
-        DBPersonalInfoTableHelper dbPersonalInfoTableHelper = new DBPersonalInfoTableHelper(theContext);
-        dbPersonalInfoTableHelper.insertPersonalInfo(theProfile.getName()
+        DBPersonalInfo dbPersonalInfo = new DBPersonalInfo(theContext);
+        dbPersonalInfo.insertPersonalInfo(theProfile.getName()
                 , theProfile.getGender(), theProfile.getDOB()
                 , theProfile.getHeight(), theProfile.getWeight()
                 , theProfile.getAvatarId());
-        dbPersonalInfoTableHelper.close();
+        dbPersonalInfo.close();
         PostPersonalInfo postInfo = new PostPersonalInfo(theContext);
         postInfo.execute(email, theProfile);
     }
@@ -81,7 +80,7 @@ public class ProfileHelper {
      * @return a profile
      */
     public static Profile getPersonalInfo(Context theContext) {
-        DBPersonalInfoTableHelper dbHelper = new DBPersonalInfoTableHelper(theContext);
+        DBPersonalInfo dbHelper = new DBPersonalInfo(theContext);
         return dbHelper.getPersonalInfo();
     }
 
@@ -92,7 +91,7 @@ public class ProfileHelper {
      * @return true or false
      */
     public static boolean hasProfile(Context theContext) {
-        DBPersonalInfoTableHelper dbHelper = new DBPersonalInfoTableHelper(theContext);
+        DBPersonalInfo dbHelper = new DBPersonalInfo(theContext);
         int size = dbHelper.getMemberSize();
         dbHelper.close();
         if (size == 0) {
@@ -109,7 +108,7 @@ public class ProfileHelper {
      * @param theProfile profile
      */
     public static void insertLocalProfile(Context theContext, Profile theProfile) {
-        DBPersonalInfoTableHelper dbHelper = new DBPersonalInfoTableHelper(theContext);
+        DBPersonalInfo dbHelper = new DBPersonalInfo(theContext);
         dbHelper.insertPersonalInfo(theProfile.getName(), theProfile.getGender(), theProfile.getDOB(), theProfile.getHeight(), theProfile.getWeight(), theProfile.getAvatarId());
         dbHelper.close();
     }

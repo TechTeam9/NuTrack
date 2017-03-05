@@ -1,31 +1,23 @@
 package edu.uw.tcss450.nutrack.fragment;
 
+import android.content.Intent;
+import android.graphics.Paint;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.net.URL;
-import java.net.URLConnection;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
-import edu.uw.tcss450.nutrack.API.FatSecretHelper;
 import edu.uw.tcss450.nutrack.R;
+import edu.uw.tcss450.nutrack.database.DBDailyLog;
+import edu.uw.tcss450.nutrack.model.Food;
+
+import static edu.uw.tcss450.nutrack.R.id.textView;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -63,6 +55,8 @@ public class FoodDialogFragment extends DialogFragment {
      */
     private OnFragmentInteractionListener mListener;
 
+    private Food mFood;
+
     /**
      * FoodDialogFragment constructor.
      */
@@ -89,8 +83,7 @@ public class FoodDialogFragment extends DialogFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            FatSecretAPI api = new FatSecretAPI();
-            api.execute(String.valueOf(getArguments().getInt("food_id")));
+            mFood = getArguments().getParcelable("food_info");
         }
     }
 
@@ -99,19 +92,49 @@ public class FoodDialogFragment extends DialogFragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         mView = inflater.inflate(R.layout.fragment_food_dialog, container, false);
-//        View foodDetailsTV = mView.findViewById(R.id.food_dialog_details);
 
-        // Changing food nutrient information
-//        ((TextView) foodDetailsTV).setText("More Coming Soon.....");
+        TextView dialogTitle = (TextView) mView.findViewById(R.id.dialog_food_title);
+        TextView caloriesResult = (TextView) mView.findViewById(R.id.calories_food_result);
+        TextView fatResult = (TextView) mView.findViewById(R.id.fat_food_result);
+        TextView carbsResult = (TextView) mView.findViewById(R.id.carbs_food_result);
+        TextView proteinResult = (TextView) mView.findViewById(R.id.protein_food_result);
+        TextView urlResult = (TextView) mView.findViewById(R.id.url_link);
+        if (mFood.getmURL().size() < 1) {
+            urlResult.setVisibility(View.GONE);
+        } else {
+            urlResult.setPaintFlags(urlResult.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
+        }
 
-        //try to do it in onCreateView but still crash
-//        if (getArguments() != null) {
-//            FatSecretAPI api = new FatSecretAPI();
-//            api.execute(String.valueOf(getArguments().getInt("food_id")));
-//        }
+        dialogTitle.setText(mFood.getName());
+        caloriesResult.setText(String.valueOf(mFood.getCalorie().get(0)));
+        fatResult.setText(String.valueOf(mFood.getFat().get(0)));
+        carbsResult.setText(String.valueOf(mFood.getCarbs().get(0)));
+        proteinResult.setText(String.valueOf(mFood.getProtein().get(0)));
+        urlResult.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                goToUrl (mFood.getmURL().get(0));
+            }
+        });
+
         // Buttons action
-        Button cancelButton = (Button) mView.findViewById(R.id.dialog_cancel_button);
         Button addButton = (Button) mView.findViewById(R.id.dialog_add_button);
+        Button cancelButton = (Button) mView.findViewById(R.id.dialog_cancel_button);
+
+        addButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                DBDailyLog db = new DBDailyLog(getContext());
+                db.insertFood(mFood.getName(), mFood.getId(), "food", "breakfast");
+            }
+        });
+
+        cancelButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dismiss();
+            }
+        });
 
         //Remove cancel button for now and will remove this line of code in the next version.
 //        cancelButton.setVisibility(mView.GONE);
@@ -120,6 +143,15 @@ public class FoodDialogFragment extends DialogFragment {
         return mView;
     }
 
+    /**
+     * Go to the URL.
+     * @param url address.
+     */
+    private void goToUrl(String url) {
+        Uri uriUrl = Uri.parse(url);
+        Intent launchBrowser = new Intent(Intent.ACTION_VIEW, uriUrl);
+        startActivity(launchBrowser);
+    }
 
     /**
      * Action when button pressed.
@@ -127,9 +159,6 @@ public class FoodDialogFragment extends DialogFragment {
      * @param uri uri.
      */
     public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction();
-        }
     }
 
 //    @Override
@@ -160,74 +189,10 @@ public class FoodDialogFragment extends DialogFragment {
      * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnFragmentInteractionListener {
-        void onFragmentInteraction();
+        void onFragmentInteraction(Food theFood);
     }
 
-    private class FatSecretAPI extends AsyncTask<String, Void, String> {
-
-        private final static String METHOD = "GET";
-
-        @Override
-        protected String doInBackground(String... strings) {
-            List<String> params = new ArrayList<>(Arrays.asList(FatSecretHelper.generateOauthParams()));
-            String[] template = new String[1];
-            String response = "";
-            params.add("method=food.get");
-            params.add("food_id=" + Uri.encode(strings[0]));
-            params.add("oauth_signature=" + FatSecretHelper.sign(METHOD, FatSecretHelper.URL, params.toArray(template)));
-
-            JSONObject foods = null;
-            try {
-                java.net.URL url = new URL(FatSecretHelper.URL + "?" + FatSecretHelper.paramify(params.toArray(template)));
-                URLConnection api = url.openConnection();
-                String line;
-                StringBuilder builder = new StringBuilder();
-                BufferedReader reader = new BufferedReader(new InputStreamReader(api.getInputStream()));
-                while ((line = reader.readLine()) != null) builder.append(line);
-                response = builder.toString();
-            } catch (Exception exception) {
-                Log.e("FatSecret Error", exception.toString());
-                exception.printStackTrace();
-            }
-
-            return response;
-        }
-
-        @Override
-        protected void onPostExecute(String result) {
-            JSONObject jsonObject;
-            JSONArray jsonArray;
-
-            try {
-                if (result != null) {
-                    jsonObject = new JSONObject(result).getJSONObject("food").getJSONObject("servings");
-                    jsonArray = jsonObject.getJSONArray("serving");
-                    if (jsonArray != null) {
-                        //for (int i = 0; i < jsonArray.length(); i++) {
-                        JSONObject servingObject = jsonArray.getJSONObject(0);
-//                        System.out.println(servingObject.getInt("calories"));
-                        int cal = servingObject.getInt("calories");
-                        int fat = servingObject.getInt("fat");
-                        int carbs = servingObject.getInt("carbohydrate");
-                        int protein = servingObject.getInt("protein");
-                        //}
-                        TextView calTV = (TextView) mView.findViewById(R.id.cal_food_result);
-                        TextView fatTV = (TextView) mView.findViewById(R.id.fat_food_result);
-                        TextView carbsTV = (TextView) mView.findViewById(R.id.carbs_food_result);
-                        TextView proteinTV = (TextView) mView.findViewById(R.id.protein_food_result);
-                        calTV.setText(Integer.toString(cal));
-                        fatTV.setText(Integer.toString(fat));
-                        carbsTV.setText(Integer.toString(carbs));
-                        proteinTV.setText(Integer.toString(protein));
-                        System.out.println("cal: " + cal + " fat: " + fat + " carbs: " + carbs + " protein: " + protein);
-                    }
-
-                }
 
 
-            } catch (JSONException exception) {
-                Log.e("API Error!", exception.getMessage());
-            }
-        }
-    }
+
 }
