@@ -106,11 +106,11 @@ public class MainActivity extends AppCompatActivity implements ProfileFragment.O
         }
 
         //TEST
-//        Fragment fragment2 = fragmentClass.newInstance();
+        Fragment fragment2 = fragmentClass.newInstance();
         // END TEST
         FragmentTransaction fragmentTracs = getSupportFragmentManager().beginTransaction();
         fragmentTracs.add(R.id.flContent, fragment);
-//        fragmentTracs.add(R.id.flContent, fragment2);
+        fragmentTracs.add(R.id.flContent, fragment2);
 
         fragmentTracs.commit();
         initializeDrawerHeaderContent();

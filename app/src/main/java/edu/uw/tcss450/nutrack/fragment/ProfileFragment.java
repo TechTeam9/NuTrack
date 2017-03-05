@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -159,7 +160,7 @@ public class ProfileFragment extends Fragment implements EditProfileDialogFragme
         //TextView viewDOB = (TextView) theView.findViewById(R.id.profile_textView_valueDoB);
         //TextView viewHeight = (TextView) theView.findViewById(R.id.profile_textView_valueHeight);
         //TextView viewWeight = (TextView) theView.findViewById(R.id.profile_textView_valueWeight);
-        //ImageView imageAvatar = (ImageView) theView.findViewById(R.id.profile_imageView_avatar);
+        ImageView imageAvatar = (ImageView) theView.findViewById(R.id.profile_imageView_avatar);
 
         //viewName.setText(profile.getName());
 //Adrian
@@ -181,7 +182,7 @@ public class ProfileFragment extends Fragment implements EditProfileDialogFragme
         //viewWeight.setText(String.valueOf(profile.getWeight()));
 
         //Log.i("FRAG", "Well " + profile.getAvatarId());
-        //imageAvatar.setImageResource(profile.getAvatarId());
+        imageAvatar.setImageResource(profile.getAvatarId());
 //Adrian
     }
 

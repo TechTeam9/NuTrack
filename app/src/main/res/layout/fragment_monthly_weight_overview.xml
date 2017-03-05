@@ -1,0 +1,18 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="edu.uw.tcss450.nutrack.fragment.MonthlyWeightOverviewFragment">
+
+    <HorizontalScrollView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+        <view
+            android:layout_width="wrap_content"
+            android:layout_height="300dp"
+            class="im.dacer.androidcharts.LineView"
+            android:id="@+id/line_view" />
+    </HorizontalScrollView>
+
+</LinearLayout>
