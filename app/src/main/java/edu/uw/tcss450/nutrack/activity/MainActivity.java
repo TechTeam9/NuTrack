@@ -30,6 +30,7 @@ import edu.uw.tcss450.nutrack.DBHelper.DBPersonalInfoTableHelper;
 import edu.uw.tcss450.nutrack.Helper.ProfileHelper;
 import edu.uw.tcss450.nutrack.R;
 import edu.uw.tcss450.nutrack.fragment.DailyIntakeOverviewFragment;
+import edu.uw.tcss450.nutrack.fragment.DailyLogFragment;
 import edu.uw.tcss450.nutrack.fragment.EditProfileDialogFragment;
 import edu.uw.tcss450.nutrack.fragment.LookUpFoodFragment;
 import edu.uw.tcss450.nutrack.fragment.MainFragment;
@@ -49,8 +50,9 @@ import static edu.uw.tcss450.nutrack.R.id.naviView;
 public class MainActivity extends AppCompatActivity implements ProfileFragment.OnFragmentInteractionListener,
         LookUpFoodFragment.OnFragmentInteractionListener, MainFragment.OnFragmentInteractionListener,
         SettingFragment.OnFragmentInteractionListener, SearchResultFragment.OnFragmentInteractionListener,
+
         EditProfileDialogFragment.OnFragmentInteractionListener, DailyIntakeOverviewFragment.OnFragmentInteractionListener,
-        WeeklyIntakeOverviewFragment.OnFragmentInteractionListener,MonthlyWeightOverviewFragment.OnFragmentInteractionListener {
+        WeeklyIntakeOverviewFragment.OnFragmentInteractionListener,MonthlyWeightOverviewFragment.OnFragmentInteractionListener, DailyLogFragment.OnFragmentInteractionListener {
     /**
      * The layout that hold the navigation drawer.
      */
@@ -250,6 +252,9 @@ public class MainActivity extends AppCompatActivity implements ProfileFragment.O
                 break;
             case R.id.nav_profile:
                 fragmentClasses[0] = ProfileFragment.class;
+                break;
+            case R.id.nav_Daily_log:
+                fragmentClass = DailyLogFragment.class;
                 break;
             case R.id.nav_settings:
                 fragmentClasses[0] = SettingFragment.class;
