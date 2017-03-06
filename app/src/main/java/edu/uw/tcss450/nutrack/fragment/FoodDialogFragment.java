@@ -120,7 +120,6 @@ public class FoodDialogFragment extends DialogFragment {
                     addButton.setText("SUBMIT");
                 } else if (addButton.getText().equals("SUBMIT")) {
                     DatePicker datePicker = (DatePicker) mView.findViewById(R.id.foodDialog_datePicker);
-                    String eatDate = datePicker.getYear() + "-" + datePicker.getMonth() + "-" + datePicker.getDayOfMonth();
                     String mealType = "";
                     RadioGroup mealTypeGroup = (RadioGroup) mView.findViewById(R.id.foodDialog_radioGroup);
                     switch (mealTypeGroup.getCheckedRadioButtonId()) {

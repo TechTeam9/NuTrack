@@ -1,6 +1,7 @@
 package edu.uw.tcss450.nutrack.fragment;
 
 import android.content.Context;
+import android.graphics.Paint;
 import android.media.Image;
 import android.net.Uri;
 import android.os.Bundle;
@@ -10,10 +11,16 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import edu.uw.tcss450.nutrack.R;
 import edu.uw.tcss450.nutrack.database.DBDailyLog;
@@ -82,27 +89,69 @@ public class RecipeDialogFragment extends DialogFragment {
                              Bundle savedInstanceState) {
         mView = inflater.inflate(R.layout.fragment_recipe_dialog, container, false);
 
-        TextView dialogTitle = (TextView) mView.findViewById(R.id.dialog_recipe_title);
-        TextView caloriesResult = (TextView) mView.findViewById(R.id.calories_recipe_result);
-        TextView fatResult = (TextView) mView.findViewById(R.id.fat_recipe_result);
-        TextView carbsResult = (TextView) mView.findViewById(R.id.carbs_recipe_result);
-        TextView proteinResult = (TextView) mView.findViewById(R.id.protein_recipe_result);
+        initializeRecipeInfoPanel(0);
 
-        dialogTitle.setText(mRecipe.getName());
-        caloriesResult.setText(String.valueOf(mRecipe.getCalorie().get(0)));
-        fatResult.setText(String.valueOf(mRecipe.getFat().get(0)));
-        carbsResult.setText(String.valueOf(mRecipe.getCarbs().get(0)));
-        proteinResult.setText(String.valueOf(mRecipe.getProtein().get(0)));
-
-        ImageView recipeImage = (ImageView) mView.findViewById(R.id.recipeDialog_imageView);
-        if (mRecipe.getImageURL() != null && mRecipe.getImageURL() != " ") {
-            Picasso.with(getContext()).load(mRecipe.getImageURL()).into(recipeImage);
-        }
+//        TextView dialogTitle = (TextView) mView.findViewById(R.id.dialog_recipe_title);
+//        TextView caloriesResult = (TextView) mView.findViewById(R.id.calories_recipe_result);
+//        TextView fatResult = (TextView) mView.findViewById(R.id.fat_recipe_result);
+//        TextView carbsResult = (TextView) mView.findViewById(R.id.carbs_recipe_result);
+//        TextView proteinResult = (TextView) mView.findViewById(R.id.protein_recipe_result);
+//
+//        dialogTitle.setText(mRecipe.getName());
+//        caloriesResult.setText(String.valueOf(mRecipe.getCalorie().get(0)));
+//        fatResult.setText(String.valueOf(mRecipe.getFat().get(0)));
+//        carbsResult.setText(String.valueOf(mRecipe.getCarbs().get(0)));
+//        proteinResult.setText(String.valueOf(mRecipe.getProtein().get(0)));
+//
+//        ImageView recipeImage = (ImageView) mView.findViewById(R.id.recipeDialog_imageView);
+//        if (mRecipe.getImageURL() != null && mRecipe.getImageURL() != "") {
+//            Picasso.with(getContext()).load(mRecipe.getImageURL()).into(recipeImage);
+//        }
 
 
         // Buttons action
-        Button addButton = (Button) mView.findViewById(R.id.dialog_add_button);
+        final Button addButton = (Button) mView.findViewById(R.id.dialog_add_button);
         Button cancelButton = (Button) mView.findViewById(R.id.dialog_cancel_button);
+
+        addButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                LinearLayout recipeInfoPanel = (LinearLayout) mView.findViewById(R.id.recipeDialog_foodInfo);
+                LinearLayout addInfoPanel = (LinearLayout) mView.findViewById(R.id.recipeDialog_addInfo);
+
+                //If add button is add function, switch to add info view, else get data from add info view.
+                if (addButton.getText().equals("ADD")) {
+                    recipeInfoPanel.setVisibility(View.GONE);
+                    addInfoPanel.setVisibility(View.VISIBLE);
+                    addButton.setText("SUBMIT");
+                } else if (addButton.getText().equals("SUBMIT")) {
+                    DatePicker datePicker = (DatePicker) mView.findViewById(R.id.recipeDialog_datePicker);
+                    String mealType = "";
+                    RadioGroup mealTypeGroup = (RadioGroup) mView.findViewById(R.id.recipeDialog_radioGroup);
+                    switch (mealTypeGroup.getCheckedRadioButtonId()) {
+                        case R.id.recipeDialog_radioButton_breakfast:
+                            mealType = "breakfast";
+                            break;
+                        case R.id.recipeDialog_radioButton_lunch:
+                            mealType = "lunch";
+                            break;
+                        case R.id.recipeDialog_radioButton_dinner:
+                            mealType = "dinner";
+                            break;
+                        case R.id.recipeDialog_radioButton_snack:
+                            mealType = "snack";
+                            break;
+                    }
+
+                    DBDailyLog db = new DBDailyLog(getContext());
+                    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+                    String date = dateFormat.format(new Date(datePicker.getYear() - 1900, datePicker.getMonth(), datePicker.getDayOfMonth()));
+                    db.insertFood(mRecipe.getName(), mRecipe.getId(), "recipe", mealType, date);
+                    System.out.println(mealType + ", " + date);
+                    dismiss();
+                }
+            }
+        });
 
         /*
         addButton.setOnClickListener(new View.OnClickListener() {
@@ -121,6 +170,27 @@ public class RecipeDialogFragment extends DialogFragment {
         });
 
         return mView;
+    }
+
+    private void initializeRecipeInfoPanel(final int thePosition) {
+        TextView dialogTitle = (TextView) mView.findViewById(R.id.dialog_recipe_title);
+        TextView caloriesResult = (TextView) mView.findViewById(R.id.calories_recipe_result);
+        TextView fatResult = (TextView) mView.findViewById(R.id.fat_recipe_result);
+        TextView carbsResult = (TextView) mView.findViewById(R.id.carbs_recipe_result);
+        TextView proteinResult = (TextView) mView.findViewById(R.id.protein_recipe_result);
+
+        dialogTitle.setText(mRecipe.getName());
+        caloriesResult.setText(String.valueOf(mRecipe.getCalorie().get(0)) + "g");
+        fatResult.setText(String.valueOf(mRecipe.getFat().get(0)) + "g");
+        carbsResult.setText(String.valueOf(mRecipe.getCarbs().get(0)) + "g");
+        proteinResult.setText(String.valueOf(mRecipe.getProtein().get(0)) + "g");
+
+        ImageView recipeImage = (ImageView) mView.findViewById(R.id.recipeDialog_imageView);
+        if (mRecipe.getImageURL() != null && mRecipe.getImageURL() != "") {
+            Picasso.with(getContext()).load(mRecipe.getImageURL()).into(recipeImage);
+        }
+
+        mView.invalidate();
     }
 
     @Override

@@ -16,6 +16,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.SearchView;
 import android.widget.SimpleAdapter;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import org.json.JSONArray;
@@ -42,6 +43,7 @@ import edu.uw.tcss450.nutrack.database.DBRecipeRecentSearch;
 import edu.uw.tcss450.nutrack.helper.RecentSearchHelper;
 import edu.uw.tcss450.nutrack.model.Food;
 
+import static android.icu.lang.UCharacter.GraphemeClusterBreak.T;
 import static java.security.AccessController.getContext;
 
 
@@ -64,6 +66,11 @@ public class SearchFoodTabFragment extends Fragment {
     private ArrayList<Integer> mFoodId;
 
     /**
+     * A view holding a whole fragment.
+     */
+    private View mView;
+
+    /**
      * TheLookUpFoodFragment interaction listener.
      */
     private SearchFoodTabFragment.OnFragmentInteractionListener mListener;
@@ -77,13 +84,13 @@ public class SearchFoodTabFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        View view = inflater.inflate(R.layout.fragment_search_food_tab, container, false);
+        mView = inflater.inflate(R.layout.fragment_search_food_tab, container, false);
 
         mContext = container.getContext();
-        initializeSearchListener(view);
-        initializeRecentSearchList(view);
+        initializeSearchListener(mView);
+        initializeRecentSearchList(mView);
 
-        return view;
+        return mView;
     }
 
     /**
@@ -110,12 +117,20 @@ public class SearchFoodTabFragment extends Fragment {
             }
         });
 
+        searchView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                searchView.setIconified(false);
+            }
+        });
+        /*
         searchView.setOnSearchClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
             }
         });
+        */
     }
 
     @Override
@@ -313,17 +328,22 @@ public class SearchFoodTabFragment extends Fragment {
             try {
                 if (result != null) {
                     jsonObject = new JSONObject(result).getJSONObject("foods");
-                    FOODS_ARRAY = jsonObject.getJSONArray("food");
-                    if (FOODS_ARRAY != null) {
-                        for (int i = 0; i < FOODS_ARRAY.length(); i++) {
-                            JSONObject food_items = FOODS_ARRAY.optJSONObject(i);
+                    if (jsonObject.getInt("total_results") != 0) {
+                        FOODS_ARRAY = jsonObject.getJSONArray("food");
+                        if (FOODS_ARRAY != null) {
+                            for (int i = 0; i < FOODS_ARRAY.length(); i++) {
+                                JSONObject food_items = FOODS_ARRAY.optJSONObject(i);
 
-                            foodsList.add(food_items.getString("food_name"));
-                            mFoodId.add(food_items.getInt("food_id"));
+                                foodsList.add(food_items.getString("food_name"));
+                                mFoodId.add(food_items.getInt("food_id"));
+                            }
                         }
+                        goToResult(mFood, foodsList);
+                        ((TextView) mView.findViewById(R.id.foodTab_textView)).setText("Food Results");
+                    } else {
+                        Toast.makeText(getContext(), "No result Founded.", Toast.LENGTH_SHORT).show();
                     }
                 }
-                goToResult(mFood, foodsList);
 
             } catch (JSONException exception) {
                 Log.e("API Error!", exception.getMessage());

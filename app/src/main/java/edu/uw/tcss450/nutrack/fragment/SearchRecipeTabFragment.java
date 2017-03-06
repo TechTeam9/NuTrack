@@ -16,6 +16,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.SearchView;
 import android.widget.SimpleAdapter;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import org.json.JSONArray;
@@ -58,6 +59,8 @@ public class SearchRecipeTabFragment extends Fragment {
 
     private ArrayList<Integer> mRecipeId;
 
+    private View mView;
+
     /**
      * TheLookUpFoodFragment interaction listener.
      */
@@ -72,13 +75,13 @@ public class SearchRecipeTabFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        View view = inflater.inflate(R.layout.fragment_search_food_tab, container, false);
+        mView = inflater.inflate(R.layout.fragment_search_food_tab, container, false);
 
         mContext = container.getContext();
-        initializeSearchListener(view);
-        initializeRecentSearchList(view);
+        initializeSearchListener(mView);
+        initializeRecentSearchList(mView);
 
-        return view;
+        return mView;
     }
 
     /**
@@ -259,6 +262,10 @@ public class SearchRecipeTabFragment extends Fragment {
     }
 
 
+    public interface OnFragmentInteractionListener {
+        void onFragmentInteraction(Recipe theRecipe);
+    }
+
     private class APIRecipeSearch extends AsyncTask<String, Void, String> {
 
         private final static String METHOD = "GET";
@@ -298,17 +305,22 @@ public class SearchRecipeTabFragment extends Fragment {
             try {
                 if (result != null) {
                     jsonObject = new JSONObject(result).getJSONObject("recipes");
-                    FOODS_ARRAY = jsonObject.getJSONArray("recipe");
-                    if (FOODS_ARRAY != null) {
-                        for (int i = 0; i < FOODS_ARRAY.length(); i++) {
-                            JSONObject recipe_items = FOODS_ARRAY.optJSONObject(i);
+                    if (jsonObject.getInt("total_results") != 0) {
+                        FOODS_ARRAY = jsonObject.getJSONArray("recipe");
+                        if (FOODS_ARRAY != null) {
+                            for (int i = 0; i < FOODS_ARRAY.length(); i++) {
+                                JSONObject recipe_items = FOODS_ARRAY.optJSONObject(i);
 
-                            recipesList.add(recipe_items.getString("recipe_name"));
-                            mRecipeId.add(recipe_items.getInt("recipe_id"));
+                                recipesList.add(recipe_items.getString("recipe_name"));
+                                mRecipeId.add(recipe_items.getInt("recipe_id"));
+                            }
                         }
+                        goToResult(mRecipeName, recipesList);
+                        ((TextView) mView.findViewById(R.id.foodTab_textView)).setText("Recipe Results");
+                    } else {
+                        Toast.makeText(getContext(), "No result Founded.", Toast.LENGTH_SHORT).show();
                     }
                 }
-                goToResult(mRecipeName, recipesList);
 
             } catch (JSONException exception) {
                 Log.e("API Error!", exception.getMessage());
@@ -380,7 +392,6 @@ public class SearchRecipeTabFragment extends Fragment {
                     proteinList.add(servingObject.getDouble("protein"));
 
 
-
                     mRecipe.setCalorie(calorieList);
                     mRecipe.setFat(fatList);
                     mRecipe.setCarbs(carbsList);
@@ -394,9 +405,5 @@ public class SearchRecipeTabFragment extends Fragment {
                 Log.e("API Error!", exception.getMessage());
             }
         }
-    }
-
-    public interface OnFragmentInteractionListener {
-        void onFragmentInteraction(Recipe theRecipe);
     }
 }

@@ -180,13 +180,13 @@ public class EditProfileDialogFragment extends DialogFragment {
                     textView.setText("Height");
                     editText.setHint(String.valueOf(profile.getHeight()));
                     editText.setVisibility(View.VISIBLE);
-                    editText.setRawInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
+                    editText.setRawInputType(InputType.TYPE_CLASS_NUMBER);
                     break;
                 case WEIGHT_TYPE:
                     textView.setText("Weight");
                     editText.setHint(String.valueOf(profile.getWeight()));
                     editText.setVisibility(View.VISIBLE);
-                    editText.setRawInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
+                    editText.setRawInputType(InputType.TYPE_CLASS_NUMBER);
 
                     break;
                 default:

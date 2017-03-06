@@ -54,6 +54,8 @@ public class DailyLogFragment extends Fragment {
 
     private ArrayList<DailyLogFood> mSnackList;
 
+    private View mView;
+
     public DailyLogFragment() {
         // Required empty public constructor
     }
@@ -88,12 +90,8 @@ public class DailyLogFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_daily_log, container, false);
+        mView = inflater.inflate(R.layout.fragment_daily_log, container, false);
 
-        final ListView breakfastListView = (ListView) view.findViewById(R.id.breakfast_listView);
-        final ListView lunchListView = (ListView) view.findViewById(R.id.lunch_listView);
-        final ListView dinnerListView = (ListView) view.findViewById(R.id.dinner_listView);
-        final ListView snackListView = (ListView) view.findViewById(R.id.snack_listView);
 
 
         //Beware of API < 24
@@ -103,7 +101,7 @@ public class DailyLogFragment extends Fragment {
         Calendar startDate = Calendar.getInstance();
         startDate.add(Calendar.MONTH, -1);
 
-        HorizontalCalendar horizontalCalendar = new HorizontalCalendar.Builder(view, R.id.calendarView)
+        HorizontalCalendar horizontalCalendar = new HorizontalCalendar.Builder(mView, R.id.calendarView)
                 .startDate(startDate.getTime())
                 .endDate(endDate.getTime())
                 .build();
@@ -111,18 +109,30 @@ public class DailyLogFragment extends Fragment {
         horizontalCalendar.setCalendarListener(new HorizontalCalendarListener() {
             @Override
             public void onDateSelected(Date date, int position) {
-                //do something
+                mSelectedDate = date;
+                intializeListView();
             }
         });
 
         //get list of food from database
+        mSelectedDate = new Date();
+        intializeListView();
+
+        return mView;
+    }
+
+    private void intializeListView() {
+        final ListView breakfastListView = (ListView) mView.findViewById(R.id.breakfast_listView);
+        final ListView lunchListView = (ListView) mView.findViewById(R.id.lunch_listView);
+        final ListView dinnerListView = (ListView) mView.findViewById(R.id.dinner_listView);
+        final ListView snackListView = (ListView) mView.findViewById(R.id.snack_listView);
+
+
         ArrayList<HashMap<String, String>> foodList = new ArrayList<>();
 
         DBDailyLog db = new DBDailyLog(getContext());
 
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-        mSelectedDate = new Date();
-        System.out.println(dateFormat.format(mSelectedDate).toString());
 
         ArrayList<HashMap<String, String>> breakfastContentList = new ArrayList<>();
         ArrayList<HashMap<String, String>> lunchContentList = new ArrayList<>();
@@ -190,10 +200,7 @@ public class DailyLogFragment extends Fragment {
         adapter = new SimpleAdapter(getContext(), snackContentList, android.R.layout.two_line_list_item, new String[]{"name", "type"}, new int[]{android.R.id.text1, android.R.id.text2});
         snackListView.setAdapter(adapter);
         calculateListViewHeight(snackListView);
-
-        return view;
     }
-
 
     private void calculateListViewHeight(ListView listView) {
         ListAdapter adapter = listView.getAdapter();

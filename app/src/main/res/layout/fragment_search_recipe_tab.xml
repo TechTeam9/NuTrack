@@ -18,7 +18,7 @@
         android:queryHint="Search" />
 
     <TextView
-        android:id="@+id/searchRecipe_textView_title"
+        android:id="@+id/recipeTab_textView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="10dp"
