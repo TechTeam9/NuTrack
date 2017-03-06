@@ -14,21 +14,21 @@
             android:background="@drawable/ic_restaurant_black_36dp"
             android:layout_gravity="center"/>
         <TextView
+            android:text="Your Week"
             android:layout_marginLeft="16dp"
-            android:layout_width="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Your Week"
-            android:textSize="24dp"
+            android:textSize="24sp"
             android:layout_gravity="center"
             android:textColor="@color/black"
-            android:alpha="0.54"/>
+            android:alpha="0.54" />
         <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@drawable/ic_info_black_24dp"
-            android:layout_gravity="center"
-            android:alpha="0.54"/>
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:background="@drawable/ic_info"
+            android:layout_gravity="center" />
     </LinearLayout>
     <lecho.lib.hellocharts.view.ColumnChartView
         android:id="@+id/weekly_intake_chart"

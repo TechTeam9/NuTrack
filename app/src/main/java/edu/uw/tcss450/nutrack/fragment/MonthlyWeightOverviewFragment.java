@@ -113,7 +113,7 @@ public class MonthlyWeightOverviewFragment extends Fragment {
         values.add(new PointValue(10, 247));
         values.add(new PointValue(15, 190));
 
-        Line line = new Line(values).setColor(getResources().getColor(R.color.colorPrimaryDark)).setCubic(true);
+        Line line = new Line(values).setColor(getResources().getColor(R.color.colorPrimary)).setCubic(true);
         line.setStrokeWidth(2);
         line.setHasLabels(true);
         List<Line> lines = new ArrayList<Line>();
