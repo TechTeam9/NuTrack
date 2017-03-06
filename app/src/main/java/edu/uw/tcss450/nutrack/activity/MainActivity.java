@@ -226,15 +226,19 @@ public class MainActivity extends AppCompatActivity implements ProfileFragment.O
         switch (theMenuItem.getItemId()) {
             case R.id.nav_profile:
                 fragmentClass = ProfileFragment.class;
+                mToolbar.setTitle("Profile");
                 break;
             case R.id.nav_overview:
                 fragmentClass = OverviewFragment.class;
+                mToolbar.setTitle("Overview");
                 break;
             case R.id.nav_Daily_log:
                 fragmentClass = DailyLogFragment.class;
+                mToolbar.setTitle("Daily Log");
                 break;
             case R.id.nav_settings:
                 fragmentClass = SettingFragment.class;
+                mToolbar.setTitle("Settings");
                 break;
             case R.id.nav_sign_out:
                 userSignOut();
