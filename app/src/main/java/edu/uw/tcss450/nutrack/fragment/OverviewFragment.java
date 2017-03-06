@@ -1,7 +1,5 @@
 package edu.uw.tcss450.nutrack.fragment;
 
-import android.animation.AnimatorSet;
-import android.animation.ValueAnimator;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
@@ -11,33 +9,19 @@ import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.AccelerateDecelerateInterpolator;
-import android.widget.CompoundButton;
-import android.widget.LinearLayout;
-import android.widget.Switch;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import edu.uw.tcss450.nutrack.R;
-import lecho.lib.hellocharts.model.Axis;
-import lecho.lib.hellocharts.model.AxisValue;
-import lecho.lib.hellocharts.model.Column;
-import lecho.lib.hellocharts.model.ColumnChartData;
-import lecho.lib.hellocharts.model.SubcolumnValue;
-import lecho.lib.hellocharts.util.ChartUtils;
-import lecho.lib.hellocharts.view.ColumnChartView;
 
 
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link MainFragment.OnFragmentInteractionListener} interface
+ * {@link OverviewFragment.OnFragmentInteractionListener} interface
  * to handle interaction events.
- * Use the {@link MainFragment#newInstance} factory method to
+ * Use the {@link OverviewFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class MainFragment extends Fragment {
+public class OverviewFragment extends Fragment {
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     /**
      * First parameter string.
@@ -67,7 +51,7 @@ public class MainFragment extends Fragment {
      */
     private OnFragmentInteractionListener mListener;
 
-    public MainFragment() {
+    public OverviewFragment() {
         // Required empty public constructor
     }
 
@@ -77,10 +61,10 @@ public class MainFragment extends Fragment {
      *
      * @param param1 Parameter 1.
      * @param param2 Parameter 2.
-     * @return A new instance of fragment MainFragment.
+     * @return A new instance of fragment OverviewFragment.
      */
-    public static MainFragment newInstance(String param1, String param2) {
-        MainFragment fragment = new MainFragment();
+    public static OverviewFragment newInstance(String param1, String param2) {
+        OverviewFragment fragment = new OverviewFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -107,7 +91,6 @@ public class MainFragment extends Fragment {
             Fragment bottomFragment = null;
 
             try {
-                //theFragment = (Fragment) theFragmentClass.newInstance();
                 topFragment = (Fragment) topFragmentClass.newInstance();
                 middleFragment = (Fragment) middleFragmentClass.newInstance();
                 bottomFragment = (Fragment) bottomFragmentClass.newInstance();
@@ -115,8 +98,7 @@ public class MainFragment extends Fragment {
                 e.printStackTrace();
             }
 
-            FragmentManager fragMan = getActivity().getSupportFragmentManager();
-            FragmentTransaction fragmentTracs = fragMan.beginTransaction();
+            FragmentTransaction fragmentTracs = getActivity().getSupportFragmentManager().beginTransaction();
 
             fragmentTracs.add(R.id.ovContentTop, topFragment, "top");
             fragmentTracs.add(R.id.ovContentMiddle, middleFragment, "middle");
@@ -130,7 +112,7 @@ public class MainFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        final View view = inflater.inflate(R.layout.fragment_main, container, false);
+        final View view = inflater.inflate(R.layout.fragment_overview, container, false);
         return view;
     }
 

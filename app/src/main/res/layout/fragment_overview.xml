@@ -3,7 +3,7 @@
     android:id="@+id/main_fragment"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    tools:context="edu.uw.tcss450.nutrack.fragment.MainFragment">
+    tools:context="edu.uw.tcss450.nutrack.fragment.OverviewFragment">
 
     <LinearLayout
         android:layout_width="wrap_content"
