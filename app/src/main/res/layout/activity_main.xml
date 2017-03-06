@@ -17,7 +17,8 @@
         <android.support.design.widget.AppBarLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:theme="@style/AppTheme">
+            android:theme="@style/AppTheme"
+            android:elevation="4dp">
 
             <include
                 layout="@layout/toolbar"
@@ -44,6 +45,7 @@
         android:layout_height="match_parent"
         android:layout_gravity="start"
         android:background="@android:color/white"
+        android:elevation="16dp"
         app:headerLayout="@layout/drawer_header"
         app:menu="@menu/drawer_view" />
 </android.support.v4.widget.DrawerLayout>
