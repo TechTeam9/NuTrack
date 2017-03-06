@@ -11,10 +11,16 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import edu.uw.tcss450.nutrack.database.DBPersonalInfo;
 import edu.uw.tcss450.nutrack.helper.ProfileHelper;
@@ -56,7 +62,6 @@ public class EditProfileDialogFragment extends DialogFragment {
 
         if (getArguments() != null) {
             mType = getArguments().getInt("type");
-            Log.d("Hello", String.valueOf(mType));
         } else {
             mType = -1;
         }
@@ -70,7 +75,7 @@ public class EditProfileDialogFragment extends DialogFragment {
         final TextView textView = (TextView) view.findViewById(R.id.dialog_editProfile_title);
         final EditText editText = (EditText) view.findViewById(R.id.dialog_editProfile_inputField);
         final RadioGroup radioGroup = (RadioGroup) view.findViewById(R.id.dialog_radioGroup);
-
+        final DatePicker datePicker = (DatePicker) view.findViewById(R.id.dialog_editProfile_datePicker);
 
         Button button = (Button) view.findViewById(R.id.dialog_editProfile_submit);
         button.setOnClickListener(new View.OnClickListener() {
@@ -82,8 +87,11 @@ public class EditProfileDialogFragment extends DialogFragment {
                     case NAME_TYPE:
                         if (editText.getText().length() < 1) {
                             editText.setError("Field cannot be left blank.");
+                            return;
+                        } else {
+                            dbHelper.editPersonalInfo(DBPersonalInfo.COLUMN_NAME, editText.getText().toString());
+
                         }
-                        dbHelper.editPersonalInfo(DBPersonalInfo.COLUMN_NAME, editText.getText().toString());
                         break;
                     case GENDER_TYPE:
                         String value;
@@ -93,27 +101,39 @@ public class EditProfileDialogFragment extends DialogFragment {
                             value = "f";
                         }
                         dbHelper.editPersonalInfo(DBPersonalInfo.COLUMN_GENDER, value);
+
                         break;
                     case DOB_TYPE:
-                        //-------------------------------------------------Need Add------------------------------------------------
                         break;
                     case HEIGHT_TYPE:
                         if (editText.getText().length() < 1) {
                             editText.setError("Field cannot be left blank.");
+                            return;
+                        } else if (editText.getText().toString().contains(",") || editText.getText().toString().contains("-") || editText.getText().toString().contains(" ")) {
+                            editText.setError("Your input contain invalid symbol");
+                            return;
+                        } else {
+                            dbHelper.editPersonalInfoNonString(DBPersonalInfo.COLUMN_HEIGHT, editText.getText().toString());
                         }
-                        dbHelper.editPersonalInfoNonString(DBPersonalInfo.COLUMN_HEIGHT, editText.getText().toString());
                         break;
                     case WEIGHT_TYPE:
                         if (editText.getText().length() < 1) {
                             editText.setError("Field cannot be left blank.");
+                            return;
+                        } else if (editText.getText().toString().contains(",") || editText.getText().toString().contains("-") || editText.getText().toString().contains(" ")) {
+                            editText.setError("Your input contain invalid symbol");
+                            return;
+                        } else {
+                            dbHelper.editPersonalInfoNonString(DBPersonalInfo.COLUMN_WEIGHT, editText.getText().toString());
                         }
-                        dbHelper.editPersonalInfoNonString(DBPersonalInfo.COLUMN_WEIGHT, editText.getText().toString());
                         break;
                     default:
                         textView.setText("Error");
                         break;
                 }
+
                 dismiss();
+                mListener.onFragmentInteraction();
             }
         });
 
@@ -148,18 +168,25 @@ public class EditProfileDialogFragment extends DialogFragment {
                     break;
                 case DOB_TYPE:
                     textView.setText("Date of Birth");
+
+                    datePicker.updateDate(Integer.parseInt(profile.getDOB().substring(0, 4))
+                            , Integer.parseInt(profile.getDOB().substring(5, 7)) - 1
+                            , Integer.parseInt(profile.getDOB().substring(8, 10)));
+
+                    datePicker.setVisibility(View.VISIBLE);
+
                     break;
                 case HEIGHT_TYPE:
                     textView.setText("Height");
                     editText.setHint(String.valueOf(profile.getHeight()));
                     editText.setVisibility(View.VISIBLE);
-                    editText.setInputType(InputType.TYPE_CLASS_NUMBER);
+                    editText.setRawInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
                     break;
                 case WEIGHT_TYPE:
                     textView.setText("Weight");
                     editText.setHint(String.valueOf(profile.getWeight()));
                     editText.setVisibility(View.VISIBLE);
-                    editText.setInputType(InputType.TYPE_CLASS_NUMBER);
+                    editText.setRawInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
 
                     break;
                 default:
@@ -167,7 +194,6 @@ public class EditProfileDialogFragment extends DialogFragment {
                     break;
             }
         }
-
 
         return view;
     }
@@ -207,7 +233,6 @@ public class EditProfileDialogFragment extends DialogFragment {
      * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
         void onFragmentInteraction();
     }
 }

@@ -1,6 +1,7 @@
 package edu.uw.tcss450.nutrack.fragment;
 
 import android.content.Context;
+import android.media.Image;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
@@ -9,12 +10,17 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.squareup.picasso.Picasso;
 
 import edu.uw.tcss450.nutrack.R;
 import edu.uw.tcss450.nutrack.database.DBDailyLog;
 import edu.uw.tcss450.nutrack.model.Food;
 import edu.uw.tcss450.nutrack.model.Recipe;
+
+import static edu.uw.tcss450.nutrack.R.id.imageView;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -88,11 +94,17 @@ public class RecipeDialogFragment extends DialogFragment {
         carbsResult.setText(String.valueOf(mRecipe.getCarbs().get(0)));
         proteinResult.setText(String.valueOf(mRecipe.getProtein().get(0)));
 
+        ImageView recipeImage = (ImageView) mView.findViewById(R.id.recipeDialog_imageView);
+        if (mRecipe.getImageURL() != null && mRecipe.getImageURL() != " ") {
+            Picasso.with(getContext()).load(mRecipe.getImageURL()).into(recipeImage);
+        }
+
 
         // Buttons action
         Button addButton = (Button) mView.findViewById(R.id.dialog_add_button);
         Button cancelButton = (Button) mView.findViewById(R.id.dialog_cancel_button);
 
+        /*
         addButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -100,7 +112,7 @@ public class RecipeDialogFragment extends DialogFragment {
                 db.insertFood(mRecipe.getName(), mRecipe.getId(), "recipe", "breakfast");
             }
         });
-
+*/
         cancelButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

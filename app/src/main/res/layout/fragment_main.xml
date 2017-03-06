@@ -1,104 +1,29 @@
-
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main_fragment"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:clickable="true"
-    android:focusableInTouchMode="true"
-    android:background="@color/lightGrayBackground"
     tools:context="edu.uw.tcss450.nutrack.fragment.MainFragment">
 
     <LinearLayout
-        android:id="@+id/main_weightChart_frame"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:background="@android:color/white"
-        android:elevation="2dp"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
-        android:layout_marginTop="20dp"
-        android:layout_marginBottom="10dp">
+        android:orientation="vertical">
 
-
-        <LinearLayout
-            android:id="@+id/main_weightChart_title"
+        <FrameLayout
+            android:id="@+id/ovContentTop"
             android:layout_width="match_parent"
-            android:layout_height="30dp"
-            android:background="@color/colorAccent">
+            android:layout_height="wrap_content" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:gravity="center"
-                android:text="Weight Graph"
-                android:textSize="18sp"
-                android:textColor="@android:color/white" />
-
-            <Switch
-                android:id="@+id/main_weightChart_switch"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_gravity="end"
-                android:checked="true"/>
-
-        </LinearLayout>
-
-        <lecho.lib.hellocharts.view.ColumnChartView
-            android:id="@+id/main_weight_chart"
-            android:layout_height="150dp"
+        <FrameLayout
+            android:id="@+id/ovContentMiddle"
             android:layout_width="match_parent"
-            android:layout_marginTop="20dp">
+            android:layout_height="wrap_content" />
 
-
-        </lecho.lib.hellocharts.view.ColumnChartView>
+        <FrameLayout
+            android:id="@+id/ovContentBottom"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
     </LinearLayout>
 
-    <LinearLayout
-        android:id="@+id/main_calorieChart_frame"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:background="@android:color/white"
-        android:elevation="2dp"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
-        android:layout_marginTop="20dp"
-        android:layout_marginBottom="10dp">
-
-        <LinearLayout
-            android:id="@+id/main_calorieChart_title"
-            android:layout_width="match_parent"
-            android:layout_height="30dp"
-            android:background="@color/colorAccent">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:gravity="center"
-                android:text="Calories Graph"
-                android:textSize="18sp"
-                android:textColor="@android:color/white" />
-
-            <Switch
-                android:id="@+id/main_calorieChart_switch"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_gravity="end"
-                android:checked="true"/>
-        </LinearLayout>
-
-        <lecho.lib.hellocharts.view.ColumnChartView
-            android:id="@+id/main_calorie_chart"
-            android:layout_height="150dp"
-            android:layout_width="match_parent"
-            android:layout_marginTop="20dp">
-
-
-        </lecho.lib.hellocharts.view.ColumnChartView>
-    </LinearLayout>
-
-
-</LinearLayout>
+</ScrollView>

@@ -46,6 +46,9 @@
     <string name="social">Social</string>
     <string name="daily_log">Daily Log</string>
     <string name="for_more_details_click_here"><u>For more details click here.</u></string>
+    <string name="fat">Fat</string>
+    <string name="carbs">Carbs</string>
+    <string name="protein">Protein</string>
 
     <string-array name="list_view_labels">
         <item>Name</item>

@@ -150,76 +150,29 @@ public class ProfileFragment extends Fragment implements EditProfileDialogFragme
     public void initializePersonalInfo(View theView) {
         Profile profile = ProfileHelper.getPersonalInfo(getContext());
 
-//master
         TextView textView = (TextView) theView.findViewById(R.id.profile_textView_valueName);
         textView.setText(profile.getName());
         textView = (TextView) theView.findViewById(R.id.profile_textView_valueGender);
-//Adrian
-        //TextView viewName = (TextView) theView.findViewById(R.id.profile_textView_valueName);
-        //TextView viewGender = (TextView) theView.findViewById(R.id.profile_textView_valueGender);
-        //TextView viewDOB = (TextView) theView.findViewById(R.id.profile_textView_valueDoB);
-        //TextView viewHeight = (TextView) theView.findViewById(R.id.profile_textView_valueHeight);
-        //TextView viewWeight = (TextView) theView.findViewById(R.id.profile_textView_valueWeight);
+
         ImageView imageAvatar = (ImageView) theView.findViewById(R.id.profile_imageView_avatar);
 
-        //viewName.setText(profile.getName());
-//Adrian
+
         if (profile.getGender() == 'm') {
             textView.setText("Male");
         } else {
             textView.setText("Female");
         }
-//master
+
         textView = (TextView) theView.findViewById(R.id.profile_textView_valueDoB);
         textView.setText(profile.getDOB());
         textView = (TextView) theView.findViewById(R.id.profile_textView_valueHeight);
         textView.setText(String.valueOf(profile.getHeight()));
         textView = (TextView) theView.findViewById(R.id.profile_textView_valueWeight);
         textView.setText(String.valueOf(profile.getWeight()));
-//Adrian
-        //viewDOB.setText(profile.getDOB());
-        //viewHeight.setText(String.valueOf(profile.getHeight()));
-        //viewWeight.setText(String.valueOf(profile.getWeight()));
 
-        //Log.i("FRAG", "Well " + profile.getAvatarId());
         imageAvatar.setImageResource(profile.getAvatarId());
-//Adrian
     }
 
-    /*
-    private void activateEditMode(View view) {
-        TextView nameValue = (TextView) view.findViewById(R.id.profile_textView_valueName);
-        EditText nameEdit = (EditText) view.findViewById(R.id.profile_editText_name);
-        nameEdit.setText(nameValue.getText().toString());
-        nameValue.setVisibility(View.GONE);
-        nameEdit.setVisibility(View.VISIBLE);
-
-        TextView heightValue = (TextView) view.findViewById(R.id.profile_textView_valueHeight);
-        EditText heightEdit = (EditText) view.findViewById(R.id.profile_editText_height);
-        heightEdit.setText(heightValue.getText().toString());
-        heightValue.setVisibility(View.GONE);
-        heightEdit.setVisibility(View.VISIBLE);
-
-        TextView weightValue = (TextView) view.findViewById(R.id.profile_textView_valueWeight);
-        EditText weightEdit = (EditText) view.findViewById(R.id.profile_editText_weight);
-        weightEdit.setText(weightValue.getText().toString());
-        weightValue.setVisibility(View.GONE);
-        weightEdit.setVisibility(View.VISIBLE);
-
-        TextView genderValue = (TextView) view.findViewById(R.id.profile_textView_valueGender);
-        EditText genderEdit = (EditText) view.findViewById(R.id.profile_editText_gender);
-        //genderEdit.setText(genderValue.getText().toString());
-        genderValue.setVisibility(View.GONE);
-        genderEdit.setVisibility(View.VISIBLE);
-
-        TextView DoBValue = (TextView) view.findViewById(R.id.profile_textView_valueDoB);
-        EditText DoBEdit = (EditText) view.findViewById(R.id.profile_editText_DoB);
-        //DoBEdit.setText(DoBValue.getText().toString());
-        DoBValue.setVisibility(View.GONE);
-        DoBEdit.setVisibility(View.VISIBLE);
-
-    }
-    */
 
 
     public void onButtonPressed(Uri uri) {

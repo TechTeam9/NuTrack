@@ -27,6 +27,10 @@ import java.util.ArrayList;
 
 import edu.uw.tcss450.nutrack.database.DBMemberInfo;
 import edu.uw.tcss450.nutrack.database.DBPersonalInfo;
+import edu.uw.tcss450.nutrack.fragment.DailyIntakeOverviewFragment;
+import edu.uw.tcss450.nutrack.fragment.LookUpFoodFragment;
+import edu.uw.tcss450.nutrack.fragment.MonthlyWeightOverviewFragment;
+import edu.uw.tcss450.nutrack.fragment.WeeklyIntakeOverviewFragment;
 import edu.uw.tcss450.nutrack.helper.ProfileHelper;
 import edu.uw.tcss450.nutrack.R;
 import edu.uw.tcss450.nutrack.fragment.DailyLogFragment;
@@ -35,6 +39,7 @@ import edu.uw.tcss450.nutrack.fragment.MainFragment;
 import edu.uw.tcss450.nutrack.fragment.ProfileFragment;
 import edu.uw.tcss450.nutrack.fragment.SearchResultFragment;
 import edu.uw.tcss450.nutrack.fragment.SettingFragment;
+import edu.uw.tcss450.nutrack.model.Food;
 import edu.uw.tcss450.nutrack.model.Profile;
 
 import static edu.uw.tcss450.nutrack.R.id.naviView;
@@ -43,9 +48,11 @@ import static edu.uw.tcss450.nutrack.R.id.naviView;
  * Main container holding all fragment activity.
  * ProfileFragment, LookUpFoodFragment, SearchResultFragment, and SettingFragment.
  */
-public class MainActivity extends AppCompatActivity implements ProfileFragment.OnFragmentInteractionListener, MainFragment.OnFragmentInteractionListener,
+public class MainActivity extends AppCompatActivity implements ProfileFragment.OnFragmentInteractionListener,
+        LookUpFoodFragment.OnFragmentInteractionListener, MainFragment.OnFragmentInteractionListener,
         SettingFragment.OnFragmentInteractionListener, SearchResultFragment.OnFragmentInteractionListener,
-        EditProfileDialogFragment.OnFragmentInteractionListener, DailyLogFragment.OnFragmentInteractionListener {
+        EditProfileDialogFragment.OnFragmentInteractionListener, DailyIntakeOverviewFragment.OnFragmentInteractionListener,
+        WeeklyIntakeOverviewFragment.OnFragmentInteractionListener,MonthlyWeightOverviewFragment.OnFragmentInteractionListener, DailyLogFragment.OnFragmentInteractionListener {
     /**
      * The layout that hold the navigation drawer.
      */
@@ -93,21 +100,22 @@ public class MainActivity extends AppCompatActivity implements ProfileFragment.O
         mDrawer.addDrawerListener(mDrawerToggle);
 
         initializeDrawerContent();
-
-
-        Class fragmentClass = MainFragment.class;
-        Fragment fragment = null;
-        try {
-            fragment = (Fragment) fragmentClass.newInstance();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        FragmentTransaction fragmentTracs = getSupportFragmentManager().beginTransaction();
-        fragmentTracs.add(R.id.flContent, fragment);
-
-        fragmentTracs.commit();
         initializeDrawerHeaderContent();
+
+        if (savedInstanceState == null) {
+            Class fragmentClass = MainFragment.class;
+            Fragment fragment = null;
+            try {
+                fragment = (Fragment) fragmentClass.newInstance();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            FragmentTransaction fragmentTracs = getSupportFragmentManager().beginTransaction();
+            fragmentTracs.add(R.id.flContent, fragment);
+
+            fragmentTracs.commit();
+        }
         //initializeFloatingActionButton();
 
     }
@@ -301,11 +309,19 @@ public class MainActivity extends AppCompatActivity implements ProfileFragment.O
 
     @Override
     public void onFragmentInteraction() {
-        mFragment.getView().invalidate();
+        mFragment = new ProfileFragment();
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        fragmentManager.beginTransaction().replace(R.id.flContent, mFragment).commit();
+
     }
 
     @Override
     public void onFragmentInteraction(Uri uri) {
+
+    }
+
+    @Override
+    public void onFragmentInteraction(Food food) {
 
     }
 

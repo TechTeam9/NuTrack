@@ -61,18 +61,15 @@ public class DBDailyLog extends SQLiteOpenHelper {
         onCreate(db);
     }
 
-    public boolean insertFood(String theName, int theId, String theType, String theMealType) {
+    public boolean insertFood(String theName, int theId, String theType, String theMealType, String theDate) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues value = new ContentValues();
-
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-        Date date = new Date();
 
         value.put(COLUMN_NAME, theName);
         value.put(COLUMN_ID, theId);
         value.put(COLUMN_TYPE, theType);
         value.put(COLUMN_MEAL_TYPE, theMealType);
-        value.put(COLUMN_TIME, dateFormat.format(date));
+        value.put(COLUMN_TIME, theDate);
 
         db.insert(TABLE_NAME, null, value);
 

@@ -352,7 +352,6 @@ public class SearchRecipeTabFragment extends Fragment {
         protected void onPostExecute(String result) {
             System.out.println(result);
             JSONObject jsonObject;
-            JSONArray jsonArray;
 
             ArrayList<Double> calorieList = new ArrayList<>();
             ArrayList<Double> fatList = new ArrayList<>();
@@ -363,6 +362,14 @@ public class SearchRecipeTabFragment extends Fragment {
                 if (result != null) {
                     mRecipe.setId(new JSONObject(result).getJSONObject("recipe").getInt("recipe_id"));
                     mRecipe.setName(new JSONObject(result).getJSONObject("recipe").getString("recipe_name"));
+                    JSONObject imageJSONObject = new JSONObject(result).getJSONObject("recipe").optJSONObject("recipe_images");
+                    if (imageJSONObject != null) {
+                        mRecipe.setImageURL(imageJSONObject.getString("recipe_image"));
+                    }
+
+//                    if (imageJSONObject.has("recipe_images")) {
+//                        mRecipe.setImageURL(imageJSONObject.getJSONObject("recipe_images").getString("recipe_image"));
+//                    }
 
                     jsonObject = new JSONObject(result).getJSONObject("recipe").getJSONObject("serving_sizes");
                     JSONObject servingObject = jsonObject.optJSONObject("serving");
@@ -373,12 +380,13 @@ public class SearchRecipeTabFragment extends Fragment {
                     proteinList.add(servingObject.getDouble("protein"));
 
 
+
                     mRecipe.setCalorie(calorieList);
                     mRecipe.setFat(fatList);
                     mRecipe.setCarbs(carbsList);
                     mRecipe.setProtein(proteinList);
-
                     mListener.onFragmentInteraction(mRecipe);
+
                 }
 
             } catch (JSONException exception) {

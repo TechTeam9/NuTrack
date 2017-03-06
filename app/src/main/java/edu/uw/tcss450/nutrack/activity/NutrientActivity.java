@@ -293,6 +293,8 @@ public class NutrientActivity extends AppCompatActivity implements SearchFoodTab
             ArrayList<Double> fatList = new ArrayList<>();
             ArrayList<Double> carbsList = new ArrayList<>();
             ArrayList<Double> proteinList = new ArrayList<>();
+            ArrayList<String> urlList = new ArrayList<>();
+            ArrayList<String> servingList = new ArrayList<>();
 
             try {
                 if (result != null) {
@@ -306,17 +308,29 @@ public class NutrientActivity extends AppCompatActivity implements SearchFoodTab
                         fatList.add(servingObject.getDouble("fat"));
                         carbsList.add(servingObject.getDouble("carbohydrate"));
                         proteinList.add(servingObject.getDouble("protein"));
-
+                        if (servingObject.has("serving_url")) {
+                            urlList.add(servingObject.getString("serving_url"));
+                        }
+                        if (servingObject.has("metric_serving_amount")) {
+                            servingList.add(servingObject.getDouble("metric_serving_amount")
+                                    + servingObject.getString("metric_serving_unit"));
+                        }
                     } else {
                         jsonArray = jsonObject.getJSONArray("serving");
                         if (jsonArray != null) {
                             for (int i = 0; i < jsonArray.length(); i++) {
                                 JSONObject serving = jsonArray.getJSONObject(i);
-
                                 calorieList.add(serving.getDouble("calories"));
                                 fatList.add(serving.getDouble("fat"));
                                 carbsList.add(serving.getDouble("carbohydrate"));
                                 proteinList.add(serving.getDouble("protein"));
+                                if (serving.has("serving_url")) {
+                                    urlList.add(serving.getString("serving_url"));
+                                }
+                                if (serving.has("metric_serving_amount")) {
+                                    servingList.add(serving.getDouble("metric_serving_amount")
+                                            + serving.getString("metric_serving_unit"));
+                                }
                             }
                         }
                     }

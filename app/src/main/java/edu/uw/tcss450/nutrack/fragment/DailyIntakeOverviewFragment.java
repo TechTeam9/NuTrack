@@ -113,6 +113,7 @@ public class DailyIntakeOverviewFragment extends Fragment {
     public void initializeDailyCalorieChart(final View view) {
         PieView pieView = (PieView) view.findViewById(R.id.pieView);
         pieView.setPercentageBackgroundColor(getResources().getColor(R.color.colorPrimary));
-        pieView.setInnerText("A");
+        pieView.setPieInnerPadding(80);
+        pieView.setInnerText("75%");
     }
 }

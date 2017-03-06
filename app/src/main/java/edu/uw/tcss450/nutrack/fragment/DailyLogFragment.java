@@ -125,9 +125,9 @@ public class DailyLogFragment extends Fragment {
         System.out.println(dateFormat.format(mSelectedDate).toString());
 
         ArrayList<HashMap<String, String>> breakfastContentList = new ArrayList<>();
-        ArrayList<HashMap<String, String>> LunchContentList = new ArrayList<>();
-        ArrayList<HashMap<String, String>> DinnerContentList = new ArrayList<>();
-        ArrayList<HashMap<String, String>> SnackContentList = new ArrayList<>();
+        ArrayList<HashMap<String, String>> lunchContentList = new ArrayList<>();
+        ArrayList<HashMap<String, String>> dinnerContentList = new ArrayList<>();
+        ArrayList<HashMap<String, String>> snackContentList = new ArrayList<>();
 
         mBreakfastList = new ArrayList<>();
         mLunchList = new ArrayList<>();
@@ -155,15 +155,15 @@ public class DailyLogFragment extends Fragment {
                             break;
                         case "lunch":
                             mLunchList.add(dailyLogFood);
-                            LunchContentList.add(tempFood);
+                            lunchContentList.add(tempFood);
                             break;
                         case "dinner":
                             mDinnerList.add(dailyLogFood);
-                            DinnerContentList.add(tempFood);
+                            dinnerContentList.add(tempFood);
                             break;
                         case "snack":
                             mSnackList.add(dailyLogFood);
-                            SnackContentList.add(tempFood);
+                            snackContentList.add(tempFood);
                             break;
                     }
                     cursor.moveToNext();
@@ -178,6 +178,19 @@ public class DailyLogFragment extends Fragment {
         SimpleAdapter adapter = new SimpleAdapter(getContext(), breakfastContentList, android.R.layout.two_line_list_item, new String[]{"name", "type"}, new int[]{android.R.id.text1, android.R.id.text2});
         breakfastListView.setAdapter(adapter);
         calculateListViewHeight(breakfastListView);
+
+        adapter = new SimpleAdapter(getContext(), lunchContentList, android.R.layout.two_line_list_item, new String[]{"name", "type"}, new int[]{android.R.id.text1, android.R.id.text2});
+        lunchListView.setAdapter(adapter);
+        calculateListViewHeight(lunchListView);
+
+        adapter = new SimpleAdapter(getContext(), dinnerContentList, android.R.layout.two_line_list_item, new String[]{"name", "type"}, new int[]{android.R.id.text1, android.R.id.text2});
+        dinnerListView.setAdapter(adapter);
+        calculateListViewHeight(dinnerListView);
+
+        adapter = new SimpleAdapter(getContext(), snackContentList, android.R.layout.two_line_list_item, new String[]{"name", "type"}, new int[]{android.R.id.text1, android.R.id.text2});
+        snackListView.setAdapter(adapter);
+        calculateListViewHeight(snackListView);
+
         return view;
     }
 

@@ -45,6 +45,11 @@ public class Food implements Parcelable {
     private ArrayList<String> mURL;
 
     /**
+     * The serving size.
+     */
+    private ArrayList<String> mServing;
+
+    /**
      * Constructs the food item.
      *
      * @param theId   the ID of the food item
@@ -58,6 +63,7 @@ public class Food implements Parcelable {
         mCarbs = new ArrayList<>();
         mProtein = new ArrayList<>();
         mURL = new ArrayList<>();
+        mServing = new ArrayList<>();
     }
 
     /**
@@ -71,6 +77,7 @@ public class Food implements Parcelable {
         mCarbs = new ArrayList<>();
         mProtein = new ArrayList<>();
         mURL = new ArrayList<>();
+        mServing = new ArrayList<>();
     }
 
     protected Food(Parcel in) {
@@ -176,6 +183,13 @@ public class Food implements Parcelable {
         this.mURL = mURL;
     }
 
+    public ArrayList<String> getmServing() {
+        return mServing;
+    }
+
+    public void setmServing(ArrayList<String> mServing) {
+        this.mServing = mServing;
+    }
 
     @Override
     public int describeContents() {
@@ -190,7 +204,8 @@ public class Food implements Parcelable {
         dest.writeList(mFat);
         dest.writeList(mCarbs);
         dest.writeList(mProtein);
+        dest.writeList(mURL);
+        dest.writeList(mServing);
     }
-
 
 }

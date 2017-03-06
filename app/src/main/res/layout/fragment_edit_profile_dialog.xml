@@ -6,31 +6,41 @@
     android:orientation="vertical"
     tools:context="edu.uw.tcss450.nutrack.fragment.EditProfileDialogFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
-        android:id="@+id/dialog_editProfile_title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:gravity="center_horizontal"
-        android:padding="@dimen/activity_horizontal_margin"
-        android:text="@string/name"
-        android:textColor="@color/black"
-        android:textSize="36sp" />
-
-    <View
-        android:id="@+id/dialog_edit_name_splitter"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp"
-        android:background="@android:color/darker_gray" />
+        android:layout_height="wrap_content"
+        android:background="@color/colorPrimary"
+        android:gravity="center"
+        android:layout_marginBottom="20dp"
+        android:elevation="4dp">
+
+        <TextView
+            android:id="@+id/dialog_editProfile_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            android:text="@string/name"
+            android:textColor="@android:color/white"
+            android:textSize="36sp"/>
+
+    </LinearLayout>
+
 
     <EditText
         android:id="@+id/dialog_editProfile_inputField"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="@dimen/activity_horizontal_margin"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
         android:visibility="gone" />
+
+    <DatePicker
+        android:id="@+id/dialog_editProfile_datePicker"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:calendarViewShown="false"
+        android:datePickerMode="spinner"
+        android:visibility="gone"/>
 
     <RadioGroup
         android:id="@+id/dialog_radioGroup"
@@ -58,19 +68,24 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:orientation="horizontal"
-        android:padding="@dimen/activity_horizontal_margin">
+        android:gravity="center"
+        android:layout_margin="20dp">
 
         <Button
             android:id="@+id/dialog_editProfile_cancel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginRight="16dp"
-            android:text="Cancel" />
+            android:background="@android:color/transparent"
+            android:text="Cancel"
+            android:textColor="@color/colorAccent" />
 
         <Button
             android:id="@+id/dialog_editProfile_submit"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Submit" />
+            android:background="@android:color/transparent"
+            android:text="Submit"
+            android:textColor="@color/colorAccent" />
     </LinearLayout>
 </LinearLayout>

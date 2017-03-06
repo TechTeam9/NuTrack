@@ -4,20 +4,27 @@ import android.content.Intent;
 import android.graphics.Paint;
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.Settings;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.DatePicker;
+import android.widget.LinearLayout;
+import android.widget.RadioGroup;
+import android.widget.Spinner;
 import android.widget.TextView;
+
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
 
 import edu.uw.tcss450.nutrack.R;
 import edu.uw.tcss450.nutrack.database.DBDailyLog;
 import edu.uw.tcss450.nutrack.model.Food;
-
-import static edu.uw.tcss450.nutrack.R.id.textView;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -93,39 +100,51 @@ public class FoodDialogFragment extends DialogFragment {
         // Inflate the layout for this fragment
         mView = inflater.inflate(R.layout.fragment_food_dialog, container, false);
 
-        TextView dialogTitle = (TextView) mView.findViewById(R.id.dialog_food_title);
-        TextView caloriesResult = (TextView) mView.findViewById(R.id.calories_food_result);
-        TextView fatResult = (TextView) mView.findViewById(R.id.fat_food_result);
-        TextView carbsResult = (TextView) mView.findViewById(R.id.carbs_food_result);
-        TextView proteinResult = (TextView) mView.findViewById(R.id.protein_food_result);
-        TextView urlResult = (TextView) mView.findViewById(R.id.url_link);
-        if (mFood.getmURL().size() < 1) {
-            urlResult.setVisibility(View.GONE);
-        } else {
-            urlResult.setPaintFlags(urlResult.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
-        }
-
-        dialogTitle.setText(mFood.getName());
-        caloriesResult.setText(String.valueOf(mFood.getCalorie().get(0)));
-        fatResult.setText(String.valueOf(mFood.getFat().get(0)));
-        carbsResult.setText(String.valueOf(mFood.getCarbs().get(0)));
-        proteinResult.setText(String.valueOf(mFood.getProtein().get(0)));
-        urlResult.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                goToUrl (mFood.getmURL().get(0));
-            }
-        });
+        initializeSpinner();
+        initializeFoodInfoPanel(0);
 
         // Buttons action
-        Button addButton = (Button) mView.findViewById(R.id.dialog_add_button);
+        final Button addButton = (Button) mView.findViewById(R.id.dialog_add_button);
         Button cancelButton = (Button) mView.findViewById(R.id.dialog_cancel_button);
 
         addButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                DBDailyLog db = new DBDailyLog(getContext());
-                db.insertFood(mFood.getName(), mFood.getId(), "food", "breakfast");
+                LinearLayout foodInfoPanel = (LinearLayout) mView.findViewById(R.id.foodDialog_foodInfo);
+                LinearLayout addInfoPanel = (LinearLayout) mView.findViewById(R.id.foodDialog_addInfo);
+
+                //If add button is add function, switch to add info view, else get data from add info view.
+                if (addButton.getText().equals("ADD")) {
+                    foodInfoPanel.setVisibility(View.GONE);
+                    addInfoPanel.setVisibility(View.VISIBLE);
+                    addButton.setText("SUBMIT");
+                } else if (addButton.getText().equals("SUBMIT")) {
+                    DatePicker datePicker = (DatePicker) mView.findViewById(R.id.foodDialog_datePicker);
+                    String eatDate = datePicker.getYear() + "-" + datePicker.getMonth() + "-" + datePicker.getDayOfMonth();
+                    String mealType = "";
+                    RadioGroup mealTypeGroup = (RadioGroup) mView.findViewById(R.id.foodDialog_radioGroup);
+                    switch (mealTypeGroup.getCheckedRadioButtonId()) {
+                        case R.id.foodDialog_radioButton_breakfast:
+                            mealType = "breakfast";
+                            break;
+                        case R.id.foodDialog_radioButton_lunch:
+                            mealType = "lunch";
+                            break;
+                        case R.id.foodDialog_radioButton_dinner:
+                            mealType = "dinner";
+                            break;
+                        case R.id.foodDialog_radioButton_snack:
+                            mealType = "snack";
+                            break;
+                    }
+
+                    DBDailyLog db = new DBDailyLog(getContext());
+                    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+                    String date = dateFormat.format(new Date(datePicker.getYear() - 1900, datePicker.getMonth(), datePicker.getDayOfMonth()));
+                    db.insertFood(mFood.getName(), mFood.getId(), "food", mealType, date);
+                    System.out.println(mealType + ", " + date);
+                    dismiss();
+                }
             }
         });
 
@@ -143,8 +162,68 @@ public class FoodDialogFragment extends DialogFragment {
         return mView;
     }
 
+    private void initializeSpinner() {
+        Spinner servingSpinner = (Spinner) mView.findViewById(R.id.foodDialog_spinner);
+        TextView servingLinearLayout = (TextView)  mView.findViewById(R.id.foodDialog_serving);
+        ArrayList<String> servingArray = new ArrayList<>();
+
+        if (mFood.getmServing().size() == 0) {
+            servingSpinner.setVisibility(View.GONE);
+            servingLinearLayout.setVisibility(View.GONE);
+        } else {
+            for (int i = 0; i < mFood.getmServing().size(); i++) {
+                servingArray.add(mFood.getmServing().get(i));
+            }
+
+            ArrayAdapter<String> adapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_dropdown_item, servingArray);
+
+            servingSpinner.setAdapter(adapter);
+
+            servingSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                    initializeFoodInfoPanel(position);
+                }
+
+                @Override
+                public void onNothingSelected(AdapterView<?> parent) {
+
+                }
+            });
+        }
+    }
+
+    private void initializeFoodInfoPanel(final int thePosition) {
+        TextView dialogTitle = (TextView) mView.findViewById(R.id.dialog_food_title);
+        TextView caloriesResult = (TextView) mView.findViewById(R.id.calories_food_result);
+        TextView fatResult = (TextView) mView.findViewById(R.id.fat_food_result);
+        TextView carbsResult = (TextView) mView.findViewById(R.id.carbs_food_result);
+        TextView proteinResult = (TextView) mView.findViewById(R.id.protein_food_result);
+        TextView urlResult = (TextView) mView.findViewById(R.id.url_link);
+        if (mFood.getmURL().size() < 1) {
+            urlResult.setVisibility(View.GONE);
+        } else {
+            urlResult.setPaintFlags(urlResult.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
+        }
+
+        dialogTitle.setText(mFood.getName());
+        caloriesResult.setText(String.valueOf(mFood.getCalorie().get(thePosition)));
+        fatResult.setText(String.valueOf(mFood.getFat().get(thePosition)) + "g");
+        carbsResult.setText(String.valueOf(mFood.getCarbs().get(thePosition)) + "g");
+        proteinResult.setText(String.valueOf(mFood.getProtein().get(thePosition)) + "g");
+        urlResult.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                goToUrl(mFood.getmURL().get(thePosition));
+            }
+        });
+
+        mView.invalidate();
+    }
+
     /**
      * Go to the URL.
+     *
      * @param url address.
      */
     private void goToUrl(String url) {
@@ -191,8 +270,6 @@ public class FoodDialogFragment extends DialogFragment {
     public interface OnFragmentInteractionListener {
         void onFragmentInteraction(Food theFood);
     }
-
-
 
 
 }

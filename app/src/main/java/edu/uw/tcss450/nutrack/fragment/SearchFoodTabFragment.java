@@ -374,6 +374,7 @@ public class SearchFoodTabFragment extends Fragment {
             ArrayList<Double> carbsList = new ArrayList<>();
             ArrayList<Double> proteinList = new ArrayList<>();
             ArrayList<String> urlList = new ArrayList<>();
+            ArrayList<String> servingList = new ArrayList<>();
 
             try {
                 if (result != null) {
@@ -387,8 +388,13 @@ public class SearchFoodTabFragment extends Fragment {
                         fatList.add(servingObject.getDouble("fat"));
                         carbsList.add(servingObject.getDouble("carbohydrate"));
                         proteinList.add(servingObject.getDouble("protein"));
-                        urlList.add(servingObject.getString("serving_url"));
-
+                        if (servingObject.has("serving_url")) {
+                            urlList.add(servingObject.getString("serving_url"));
+                        }
+                        if (servingObject.has("metric_serving_amount")) {
+                            servingList.add(servingObject.getDouble("metric_serving_amount")
+                                    + servingObject.getString("metric_serving_unit"));
+                        }
                     } else {
                         jsonArray = jsonObject.getJSONArray("serving");
                         if (jsonArray != null) {
@@ -399,7 +405,13 @@ public class SearchFoodTabFragment extends Fragment {
                                 fatList.add(serving.getDouble("fat"));
                                 carbsList.add(serving.getDouble("carbohydrate"));
                                 proteinList.add(serving.getDouble("protein"));
-                                urlList.add(serving.getString("serving_url"));
+                                if (serving.has("serving_url")) {
+                                    urlList.add(serving.getString("serving_url"));
+                                }
+                                if (serving.has("metric_serving_amount")) {
+                                    servingList.add(serving.getDouble("metric_serving_amount")
+                                            + serving.getString("metric_serving_unit"));
+                                }
                             }
                         }
                     }
@@ -409,7 +421,7 @@ public class SearchFoodTabFragment extends Fragment {
                     mFood.setCarbs(carbsList);
                     mFood.setProtein(proteinList);
                     mFood.setmURL(urlList);
-
+                    mFood.setmServing(servingList);
                     mListener.onFragmentInteraction(mFood);
                 }
 
