@@ -9,10 +9,25 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.github.mikephil.charting.charts.LineChart;
+import com.github.mikephil.charting.data.Entry;
+import com.github.mikephil.charting.data.LineData;
+import com.github.mikephil.charting.data.LineDataSet;
+import com.github.mikephil.charting.utils.ColorTemplate;
+
 import java.util.ArrayList;
+import java.util.List;
 
 import edu.uw.tcss450.nutrack.R;
 import im.dacer.androidcharts.LineView;
+import lecho.lib.hellocharts.model.Axis;
+import lecho.lib.hellocharts.model.AxisValue;
+import lecho.lib.hellocharts.model.ChartData;
+import lecho.lib.hellocharts.model.ColumnChartData;
+import lecho.lib.hellocharts.model.Line;
+import lecho.lib.hellocharts.model.LineChartData;
+import lecho.lib.hellocharts.model.PointValue;
+import lecho.lib.hellocharts.view.LineChartView;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -69,7 +84,46 @@ public class MonthlyWeightOverviewFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_monthly_weight_overview, container, false);
+        View view = inflater.inflate(R.layout.fragment_monthly_weight_overview, container, false);
+        //ArrayList<Integer> weights = new ArrayList<>(); //Should go away after we have real code here.
+        //initializeMonthlyWeightGraph(view, weights);
+        LineChartView weightChart = (LineChartView) view.findViewById(R.id.weight_chart);
+        weightChart.setInteractive(false);
+        weightChart.setZoomEnabled(false);
+        weightChart.setScrollContainer(false);
+        LineChartData chartData = weightChart.getLineChartData();
+
+        ArrayList<AxisValue> dayList = new ArrayList<>();
+
+        for(int i=1; i < 31; i++){
+            dayList.add(new AxisValue(i));
+        }
+        Axis axisX = new Axis(dayList);
+
+        chartData.setBaseValue(10);
+        chartData.setAxisXBottom(axisX);
+
+        List<PointValue> values = new ArrayList<PointValue>();
+        values.add(new PointValue(1, 250));
+        values.add(new PointValue(3, 251));
+        values.add(new PointValue(4, 248));
+        values.add(new PointValue(5, 247));
+        values.add(new PointValue(7, 251));
+        values.add(new PointValue(9, 248));
+        values.add(new PointValue(10, 247));
+        values.add(new PointValue(15, 190));
+
+        Line line = new Line(values).setColor(getResources().getColor(R.color.colorPrimary)).setCubic(true);
+        line.setStrokeWidth(2);
+        line.setHasLabels(true);
+        List<Line> lines = new ArrayList<Line>();
+        lines.add(line);
+
+        chartData.setLines(lines);
+
+        weightChart.setLineChartData(chartData);
+
+        return view;
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -110,18 +164,30 @@ public class MonthlyWeightOverviewFragment extends Fragment {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
     }
-    public void initializeMonthlyWeightGraph(View view) {
-        ArrayList dataLists = null;
-        dataLists.add(1);
-        dataLists.add(2);
-        ArrayList strList = null;
-        strList.add(0,1);
-        strList.add(1,2);
-        LineView lineView = (LineView) view.findViewById(R.id.line_view);
-        lineView.setDrawDotLine(false); //optional
-        lineView.setShowPopup(LineView.SHOW_POPUPS_MAXMIN_ONLY); //optional
-        lineView.setBottomTextList(strList);
-        lineView.setColorArray(new int[]{Color.BLACK,Color.GREEN,Color.GRAY,Color.CYAN});
-        lineView.setDataList(dataLists); //or lineView.setFloatDataList(floatDataLists)
-    }
+
+//    public void initializeMonthlyWeightGraph(View view, ArrayList<Integer> weights) {
+//
+//        ArrayList<ArrayList<Integer>> dataLists = new ArrayList<>();
+//
+//        weights.add(0, 250);
+//        weights.add(0);
+//        weights.add(251);
+//        weights.add(200);
+//        weights.add(20);
+//        dataLists.add(weights);
+//        ArrayList<String> strList = new ArrayList<>();
+//        strList.add("JAN 1");
+//        strList.add("JAN 2");
+//        strList.add("JAN 3");
+//        strList.add("JAN 4");
+//        strList.add("JAN 5");
+//        strList.add("JAN 6");
+//        LineView lineView = (LineView) view.findViewById(R.id.weight_chart);
+//        lineView.setDrawDotLine(true); //optional
+//        lineView.setShowPopup(LineView.SHOW_POPUPS_MAXMIN_ONLY); //optional
+//        lineView.setBottomTextList(strList);
+//        lineView.setColorArray(new int[]{Color.BLACK,Color.GREEN,Color.GRAY,Color.CYAN});
+//        lineView.setDataList(dataLists); //or lineView.setFloatDataList(floatDataLists)
+//        lineView.setBottom(50);
+//    }
 }

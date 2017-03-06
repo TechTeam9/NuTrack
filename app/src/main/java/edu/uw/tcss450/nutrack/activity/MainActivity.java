@@ -30,12 +30,12 @@ import edu.uw.tcss450.nutrack.database.DBPersonalInfo;
 import edu.uw.tcss450.nutrack.fragment.DailyIntakeOverviewFragment;
 import edu.uw.tcss450.nutrack.fragment.LookUpFoodFragment;
 import edu.uw.tcss450.nutrack.fragment.MonthlyWeightOverviewFragment;
+import edu.uw.tcss450.nutrack.fragment.OverviewFragment;
 import edu.uw.tcss450.nutrack.fragment.WeeklyIntakeOverviewFragment;
 import edu.uw.tcss450.nutrack.helper.ProfileHelper;
 import edu.uw.tcss450.nutrack.R;
 import edu.uw.tcss450.nutrack.fragment.DailyLogFragment;
 import edu.uw.tcss450.nutrack.fragment.EditProfileDialogFragment;
-import edu.uw.tcss450.nutrack.fragment.MainFragment;
 import edu.uw.tcss450.nutrack.fragment.ProfileFragment;
 import edu.uw.tcss450.nutrack.fragment.SearchResultFragment;
 import edu.uw.tcss450.nutrack.fragment.SettingFragment;
@@ -49,7 +49,7 @@ import static edu.uw.tcss450.nutrack.R.id.naviView;
  * ProfileFragment, LookUpFoodFragment, SearchResultFragment, and SettingFragment.
  */
 public class MainActivity extends AppCompatActivity implements ProfileFragment.OnFragmentInteractionListener,
-        LookUpFoodFragment.OnFragmentInteractionListener, MainFragment.OnFragmentInteractionListener,
+        LookUpFoodFragment.OnFragmentInteractionListener, OverviewFragment.OnFragmentInteractionListener,
         SettingFragment.OnFragmentInteractionListener, SearchResultFragment.OnFragmentInteractionListener,
         EditProfileDialogFragment.OnFragmentInteractionListener, DailyIntakeOverviewFragment.OnFragmentInteractionListener,
         WeeklyIntakeOverviewFragment.OnFragmentInteractionListener,MonthlyWeightOverviewFragment.OnFragmentInteractionListener, DailyLogFragment.OnFragmentInteractionListener {
@@ -103,7 +103,7 @@ public class MainActivity extends AppCompatActivity implements ProfileFragment.O
         initializeDrawerHeaderContent();
 
         if (savedInstanceState == null) {
-            Class fragmentClass = MainFragment.class;
+            Class fragmentClass = OverviewFragment.class;
             Fragment fragment = null;
             try {
                 fragment = (Fragment) fragmentClass.newInstance();
@@ -226,15 +226,19 @@ public class MainActivity extends AppCompatActivity implements ProfileFragment.O
         switch (theMenuItem.getItemId()) {
             case R.id.nav_profile:
                 fragmentClass = ProfileFragment.class;
+                mToolbar.setTitle("Profile");
                 break;
             case R.id.nav_overview:
-                fragmentClass = MainFragment.class;
+                fragmentClass = OverviewFragment.class;
+                mToolbar.setTitle("Overview");
                 break;
             case R.id.nav_Daily_log:
                 fragmentClass = DailyLogFragment.class;
+                mToolbar.setTitle("Daily Log");
                 break;
             case R.id.nav_settings:
                 fragmentClass = SettingFragment.class;
+                mToolbar.setTitle("Settings");
                 break;
             case R.id.nav_sign_out:
                 userSignOut();
@@ -244,7 +248,7 @@ public class MainActivity extends AppCompatActivity implements ProfileFragment.O
                 startActivity(intent);
                 break;
             default:
-                fragmentClass = MainFragment.class;
+                fragmentClass = OverviewFragment.class;
         }
 
         if (theMenuItem.getItemId() != R.id.nav_sign_out && theMenuItem.getItemId() != R.id.nav_add_food) {
