@@ -8,7 +8,8 @@
 
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:elevation="3dp">
 
         <devs.mulham.horizontalcalendar.HorizontalCalendarView
             android:id="@+id/calendarView"
@@ -38,15 +39,25 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@color/colorAccent"
-                    android:padding="10dp"
+                    android:elevation="2dp"
+                    android:paddingBottom="8dp"
+                    android:paddingEnd="16dp"
+                    android:paddingLeft="16dp"
+                    android:paddingRight="16dp"
+                    android:paddingStart="16dp"
+                    android:paddingTop="8dp"
                     android:text="Breakfast"
-                    android:textSize="20sp"
-                    android:textColor="@android:color/white"/>
+                    android:textColor="@android:color/white"
+                    android:textSize="20sp" />
 
                 <ListView
                     android:id="@+id/breakfast_listView"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    android:paddingEnd="24dp"
+                    android:paddingLeft="24dp"
+                    android:paddingRight="24dp"
+                    android:paddingStart="24dp" />
 
             </LinearLayout>
 
@@ -59,15 +70,25 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@color/colorAccent"
-                    android:padding="10dp"
+                    android:elevation="2dp"
+                    android:paddingBottom="8dp"
+                    android:paddingEnd="16dp"
+                    android:paddingLeft="16dp"
+                    android:paddingRight="16dp"
+                    android:paddingStart="16dp"
+                    android:paddingTop="8dp"
                     android:text="Lunch"
-                    android:textSize="20sp"
-                    android:textColor="@android:color/white"/>
+                    android:textColor="@android:color/white"
+                    android:textSize="20sp" />
 
                 <ListView
                     android:id="@+id/lunch_listView"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    android:paddingEnd="24dp"
+                    android:paddingLeft="24dp"
+                    android:paddingRight="24dp"
+                    android:paddingStart="24dp" />
 
             </LinearLayout>
 
@@ -80,15 +101,25 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@color/colorAccent"
-                    android:padding="10dp"
+                    android:elevation="2dp"
+                    android:paddingBottom="8dp"
+                    android:paddingEnd="16dp"
+                    android:paddingLeft="16dp"
+                    android:paddingRight="16dp"
+                    android:paddingStart="16dp"
+                    android:paddingTop="8dp"
                     android:text="Dinner"
-                    android:textSize="20sp"
-                    android:textColor="@android:color/white" />
+                    android:textColor="@android:color/white"
+                    android:textSize="20sp" />
 
                 <ListView
                     android:id="@+id/dinner_listView"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    android:paddingEnd="24dp"
+                    android:paddingLeft="24dp"
+                    android:paddingRight="24dp"
+                    android:paddingStart="24dp" />
 
             </LinearLayout>
 
@@ -101,15 +132,25 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@color/colorAccent"
-                    android:padding="10dp"
+                    android:elevation="2dp"
+                    android:paddingBottom="8dp"
+                    android:paddingEnd="16dp"
+                    android:paddingLeft="16dp"
+                    android:paddingRight="16dp"
+                    android:paddingStart="16dp"
+                    android:paddingTop="8dp"
                     android:text="Snack"
-                    android:textSize="20sp"
-                    android:textColor="@android:color/white" />
+                    android:textColor="@android:color/white"
+                    android:textSize="20sp" />
 
                 <ListView
                     android:id="@+id/snack_listView"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    android:paddingEnd="24dp"
+                    android:paddingLeft="24dp"
+                    android:paddingRight="24dp"
+                    android:paddingStart="24dp" />
 
             </LinearLayout>
         </LinearLayout>

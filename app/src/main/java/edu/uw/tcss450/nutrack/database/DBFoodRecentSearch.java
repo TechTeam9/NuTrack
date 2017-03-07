@@ -116,7 +116,6 @@ public class DBFoodRecentSearch extends SQLiteOpenHelper {
     public Cursor getAllFood() {
         SQLiteDatabase db = this.getReadableDatabase();
         return db.rawQuery("SELECT * FROM food_recent_search", null);
-
     }
 
 }
