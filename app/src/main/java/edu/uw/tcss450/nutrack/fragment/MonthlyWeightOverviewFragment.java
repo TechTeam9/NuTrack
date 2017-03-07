@@ -113,6 +113,7 @@ public class MonthlyWeightOverviewFragment extends Fragment {
         dbWeight.insertWeight("2017-03-03", 121);
         dbWeight.insertWeight("2017-03-02", 145);
         dbWeight.insertWeight("2017-03-01", 999);
+        dbWeight.getWeight(new Date());
         /*
         for (int i = 0; i < 7; i++) {
             System.out.println(test.get(i));
@@ -130,16 +131,27 @@ public class MonthlyWeightOverviewFragment extends Fragment {
             }
         });
         ArrayList<AxisValue> dayList = new ArrayList<>();
+        //ArrayList<String> dayList = new ArrayList<>();
 
-        for(int i=1; i < 7; i++){
-            dayList.add(new AxisValue(i));
+        for(int i=1; i <= 7; i++){
+            dayList.add(new AxisValue(i).setLabel("mon"));
         }
-        Axis axisX = new Axis(dayList);
+        Axis axisX = new Axis();//new Axis(dayList);
+        axisX.setValues(dayList);
+        axisX.setHasTiltedLabels(true);
+        ArrayList<AxisValue> weightList = new ArrayList<>();
+        for(int i=150; i < 300; i++){
+            weightList.add(new AxisValue(i));
+        }
+        Axis axisY = new Axis(weightList);
 
         chartData.setBaseValue(10);
         chartData.setAxisXBottom(axisX);
+        //chartData.setAxisYLeft(axisY);
+
 
         List<PointValue> values = new ArrayList<PointValue>();
+        List<PointValue> hiddenValues = new ArrayList<PointValue>();
 
         /*
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
@@ -161,18 +173,28 @@ public class MonthlyWeightOverviewFragment extends Fragment {
         */
 
         values.add(new PointValue(1, 250));
-        values.add(new PointValue(3, 251));
-        values.add(new PointValue(4, 248));
-        values.add(new PointValue(5, 247));
-        values.add(new PointValue(7, 251));
-        values.add(new PointValue(9, 248));
-        values.add(new PointValue(10, 247));
+        values.add(new PointValue(2, 251));
+        values.add(new PointValue(3, 248));
+        values.add(new PointValue(4, 247));
+        values.add(new PointValue(5, 251));
+        values.add(new PointValue(6, 248));
+        values.add(new PointValue(7, 247));
 
-        Line line = new Line(values).setColor(getResources().getColor(R.color.colorPrimary)).setCubic(true);
+        hiddenValues.add(new PointValue(1,200));
+        hiddenValues.add(new PointValue(7,275));
+
+        Line hiddenLine = new Line(hiddenValues).setColor(Color.WHITE);
+        hiddenLine.setStrokeWidth(0);
+        hiddenLine.setHasLabels(false);
+        List<Line> lines = new ArrayList<Line>();
+        lines.add(hiddenLine);
+
+        Line line = new Line(values).setColor(getResources().getColor(R.color.colorPrimary)).setCubic(false);
+        line.setHasPoints(true);
         line.setStrokeWidth(2);
         line.setHasLabels(true);
-        List<Line> lines = new ArrayList<Line>();
         lines.add(line);
+
 
         chartData.setLines(lines);
 
