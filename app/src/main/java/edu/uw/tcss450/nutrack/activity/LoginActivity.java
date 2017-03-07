@@ -190,8 +190,14 @@ public class LoginActivity extends AppCompatActivity implements AddAccountInfo.R
                     }
                 } else {
                     createAccount(email, password);
-
                 }
+            }
+        });
+        Button btnCancel = (Button) mRegistrationDialog.findViewById(R.id.registration_button_cancel);
+        btnCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mRegistrationDialog.cancel();
             }
         });
     }
