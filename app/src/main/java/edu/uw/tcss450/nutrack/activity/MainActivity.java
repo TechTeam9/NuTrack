@@ -2,6 +2,7 @@ package edu.uw.tcss450.nutrack.activity;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.graphics.Color;
 import android.net.Uri;
@@ -25,8 +26,6 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 
-import edu.uw.tcss450.nutrack.database.DBMemberInfo;
-import edu.uw.tcss450.nutrack.database.DBPersonalInfo;
 import edu.uw.tcss450.nutrack.fragment.DailyIntakeOverviewFragment;
 import edu.uw.tcss450.nutrack.fragment.LookUpFoodFragment;
 import edu.uw.tcss450.nutrack.fragment.MonthlyWeightOverviewFragment;
@@ -301,11 +300,14 @@ public class MainActivity extends AppCompatActivity implements ProfileFragment.O
      * Cleans up after the user logs out.
      */
     private void userSignOut() {
-        DBMemberInfo DBMemberInfo = new DBMemberInfo(this);
-        DBMemberInfo.deleteData();
+        SharedPreferences sharedPref = this.getSharedPreferences(getString(R.string.preference_account), Context.MODE_PRIVATE);
 
-        DBPersonalInfo dbPersonalInfo = new DBPersonalInfo(this);
-        dbPersonalInfo.deletePersonalInfo();
+        sharedPref.edit().remove("email").commit();
+        sharedPref.edit().remove("password").commit();
+
+
+        SharedPreferences sharedPrefProfile = this.getSharedPreferences(getString(R.string.preference_profile), Context.MODE_PRIVATE);
+        sharedPrefProfile.edit().clear().commit();
 
         Intent intent = new Intent(this, LoginActivity.class);
         startActivity(intent);

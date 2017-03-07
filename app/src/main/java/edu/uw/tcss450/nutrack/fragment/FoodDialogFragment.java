@@ -6,6 +6,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,6 +25,7 @@ import java.util.Date;
 
 import edu.uw.tcss450.nutrack.R;
 import edu.uw.tcss450.nutrack.database.DBDailyLog;
+import edu.uw.tcss450.nutrack.database.DBNutrientRecord;
 import edu.uw.tcss450.nutrack.model.Food;
 
 /**
@@ -63,6 +65,8 @@ public class FoodDialogFragment extends DialogFragment {
     private OnFragmentInteractionListener mListener;
 
     private Food mFood;
+
+    private int mChosenServingOffset;
 
     /**
      * FoodDialogFragment constructor.
@@ -115,6 +119,9 @@ public class FoodDialogFragment extends DialogFragment {
 
                 //If add button is add function, switch to add info view, else get data from add info view.
                 if (addButton.getText().equals("ADD")) {
+                    Spinner servingSpinner = (Spinner) mView.findViewById(R.id.foodDialog_spinner);
+                    mChosenServingOffset = servingSpinner.getSelectedItemPosition();
+
                     foodInfoPanel.setVisibility(View.GONE);
                     addInfoPanel.setVisibility(View.VISIBLE);
                     addButton.setText("SUBMIT");
@@ -141,7 +148,14 @@ public class FoodDialogFragment extends DialogFragment {
                     SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
                     String date = dateFormat.format(new Date(datePicker.getYear() - 1900, datePicker.getMonth(), datePicker.getDayOfMonth()));
                     db.insertFood(mFood.getName(), mFood.getId(), "food", mealType, date);
-                    System.out.println(mealType + ", " + date);
+                    db.close();
+
+                    DBNutrientRecord dbNutrientRecord = new DBNutrientRecord(getContext());
+                    dbNutrientRecord.insertNutrient(date, mFood.getCalorie().get(mChosenServingOffset)
+                            , mFood.getFat().get(mChosenServingOffset)
+                            , mFood.getCarbs().get(mChosenServingOffset)
+                            , mFood.getProtein().get(mChosenServingOffset));
+                    System.out.println(date);
                     dismiss();
                 }
             }

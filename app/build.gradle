@@ -49,6 +49,11 @@ dependencies {
     compile 'com.github.lecho:hellocharts-android:v1.5.8'
     compile 'com.github.lecho:hellocharts-library:1.5.8@aar'
 
+    compile 'com.github.joaquimley:faboptions:1.1.2'
+    compile 'com.getbase:floatingactionbutton:1.10.1'
+
+    compile 'com.github.aakira:expandable-layout:1.6.0@aar'
+
 }
 
 

@@ -57,4 +57,9 @@
         <item>Date of Birth</item>
         <item>Gender</item>
     </string-array>
+
+    <!-- SharedPreferences -->
+    <string name="preference_profile">SharedPreferenceProfile</string>
+    <string name="preference_goal">SharedPreferenceGoal</string>
+    <string name="preference_account">SharedPreferenceAccount</string>
 </resources>

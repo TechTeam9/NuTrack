@@ -1,12 +1,12 @@
 package edu.uw.tcss450.nutrack.fragment;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.text.InputType;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,13 +16,7 @@ import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
-import edu.uw.tcss450.nutrack.database.DBPersonalInfo;
 import edu.uw.tcss450.nutrack.helper.ProfileHelper;
 import edu.uw.tcss450.nutrack.R;
 import edu.uw.tcss450.nutrack.model.Profile;
@@ -81,26 +75,25 @@ public class EditProfileDialogFragment extends DialogFragment {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                DBPersonalInfo dbHelper = new DBPersonalInfo(getContext());
-
+                SharedPreferences sharedPrefProfile = getContext().getSharedPreferences(getContext().getString(R.string.preference_profile), Context.MODE_PRIVATE);
                 switch (mType) {
                     case NAME_TYPE:
                         if (editText.getText().length() < 1) {
                             editText.setError("Field cannot be left blank.");
                             return;
                         } else {
-                            dbHelper.editPersonalInfo(DBPersonalInfo.COLUMN_NAME, editText.getText().toString());
-
+                            sharedPrefProfile.edit().putString("name", editText.getText().toString()).commit();
                         }
                         break;
                     case GENDER_TYPE:
                         String value;
                         if (radioGroup.getCheckedRadioButtonId() == R.id.dialog_editProfile_radioMale) {
-                            value = "m";
+                            value = "Male";
                         } else {
-                            value = "f";
+                            value = "Female";
                         }
-                        dbHelper.editPersonalInfo(DBPersonalInfo.COLUMN_GENDER, value);
+
+                        sharedPrefProfile.edit().putString("gender", value).commit();
 
                         break;
                     case DOB_TYPE:
@@ -113,7 +106,7 @@ public class EditProfileDialogFragment extends DialogFragment {
                             editText.setError("Your input contain invalid symbol");
                             return;
                         } else {
-                            dbHelper.editPersonalInfoNonString(DBPersonalInfo.COLUMN_HEIGHT, editText.getText().toString());
+                            sharedPrefProfile.edit().putInt("height", Integer.parseInt(editText.getText().toString())).commit();
                         }
                         break;
                     case WEIGHT_TYPE:
@@ -124,7 +117,7 @@ public class EditProfileDialogFragment extends DialogFragment {
                             editText.setError("Your input contain invalid symbol");
                             return;
                         } else {
-                            dbHelper.editPersonalInfoNonString(DBPersonalInfo.COLUMN_WEIGHT, editText.getText().toString());
+                            sharedPrefProfile.edit().putInt("weight", Integer.parseInt(editText.getText().toString())).commit();
                         }
                         break;
                     default:
@@ -152,13 +145,13 @@ public class EditProfileDialogFragment extends DialogFragment {
                     textView.setText("Name");
                     editText.setHint(profile.getName());
                     editText.setVisibility(View.VISIBLE);
-                    DBPersonalInfo dbHelper = new DBPersonalInfo(getContext());
+                    editText.setText(profile.getName());
                     break;
                 case GENDER_TYPE:
                     textView.setText("Gender");
                     radioGroup.setVisibility(View.VISIBLE);
                     RadioButton radioButton;
-                    if (profile.getGender() == 'm') {
+                    if (profile.getGender().equals("Male")) {
                         radioButton = (RadioButton) view.findViewById(R.id.dialog_editProfile_radioMale);
                     } else {
                         radioButton = (RadioButton) view.findViewById(R.id.dialog_editProfile_radioFemale);
@@ -180,13 +173,13 @@ public class EditProfileDialogFragment extends DialogFragment {
                     textView.setText("Height");
                     editText.setHint(String.valueOf(profile.getHeight()));
                     editText.setVisibility(View.VISIBLE);
-                    editText.setRawInputType(InputType.TYPE_CLASS_NUMBER);
+                    editText.setInputType(InputType.TYPE_CLASS_NUMBER);
                     break;
                 case WEIGHT_TYPE:
                     textView.setText("Weight");
                     editText.setHint(String.valueOf(profile.getWeight()));
                     editText.setVisibility(View.VISIBLE);
-                    editText.setRawInputType(InputType.TYPE_CLASS_NUMBER);
+                    editText.setInputType(InputType.TYPE_CLASS_NUMBER);
 
                     break;
                 default:

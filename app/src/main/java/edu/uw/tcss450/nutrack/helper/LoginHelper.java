@@ -1,10 +1,11 @@
 package edu.uw.tcss450.nutrack.helper;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 
+import edu.uw.tcss450.nutrack.R;
 import edu.uw.tcss450.nutrack.api.AddAccountInfo;
-import edu.uw.tcss450.nutrack.database.DBMemberInfo;
 import edu.uw.tcss450.nutrack.api.getAccountInfo;
 import edu.uw.tcss450.nutrack.model.Account;
 
@@ -50,35 +51,14 @@ public class LoginHelper {
      */
     public static final int EMAIL_ALREADY_EXIST = 21;
 
-    /**
-     * Static method for auto verifying account existance.
-     * @param theContext context of the activity
-     * @return result code
-     */
-    public static int autoVerifyAccountExistance(Context theContext) {
-        int resultCode = ERROR;
-        DBMemberInfo dbHelper = new DBMemberInfo(theContext);
-        //NEED TO CHANGE COMPARE TO == AFTER COMPLETING LOGIN PAGE
-        if (dbHelper.getMemberSize() >= 1) {
-            Cursor accountInfo = dbHelper.getData();
-            accountInfo.moveToFirst();
-            Account account = new Account(accountInfo.getString(0), accountInfo.getString(1));
 
-            autoVerifyAccount(account, theContext);
-        } else {
-            resultCode = NO_ACCOUNT_FOUND;
-        }
-
-        dbHelper.close();
-        return resultCode;
-    }
 
     /**
      * Auto verify account for current user.
      * @param theAccount account model
      * @param theContext context
      */
-    private static void autoVerifyAccount(Account theAccount, Context theContext) {
+    public static void autoVerifyAccount(Account theAccount, Context theContext) {
         final String baseUrl = "http://cssgate.insttech.washington.edu/~mhl325/";
 
         getAccountInfo task = new getAccountInfo(theContext);

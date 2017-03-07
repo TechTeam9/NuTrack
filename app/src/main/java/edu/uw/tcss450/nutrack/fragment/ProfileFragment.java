@@ -157,11 +157,7 @@ public class ProfileFragment extends Fragment implements EditProfileDialogFragme
         ImageView imageAvatar = (ImageView) theView.findViewById(R.id.profile_imageView_avatar);
 
 
-        if (profile.getGender() == 'm') {
-            textView.setText("Male");
-        } else {
-            textView.setText("Female");
-        }
+        textView.setText(profile.getGender());
 
         textView = (TextView) theView.findViewById(R.id.profile_textView_valueDoB);
         textView.setText(profile.getDOB());

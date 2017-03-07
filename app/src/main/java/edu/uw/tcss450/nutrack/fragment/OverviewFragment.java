@@ -10,6 +10,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.joaquimley.faboptions.FabOptions;
+
 import edu.uw.tcss450.nutrack.R;
 
 
@@ -113,6 +115,7 @@ public class OverviewFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         final View view = inflater.inflate(R.layout.fragment_overview, container, false);
+
         return view;
     }
 

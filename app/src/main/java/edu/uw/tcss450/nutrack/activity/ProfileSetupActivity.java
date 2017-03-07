@@ -4,6 +4,7 @@ import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.support.design.widget.TextInputEditText;
 import android.support.v7.app.AppCompatActivity;
@@ -32,7 +33,7 @@ public class ProfileSetupActivity extends AppCompatActivity implements AvatarSel
     /**
      * The user's chosen gender.
      */
-    private char mGenderChosen;
+    private String mGenderChosen;
 
     /**
      * The user's email.
@@ -62,13 +63,13 @@ public class ProfileSetupActivity extends AppCompatActivity implements AvatarSel
         final Button maleIcon = (Button) findViewById(R.id.profileSetup_button_male);
         final Button femaleIcon = (Button) findViewById(R.id.profileSetup_button_female);
 
-        mGenderChosen = 'm';
+        mGenderChosen = "Male";
         maleIcon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 mAvatarSelectorFragment.changeAvatarGender(AvatarSelectorFragment.MALE, femaleIcon);
                 maleIcon.setClickable(false);
-                mGenderChosen = 'm';
+                mGenderChosen = "Male";
             }
         });
         maleIcon.setClickable(false);
@@ -78,7 +79,7 @@ public class ProfileSetupActivity extends AppCompatActivity implements AvatarSel
             public void onClick(View v) {
                 mAvatarSelectorFragment.changeAvatarGender(AvatarSelectorFragment.FEMALE, maleIcon);
                 femaleIcon.setClickable(false);
-                mGenderChosen = 'f';
+                mGenderChosen = "Female";
             }
         });
 
@@ -138,15 +139,22 @@ public class ProfileSetupActivity extends AppCompatActivity implements AvatarSel
             Toast.makeText(context, hint + "empty!", Toast.LENGTH_SHORT).show();
         } else {
             int avatarIconId = mAvatarSelectorFragment.getChosen();
-            String dateOfBirth = datePicker.getYear() + "-" + datePicker.getMonth() + "-" + datePicker.getDayOfMonth();
+            String dateOfBirth = datePicker.getYear() + "-" + (datePicker.getMonth() + 1) + "-" + datePicker.getDayOfMonth();
 
             Profile profile = new Profile(fieldName.getText().toString(), mGenderChosen
                     , dateOfBirth
-                    , Double.parseDouble(fieldHeight.getText().toString())
-                    , Double.parseDouble(fieldWeight.getText().toString())
+                    , Integer.parseInt(fieldHeight.getText().toString())
+                    , Integer.parseInt(fieldWeight.getText().toString())
                     , avatarIconId);
 
 
+            SharedPreferences sharedPrefProfile = this.getSharedPreferences(getString(R.string.preference_profile), Context.MODE_PRIVATE);
+            sharedPrefProfile.edit().putString("name", fieldName.getText().toString()).commit();
+            sharedPrefProfile.edit().putString("gender", mGenderChosen).commit();
+            sharedPrefProfile.edit().putString("dob", dateOfBirth).commit();
+            sharedPrefProfile.edit().putInt("height", Integer.parseInt(fieldHeight.getText().toString())).commit();
+            sharedPrefProfile.edit().putInt("weight", Integer.parseInt(fieldWeight.getText().toString())).commit();
+            sharedPrefProfile.edit().putInt("avatar_id", avatarIconId).commit();
 
             ProfileHelper.insertProfile(this, mEmail, profile);
         }

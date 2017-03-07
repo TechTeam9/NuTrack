@@ -148,7 +148,7 @@
                         android:id="@+id/profileSetup_editText_height"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:inputType="number"
+                        android:inputType="number|none"
                         android:hint="@string/height" />
                 </android.support.design.widget.TextInputLayout>
             </LinearLayout>
@@ -175,7 +175,7 @@
                         android:id="@+id/profileSetup_editText_weight"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:inputType="number"
+                        android:inputType="number|none"
                         android:hint="@string/weight" />
                 </android.support.design.widget.TextInputLayout>
             </LinearLayout>

@@ -1,11 +1,15 @@
 package edu.uw.tcss450.nutrack.activity;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
@@ -19,7 +23,6 @@ import android.widget.Toast;
 import org.json.JSONArray;
 import org.json.JSONException;
 
-import edu.uw.tcss450.nutrack.database.DBMemberInfo;
 import edu.uw.tcss450.nutrack.api.getAccountInfo;
 import edu.uw.tcss450.nutrack.helper.LoginHelper;
 import edu.uw.tcss450.nutrack.api.AddAccountInfo;
@@ -30,7 +33,6 @@ import edu.uw.tcss450.nutrack.model.Profile;
 
 /**
  * Provide a login activity when user open the app.
- *
  */
 public class LoginActivity extends AppCompatActivity implements AddAccountInfo.RegistrationCompleted, getAccountInfo.LoginCompleted, ProfileHelper.CheckProfileCompleted {
 
@@ -71,6 +73,7 @@ public class LoginActivity extends AppCompatActivity implements AddAccountInfo.R
 
     /**
      * Builds and sets up LoginActivity.
+     *
      * @param savedInstanceState the saved instance state.
      */
     @Override
@@ -114,13 +117,34 @@ public class LoginActivity extends AppCompatActivity implements AddAccountInfo.R
             }
         });
 
-        switch (LoginHelper.autoVerifyAccountExistance(this)) {
+        switch (autoVerifyAccountExistance(this)) {
             case LoginHelper.NO_ACCOUNT_FOUND:
                 initializeLoginForm();
                 break;
             default:
                 break;
         }
+    }
+
+    /**
+     * Static method for auto verifying account existance.
+     * @param theContext context of the activity
+     * @return result code
+     */
+    private int autoVerifyAccountExistance(Context theContext) {
+        int resultCode = LoginHelper.ERROR;
+        SharedPreferences sharedPref = this.getSharedPreferences(getString(R.string.preference_account), Context.MODE_PRIVATE);
+
+        String email = sharedPref.getString("email", "null");
+        String password = sharedPref.getString("password", "null");
+
+        if (!email.equals("null") && !password.equals("null")) {
+            LoginHelper.autoVerifyAccount(new Account(email, password), theContext);
+        } else {
+            resultCode = LoginHelper.NO_ACCOUNT_FOUND;
+        }
+
+        return resultCode;
     }
 
     /**
@@ -243,15 +267,11 @@ public class LoginActivity extends AppCompatActivity implements AddAccountInfo.R
      * @param thePassword the user's password
      * @return a pass or fail indicator
      */
-    private boolean insertNewMemberData(String theEmail, String thePassword) {
-        DBMemberInfo memberTable = new DBMemberInfo(this);
+    private void insertNewMemberData(String theEmail, String thePassword) {
+        SharedPreferences sharedPref = this.getSharedPreferences(getString(R.string.preference_account), Context.MODE_PRIVATE);
 
-        if (memberTable.insertMember(theEmail, thePassword)) {
-            memberTable.close();
-            return true;
-        } else {
-            return false;
-        }
+        sharedPref.edit().putString("email", theEmail).commit();
+        sharedPref.edit().putString("password", thePassword).commit();
     }
 
     /**
@@ -270,14 +290,15 @@ public class LoginActivity extends AppCompatActivity implements AddAccountInfo.R
                     .getText()
                     .toString();
 
-            if (insertNewMemberData(email, password)) {
-                mRegistrationDialog.dismiss();
+            insertNewMemberData(email, password);
+            mRegistrationDialog.dismiss();
 
-                mEmail = email;
-                startProfileSetupActivity();
-            }
+            mEmail = email;
+            startProfileSetupActivity();
 
-        } else if (theResultCode == LoginHelper.EMAIL_ALREADY_EXIST) {
+        } else if (theResultCode == LoginHelper.EMAIL_ALREADY_EXIST)
+
+        {
             TextView textViewError = (TextView) mRegistrationDialog.findViewById(R.id.registration_textView_error);
             if (textViewError != null) {
                 textViewError.setText(R.string.email_already_exist, null);
@@ -296,19 +317,17 @@ public class LoginActivity extends AppCompatActivity implements AddAccountInfo.R
     public void onLoginCompleted(int theResultCode, String theEmail, String thePassword) {
         mEmail = theEmail;
         if (theResultCode == LoginHelper.CORRECT_LOGIN_INFO) {
-            DBMemberInfo memberTable = new DBMemberInfo(this);
+            SharedPreferences sharedPref = this.getSharedPreferences(getString(R.string.preference_account), Context.MODE_PRIVATE);
 
-            if (memberTable.getMemberSize() == 0) {
-                memberTable.insertMember(theEmail, thePassword);
-            }
-
+            sharedPref.edit().putString("email", theEmail).commit();
+            sharedPref.edit().putString("password", thePassword).commit();
             ProfileHelper.checkProfileExistence(this, theEmail);
 
         } else if (theResultCode == LoginHelper.ACCOUNT_FOUND_BUT_LOGIN_ERROR) {
-            DBMemberInfo memberTable = new DBMemberInfo(this);
-            memberTable.deleteData();
-            memberTable.close();
+            SharedPreferences sharedPref = this.getSharedPreferences(getString(R.string.preference_account), Context.MODE_PRIVATE);
 
+            sharedPref.edit().remove("email").commit();
+            sharedPref.edit().remove("password").commit();
             initializeLoginForm();
             Toast.makeText(this, "Auto Login Error. Please Login Again.", Toast.LENGTH_SHORT).show();
         } else if (theResultCode == LoginHelper.INCORRECT_PASSWORD) {
@@ -332,10 +351,10 @@ public class LoginActivity extends AppCompatActivity implements AddAccountInfo.R
             if (resultCode == ProfileHelper.PROFILE_FOUND) {
                 if (!ProfileHelper.hasProfile(this)) {
                     Profile profile = new Profile(jsonArray.getJSONObject(1).getString("name")
-                            , jsonArray.getJSONObject(1).getString("gender").charAt(0)
+                            , jsonArray.getJSONObject(1).getString("gender")
                             , jsonArray.getJSONObject(1).getString("date_of_birth")
-                            , jsonArray.getJSONObject(1).getDouble("height")
-                            , jsonArray.getJSONObject(1).getDouble("weight")
+                            , jsonArray.getJSONObject(1).getInt("height")
+                            , jsonArray.getJSONObject(1).getInt("weight")
                             , jsonArray.getJSONObject(1).getInt("avatar_id"));
                     ProfileHelper.insertLocalProfile(this, profile);
                 }

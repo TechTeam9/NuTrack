@@ -12,7 +12,7 @@ public class Profile {
     /**
      * The gender of the user.
      */
-    private char mGender;
+    private String mGender;
     /**
      * The date of birth of the user.
      */
@@ -20,11 +20,11 @@ public class Profile {
     /**
      * The height of the user.
      */
-    private double mHeight;
+    private int mHeight;
     /**
      * The weight of the user.
      */
-    private double mWeight;
+    private int mWeight;
     /**
      * The selected avatar ID of the user.
      */
@@ -40,7 +40,7 @@ public class Profile {
      * @param weight      the weight of the user
      * @param theAvatarId the ID of the selected avatar of the user
      */
-    public Profile(String name, char gender, String dateOfBirth, double height, double weight, int theAvatarId) {
+    public Profile(String name, String gender, String dateOfBirth, int height, int weight, int theAvatarId) {
         mName = name;
         mGender = gender;
         mDOB = dateOfBirth;
@@ -72,7 +72,7 @@ public class Profile {
      *
      * @param theGender the gender of the user
      */
-    public void setGender(char theGender) {
+    public void setGender(String theGender) {
         mGender = theGender;
     }
 
@@ -81,7 +81,7 @@ public class Profile {
      *
      * @return the gender of the user
      */
-    public char getGender() {
+    public String getGender() {
         return mGender;
     }
 
@@ -108,7 +108,7 @@ public class Profile {
      *
      * @param theHeight the height of the user
      */
-    public void setHeight(double theHeight) {
+    public void setHeight(int theHeight) {
         mHeight = theHeight;
     }
 
@@ -117,7 +117,7 @@ public class Profile {
      *
      * @return the height of the user
      */
-    public double getHeight() {
+    public int getHeight() {
         return mHeight;
     }
 
@@ -126,7 +126,7 @@ public class Profile {
      *
      * @param theWeight the weight of the user
      */
-    public void setWeight(double theWeight) {
+    public void setWeight(int theWeight) {
         mWeight = theWeight;
     }
 
@@ -135,7 +135,7 @@ public class Profile {
      *
      * @return the weight of the user
      */
-    public double getWeight() {
+    public int getWeight() {
         return mWeight;
     }
 

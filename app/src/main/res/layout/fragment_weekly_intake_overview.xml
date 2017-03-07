@@ -2,39 +2,47 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="edu.uw.tcss450.nutrack.fragment.WeeklyIntakeOverviewFragment"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    tools:context="edu.uw.tcss450.nutrack.fragment.WeeklyIntakeOverviewFragment">
+
+    <ImageView
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_gravity="right"
+        android:background="@drawable/ic_info" />
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
-        <ImageView
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:background="@drawable/ic_restaurant_black_36dp"
-            android:layout_gravity="center"/>
+        android:orientation="vertical"
+        android:gravity="">
+
         <TextView
-            android:text="Your Week"
-            android:layout_marginLeft="16dp"
-            android:layout_marginStart="16dp"
-            android:layout_width="0dp"
+            android:id="@+id/textView3"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:textSize="24sp"
             android:layout_gravity="center"
+            android:text="Weekly Calories Progress"
             android:textColor="@color/black"
-            android:alpha="0.54" />
-        <ImageView
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:background="@drawable/ic_info"
-            android:layout_gravity="center" />
+            android:textSize="28sp"
+            android:textStyle="bold" />
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="50dp"
+            android:layout_marginLeft="60dp"
+            android:layout_marginRight="60dp"
+            android:background="@android:color/darker_gray" />
+
     </LinearLayout>
+
     <lecho.lib.hellocharts.view.ColumnChartView
         android:id="@+id/weekly_intake_chart"
-        android:layout_height="match_parent"
         android:layout_width="match_parent"
-        android:layout_weight="1"
-        android:layout_marginTop="32dp">
-    </lecho.lib.hellocharts.view.ColumnChartView>
+        android:layout_height="match_parent"
+        android:layout_marginTop="32dp"
+        android:layout_weight="1"></lecho.lib.hellocharts.view.ColumnChartView>
 </LinearLayout>

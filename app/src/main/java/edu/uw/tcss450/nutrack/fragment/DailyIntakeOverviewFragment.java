@@ -1,15 +1,29 @@
 package edu.uw.tcss450.nutrack.fragment;
 
 import android.content.Context;
+import android.database.Cursor;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
+
+import java.text.DecimalFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import az.plainpie.PieView;
 import edu.uw.tcss450.nutrack.R;
+import edu.uw.tcss450.nutrack.database.DBNutrientRecord;
+
+import static android.R.attr.x;
+import static android.R.attr.y;
+import static android.graphics.Color.rgb;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -67,7 +81,33 @@ public class DailyIntakeOverviewFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_daily_intake_overview, container, false);
-        initializeDailyCalorieChart(view);
+
+        TextView fatTextView = (TextView) view.findViewById(R.id.overview_textView_dailyIntakeFat);
+        TextView carbsTextView = (TextView) view.findViewById(R.id.overview_textView_dailyIntakeCarbs);
+        TextView proteinTextView = (TextView) view.findViewById(R.id.overview_textView_dailyIntakeProtein);
+
+        DBNutrientRecord dbNutrientRecord = new DBNutrientRecord(getContext());
+
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        Date date = new Date();
+        try {
+            Cursor cursor = dbNutrientRecord.getNutrientByDate(dateFormat.format(date));
+            if (cursor.getCount() == 0) {
+                fatTextView.setText("0g");
+                carbsTextView.setText("0g");
+                proteinTextView.setText("0g");
+                initializeDailyCalorieChart(view, 0);
+            } else {
+                cursor.moveToFirst();
+                DecimalFormat df = new DecimalFormat("0.00");
+                fatTextView.setText(String.valueOf(df.format(cursor.getDouble(2))) + "g");
+                carbsTextView.setText(String.valueOf(df.format(cursor.getDouble(3))) + "g");
+                proteinTextView.setText(String.valueOf(df.format(cursor.getDouble(4))) + "g");
+                initializeDailyCalorieChart(view, (int) cursor.getDouble(1));
+            }
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
         return view;
     }
 
@@ -95,6 +135,21 @@ public class DailyIntakeOverviewFragment extends Fragment {
         mListener = null;
     }
 
+    public void initializeDailyCalorieChart(final View view, final int theInt) {
+        PieView pieView = (PieView) view.findViewById(R.id.pieView);
+        pieView.setPercentageBackgroundColor(getResources().getColor(R.color.colorPrimary));
+        pieView.setPieInnerPadding(50);
+        int result =(int) ((theInt / 2000.0) * 100);
+        Log.d("Percentage", String.valueOf(result));
+        pieView.setPercentage(90f);
+        //pieView.setPercentage((float) result);
+        pieView.setInnerText("Calories\n" + result + "%");
+        pieView.setPercentageTextSize(35.0f);
+//        pieView.setTextColor(getResources().getColor(R.color.calories));
+        TextView caloriesProgress =(TextView) view.findViewById(R.id.overview_textView_caloriesProgress);
+        caloriesProgress.setText(theInt + " / 2000");
+    }
+
     /**
      * This interface must be implemented by activities that contain this
      * fragment to allow an interaction in this fragment to be communicated
@@ -108,12 +163,5 @@ public class DailyIntakeOverviewFragment extends Fragment {
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
-    }
-
-    public void initializeDailyCalorieChart(final View view) {
-        PieView pieView = (PieView) view.findViewById(R.id.pieView);
-        pieView.setPercentageBackgroundColor(getResources().getColor(R.color.colorPrimary));
-        pieView.setPieInnerPadding(80);
-        pieView.setInnerText("75%");
-    }
+     }
 }

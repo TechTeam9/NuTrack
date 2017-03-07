@@ -1,6 +1,7 @@
 package edu.uw.tcss450.nutrack.helper;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 
 import java.io.BufferedReader;
@@ -11,7 +12,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
 
-import edu.uw.tcss450.nutrack.database.DBPersonalInfo;
+import edu.uw.tcss450.nutrack.R;
 import edu.uw.tcss450.nutrack.model.Profile;
 
 /**
@@ -63,12 +64,6 @@ public class ProfileHelper {
      * @param theProfile Profile model
      */
     public static void insertProfile(Context theContext, String email, Profile theProfile) {
-        DBPersonalInfo dbPersonalInfo = new DBPersonalInfo(theContext);
-        dbPersonalInfo.insertPersonalInfo(theProfile.getName()
-                , theProfile.getGender(), theProfile.getDOB()
-                , theProfile.getHeight(), theProfile.getWeight()
-                , theProfile.getAvatarId());
-        dbPersonalInfo.close();
         PostPersonalInfo postInfo = new PostPersonalInfo(theContext);
         postInfo.execute(email, theProfile);
     }
@@ -80,8 +75,14 @@ public class ProfileHelper {
      * @return a profile
      */
     public static Profile getPersonalInfo(Context theContext) {
-        DBPersonalInfo dbHelper = new DBPersonalInfo(theContext);
-        return dbHelper.getPersonalInfo();
+        SharedPreferences sharedPrefProfile = theContext.getSharedPreferences(theContext.getString(R.string.preference_profile), Context.MODE_PRIVATE);
+        Profile profile = new Profile(sharedPrefProfile.getString("name", "null")
+                , sharedPrefProfile.getString("gender", "null")
+                , sharedPrefProfile.getString("dob", "null")
+                , sharedPrefProfile.getInt("height", 0)
+                , sharedPrefProfile.getInt("weight", 0)
+                , sharedPrefProfile.getInt("avatar_id", 0));
+        return profile;
     }
 
     /**
@@ -91,10 +92,9 @@ public class ProfileHelper {
      * @return true or false
      */
     public static boolean hasProfile(Context theContext) {
-        DBPersonalInfo dbHelper = new DBPersonalInfo(theContext);
-        int size = dbHelper.getMemberSize();
-        dbHelper.close();
-        if (size == 0) {
+        SharedPreferences sharedPrefProfile = theContext.getSharedPreferences(theContext.getString(R.string.preference_profile), Context.MODE_PRIVATE);
+
+        if (sharedPrefProfile.getString("name", "null").equals(null)) {
             return false;
         } else {
             return true;
@@ -108,9 +108,14 @@ public class ProfileHelper {
      * @param theProfile profile
      */
     public static void insertLocalProfile(Context theContext, Profile theProfile) {
-        DBPersonalInfo dbHelper = new DBPersonalInfo(theContext);
-        dbHelper.insertPersonalInfo(theProfile.getName(), theProfile.getGender(), theProfile.getDOB(), theProfile.getHeight(), theProfile.getWeight(), theProfile.getAvatarId());
-        dbHelper.close();
+        SharedPreferences sharedPrefProfile = theContext.getSharedPreferences(theContext.getString(R.string.preference_profile), Context.MODE_PRIVATE);
+
+        sharedPrefProfile.edit().putString("name", theProfile.getName()).commit();
+        sharedPrefProfile.edit().putString("gender", theProfile.getGender()).commit();
+        sharedPrefProfile.edit().putString("dob", theProfile.getDOB()).commit();
+        sharedPrefProfile.edit().putInt("height", theProfile.getHeight()).commit();
+        sharedPrefProfile.edit().putInt("weight", theProfile.getWeight()).commit();
+        sharedPrefProfile.edit().putInt("avatar_id", theProfile.getAvatarId()).commit();
     }
 
     /**

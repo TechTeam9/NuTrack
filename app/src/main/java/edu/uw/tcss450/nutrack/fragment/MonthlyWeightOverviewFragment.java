@@ -1,5 +1,6 @@
 package edu.uw.tcss450.nutrack.fragment;
 
+import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.graphics.Color;
 import android.net.Uri;
@@ -8,17 +9,26 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
+import android.widget.TextView;
+import android.widget.Toast;
 
+import com.github.aakira.expandablelayout.ExpandableRelativeLayout;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.utils.ColorTemplate;
 
+import org.w3c.dom.Text;
+
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import edu.uw.tcss450.nutrack.R;
+import edu.uw.tcss450.nutrack.database.DBWeight;
 import im.dacer.androidcharts.LineView;
 import lecho.lib.hellocharts.model.Axis;
 import lecho.lib.hellocharts.model.AxisValue;
@@ -46,6 +56,8 @@ public class MonthlyWeightOverviewFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+
+    private View mView;
 
     private OnFragmentInteractionListener mListener;
 
@@ -84,18 +96,42 @@ public class MonthlyWeightOverviewFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_monthly_weight_overview, container, false);
+        mView = inflater.inflate(R.layout.fragment_monthly_weight_overview, container, false);
         //ArrayList<Integer> weights = new ArrayList<>(); //Should go away after we have real code here.
-        //initializeMonthlyWeightGraph(view, weights);
-        LineChartView weightChart = (LineChartView) view.findViewById(R.id.weight_chart);
+        //initializeMonthlyWeightGraph(mView, weights);
+        LineChartView weightChart = (LineChartView) mView.findViewById(R.id.weight_chart);
         weightChart.setInteractive(false);
         weightChart.setZoomEnabled(false);
         weightChart.setScrollContainer(false);
         LineChartData chartData = weightChart.getLineChartData();
 
+        DBWeight dbWeight = new DBWeight(getContext());
+        dbWeight.insertWeight("2017-03-07", 112);
+        dbWeight.insertWeight("2017-03-06", 122);
+        dbWeight.insertWeight("2017-03-05", 121);
+        dbWeight.insertWeight("2017-03-04", 120);
+        dbWeight.insertWeight("2017-03-03", 121);
+        dbWeight.insertWeight("2017-03-02", 145);
+        dbWeight.insertWeight("2017-03-01", 999);
+        /*
+        for (int i = 0; i < 7; i++) {
+            System.out.println(test.get(i));
+        }
+        */
+        //Get weight goal from sharedPreference and set it to textView
+
+        TextView weightGoal = (TextView) mView.findViewById(R.id.overview_textView_weightGoal);
+
+        weightGoal.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                Toast.makeText(getContext(), "Long clicked", Toast.LENGTH_LONG).show();
+                return false;
+            }
+        });
         ArrayList<AxisValue> dayList = new ArrayList<>();
 
-        for(int i=1; i < 31; i++){
+        for(int i=1; i < 7; i++){
             dayList.add(new AxisValue(i));
         }
         Axis axisX = new Axis(dayList);
@@ -104,6 +140,26 @@ public class MonthlyWeightOverviewFragment extends Fragment {
         chartData.setAxisXBottom(axisX);
 
         List<PointValue> values = new ArrayList<PointValue>();
+
+        /*
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        Date date = new Date();
+        Date dateBefore = date;
+        String dateString = dateFormat.format(date);
+        ArrayList<Integer> weightList = dbWeight.getWeight(date);
+        String[] dateSplit = dateString.split("-");
+        String result = dateSplit[2];
+        int today = Integer.parseInt(result);
+
+        for (int i = 6; i >=0; i--) {
+            String tempDate = dateFormat.format(dateFormat).substring(6, 11).replace('-', '/');
+            values.add(new PointValue(i, (float) weightList));
+            values.ad
+            dateBefore = new Date(date.getTime() - i * 24 * 3600 * 1000l);
+
+        }
+        */
+
         values.add(new PointValue(1, 250));
         values.add(new PointValue(3, 251));
         values.add(new PointValue(4, 248));
@@ -111,7 +167,6 @@ public class MonthlyWeightOverviewFragment extends Fragment {
         values.add(new PointValue(7, 251));
         values.add(new PointValue(9, 248));
         values.add(new PointValue(10, 247));
-        values.add(new PointValue(15, 190));
 
         Line line = new Line(values).setColor(getResources().getColor(R.color.colorPrimary)).setCubic(true);
         line.setStrokeWidth(2);
@@ -123,15 +178,11 @@ public class MonthlyWeightOverviewFragment extends Fragment {
 
         weightChart.setLineChartData(chartData);
 
-        return view;
+        return mView;
     }
 
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
-        }
-    }
+
+
 
     @Override
     public void onAttach(Context context) {
