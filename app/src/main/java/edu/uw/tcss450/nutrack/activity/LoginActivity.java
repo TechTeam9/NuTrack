@@ -128,7 +128,6 @@ public class LoginActivity extends AppCompatActivity implements AddAccountInfo.R
      */
     private void showError(String theMessage) {
         Toast.makeText(this, theMessage, Toast.LENGTH_SHORT).show();
-
     }
 
     /**

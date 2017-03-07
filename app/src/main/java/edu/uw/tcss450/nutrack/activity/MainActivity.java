@@ -32,6 +32,7 @@ import edu.uw.tcss450.nutrack.fragment.LookUpFoodFragment;
 import edu.uw.tcss450.nutrack.fragment.MonthlyWeightOverviewFragment;
 import edu.uw.tcss450.nutrack.fragment.OverviewFragment;
 import edu.uw.tcss450.nutrack.fragment.WeeklyIntakeOverviewFragment;
+import edu.uw.tcss450.nutrack.helper.LoginHelper;
 import edu.uw.tcss450.nutrack.helper.ProfileHelper;
 import edu.uw.tcss450.nutrack.R;
 import edu.uw.tcss450.nutrack.fragment.DailyLogFragment;
@@ -39,6 +40,7 @@ import edu.uw.tcss450.nutrack.fragment.EditProfileDialogFragment;
 import edu.uw.tcss450.nutrack.fragment.ProfileFragment;
 import edu.uw.tcss450.nutrack.fragment.SearchResultFragment;
 import edu.uw.tcss450.nutrack.fragment.SettingFragment;
+import edu.uw.tcss450.nutrack.model.Account;
 import edu.uw.tcss450.nutrack.model.Food;
 import edu.uw.tcss450.nutrack.model.Profile;
 
@@ -249,6 +251,7 @@ public class MainActivity extends AppCompatActivity implements ProfileFragment.O
                 break;
             default:
                 fragmentClass = OverviewFragment.class;
+                mToolbar.setTitle("Overview");
         }
 
         if (theMenuItem.getItemId() != R.id.nav_sign_out && theMenuItem.getItemId() != R.id.nav_add_food) {
@@ -356,17 +359,14 @@ public class MainActivity extends AppCompatActivity implements ProfileFragment.O
         Context context = this;
         View headerView = mNaviDrawer.getHeaderView(0);
         Profile profile = ProfileHelper.getPersonalInfo(context);
-        //Account account = AccountHelper.getAccountInfo(context);
+        Account account = LoginHelper.getAccountInfo(context);
 
         ImageView imageAvatar = (ImageView) headerView.findViewById(R.id.nav_avatar_image);
         TextView name = (TextView) headerView.findViewById(R.id.name);
-        TextView email = (TextView) headerView.findViewById(R.id.name);
-
-        Log.i("WHAT", "avatar " + profile.getAvatarId());
+        TextView email = (TextView) headerView.findViewById(R.id.email);
 
         imageAvatar.setImageResource(profile.getAvatarId());
         name.setText(profile.getName());
-        //email.setText(account.getEmail());
-        //LAP TEST
+        email.setText(account.getUsername());
     }
 }

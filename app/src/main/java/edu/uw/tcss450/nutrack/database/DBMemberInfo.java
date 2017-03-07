@@ -6,6 +6,8 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import edu.uw.tcss450.nutrack.model.Account;
+
 /**
  * Database helper class for connecting to member table in the database
  */
@@ -101,6 +103,17 @@ public class DBMemberInfo extends SQLiteOpenHelper {
     public Cursor getData() {
         SQLiteDatabase db = this.getReadableDatabase();
         return db.rawQuery("SELECT * FROM account_info", null);
+    }
+    /**
+     * Get member account
+     *
+     * @return member account
+     */
+    public Account getAccountData() {
+        Cursor cursor = getData();
+        cursor.moveToFirst();
+        Account account = new Account(cursor.getString(0),cursor.getString(1));
+        return account;
     }
 
     /**

@@ -111,4 +111,12 @@ public class LoginHelper {
         AddAccountInfo task = new AddAccountInfo(theContext);
         task.execute(baseUrl, theAccount.getUsername(), theAccount.getPassword());
     }
+    /**
+     *
+     * @param theContext context
+     */
+    public static Account getAccountInfo(Context theContext) {
+        DBMemberInfo dbHelper = new DBMemberInfo(theContext);
+        return dbHelper.getAccountData();
+    }
 }
