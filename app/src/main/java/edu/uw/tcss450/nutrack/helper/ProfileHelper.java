@@ -94,7 +94,7 @@ public class ProfileHelper {
     public static boolean hasProfile(Context theContext) {
         SharedPreferences sharedPrefProfile = theContext.getSharedPreferences(theContext.getString(R.string.preference_profile), Context.MODE_PRIVATE);
 
-        if (sharedPrefProfile.getString("name", "null").equals(null)) {
+        if (sharedPrefProfile.getString("name", "null").equals("null")) {
             return false;
         } else {
             return true;

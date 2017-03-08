@@ -68,6 +68,7 @@ public class FoodDialogFragment extends DialogFragment {
 
     private int mChosenServingOffset;
 
+    private String mType;
     /**
      * FoodDialogFragment constructor.
      */
@@ -95,6 +96,7 @@ public class FoodDialogFragment extends DialogFragment {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             mFood = getArguments().getParcelable("food_info");
+            mType = getArguments().getString("type");
         }
     }
 
@@ -109,7 +111,12 @@ public class FoodDialogFragment extends DialogFragment {
 
         // Buttons action
         final Button addButton = (Button) mView.findViewById(R.id.dialog_add_button);
-        Button cancelButton = (Button) mView.findViewById(R.id.dialog_cancel_button);
+        final Button cancelButton = (Button) mView.findViewById(R.id.dialog_cancel_button);
+
+        if (mType.equals("read")) {
+            addButton.setVisibility(View.GONE);
+            cancelButton.setText("CLOSE");
+        }
 
         addButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -147,7 +154,7 @@ public class FoodDialogFragment extends DialogFragment {
                     DBDailyLog db = new DBDailyLog(getContext());
                     SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
                     String date = dateFormat.format(new Date(datePicker.getYear() - 1900, datePicker.getMonth(), datePicker.getDayOfMonth()));
-                    db.insertFood(mFood.getName(), mFood.getId(), "food", mealType, date);
+                    db.insertFood(mFood.getName(), mFood.getId(), "food", mealType, date, mFood.getServingId().get(mChosenServingOffset));
                     db.close();
 
                     DBNutrientRecord dbNutrientRecord = new DBNutrientRecord(getContext());
@@ -164,10 +171,14 @@ public class FoodDialogFragment extends DialogFragment {
         cancelButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                dismiss();
+
+                if (cancelButton.getText().toString().equals("CLOSE") || cancelButton.getText().toString().equals("CANCEL")) {
+                    dismiss();
+                } else {
+
+                }
             }
         });
-
         //Remove cancel button for now and will remove this line of code in the next version.
 //        cancelButton.setVisibility(mView.GONE);
 //        addButton.setVisibility(mView.GONE);
@@ -281,7 +292,7 @@ public class FoodDialogFragment extends DialogFragment {
      * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnFragmentInteractionListener {
-        void onFragmentInteraction(Food theFood);
+        void onFragmentInteraction(Food theFood, String theType);
     }
 
 

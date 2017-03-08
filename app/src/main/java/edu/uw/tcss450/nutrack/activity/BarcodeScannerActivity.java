@@ -31,8 +31,7 @@ public class BarcodeScannerActivity extends Activity implements ZXingScannerView
 
     @Override
     public void handleResult(Result result) {
-        Log.v("Test", result.getText()); // Prints scan results
-
+        System.out.println(result.getText());
         Intent resultIntent = new Intent();
         resultIntent.putExtra("barcode", result.getText());
         setResult(Activity.RESULT_OK, resultIntent);

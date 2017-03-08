@@ -93,7 +93,26 @@ public class DBNutrientRecord extends SQLiteOpenHelper{
 
     }
 
+    public void deleteNutrient(String theDate, double theCalories, double theFat, double theCarbs, double theProtein) {
+        SQLiteDatabase dbRead = this.getReadableDatabase();
+        SQLiteDatabase dbWrite = this.getWritableDatabase();
 
+        Cursor cursor = dbRead.rawQuery("SELECT * FROM nutrient_record WHERE date='" + theDate + "'", null);
+
+        cursor.moveToFirst();
+        double calories = cursor.getDouble(1) - theCalories;
+        double fat = cursor.getDouble(2) - theFat;
+        double carbs = cursor.getDouble(3) - theCarbs;
+        double protein = cursor.getDouble(4) - theProtein;
+
+        ContentValues nutrient = new ContentValues();
+        nutrient.put("calories", calories);
+        nutrient.put("fat", fat);
+        nutrient.put("carbs", carbs);
+        nutrient.put("protein", protein);
+
+        dbWrite.update(TABLE_NAME, nutrient, "date=?", new String[]{theDate});
+    }
 
     /**
      * Delete all nutrient record.

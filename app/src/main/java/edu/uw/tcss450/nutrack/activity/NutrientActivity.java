@@ -142,14 +142,6 @@ public class NutrientActivity extends AppCompatActivity implements SearchFoodTab
                 */
             }
         } else {
-            /*
-            IntentIntegrator integrator = new IntentIntegrator(this);
-            integrator.setDesiredBarcodeFormats(IntentIntegrator.ONE_D_CODE_TYPES);
-            integrator.setPrompt("Scan a barcode");
-            integrator.setCameraId(0);  // Use a specific camera of the device
-            integrator.setBeepEnabled(false);
-            integrator.initiateScan();
-            */
 
             Intent intent = new Intent(this, BarcodeScannerActivity.class);
             startActivityForResult(intent, 10);
@@ -176,30 +168,27 @@ public class NutrientActivity extends AppCompatActivity implements SearchFoodTab
     }
 
     @Override
-    public void onFragmentInteraction(Food theFood) {
+    public void onFragmentInteraction(Food theFood, String theType) {
         Bundle bundle = new Bundle();
         FragmentManager fragmentManager = this.getSupportFragmentManager();
-        DialogFragment dialogFragment = null;
+        DialogFragment dialogFragment = new FoodDialogFragment();
         bundle.putParcelable("food_info", theFood);
-        dialogFragment = new FoodDialogFragment();
-
+        bundle.putString("type", theType);
 
         dialogFragment.setArguments(bundle);
         dialogFragment.show(fragmentManager, "Info Dialog");
-
     }
 
     @Override
-    public void onFragmentInteraction(Recipe theRecipe) {
+    public void onFragmentInteraction(Recipe theRecipe, String theType) {
         Bundle bundle = new Bundle();
         FragmentManager fragmentManager = this.getSupportFragmentManager();
-        DialogFragment dialogFragment = null;
+        DialogFragment dialogFragment = new RecipeDialogFragment();
         bundle.putParcelable("recipe_info", theRecipe);
-        dialogFragment = new RecipeDialogFragment();
+        bundle.putString("type", theType);
 
         dialogFragment.setArguments(bundle);
         dialogFragment.show(fragmentManager, "Info Dialog");
-
     }
 
     private class APIBarcodeSearch extends AsyncTask<String, Void, String> {
@@ -267,7 +256,6 @@ public class NutrientActivity extends AppCompatActivity implements SearchFoodTab
 
             params.add("oauth_signature=" + FatSecretHelper.sign(METHOD, FatSecretHelper.URL, params.toArray(template)));
 
-            JSONObject foods = null;
             try {
                 java.net.URL url = new URL(FatSecretHelper.URL + "?" + FatSecretHelper.paramify(params.toArray(template)));
                 URLConnection api = url.openConnection();
@@ -295,6 +283,7 @@ public class NutrientActivity extends AppCompatActivity implements SearchFoodTab
             ArrayList<Double> proteinList = new ArrayList<>();
             ArrayList<String> urlList = new ArrayList<>();
             ArrayList<String> servingList = new ArrayList<>();
+            ArrayList<Integer> servingIdList = new ArrayList<>();
 
             try {
                 if (result != null) {
@@ -315,6 +304,9 @@ public class NutrientActivity extends AppCompatActivity implements SearchFoodTab
                             servingList.add(servingObject.getDouble("metric_serving_amount")
                                     + servingObject.getString("metric_serving_unit"));
                         }
+                        if (servingObject.has("serving_id")) {
+                            servingIdList.add(servingObject.getInt("serving_id"));
+                        }
                     } else {
                         jsonArray = jsonObject.getJSONArray("serving");
                         if (jsonArray != null) {
@@ -331,6 +323,9 @@ public class NutrientActivity extends AppCompatActivity implements SearchFoodTab
                                     servingList.add(serving.getDouble("metric_serving_amount")
                                             + serving.getString("metric_serving_unit"));
                                 }
+                                if (serving.has("serving_id")) {
+                                    servingIdList.add(serving.getInt("serving_id"));
+                                }
                             }
                         }
                     }
@@ -339,8 +334,10 @@ public class NutrientActivity extends AppCompatActivity implements SearchFoodTab
                     mFood.setFat(fatList);
                     mFood.setCarbs(carbsList);
                     mFood.setProtein(proteinList);
-
-                    onFragmentInteraction(mFood);
+                    mFood.setmURL(urlList);
+                    mFood.setmServing(servingList);
+                    mFood.setServingId(servingIdList);
+                    onFragmentInteraction(mFood, "write");
                 }
 
             } catch (JSONException exception) {

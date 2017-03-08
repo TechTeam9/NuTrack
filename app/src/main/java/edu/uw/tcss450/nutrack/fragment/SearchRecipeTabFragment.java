@@ -263,7 +263,7 @@ public class SearchRecipeTabFragment extends Fragment {
 
 
     public interface OnFragmentInteractionListener {
-        void onFragmentInteraction(Recipe theRecipe);
+        void onFragmentInteraction(Recipe theRecipe, String theType);
     }
 
     private class APIRecipeSearch extends AsyncTask<String, Void, String> {
@@ -396,7 +396,7 @@ public class SearchRecipeTabFragment extends Fragment {
                     mRecipe.setFat(fatList);
                     mRecipe.setCarbs(carbsList);
                     mRecipe.setProtein(proteinList);
-                    mListener.onFragmentInteraction(mRecipe);
+                    mListener.onFragmentInteraction(mRecipe, "write");
 
                 }
 

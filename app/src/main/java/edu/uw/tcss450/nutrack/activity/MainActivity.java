@@ -9,6 +9,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -27,9 +28,11 @@ import android.widget.Toast;
 import java.util.ArrayList;
 
 import edu.uw.tcss450.nutrack.fragment.DailyIntakeOverviewFragment;
+import edu.uw.tcss450.nutrack.fragment.FoodDialogFragment;
 import edu.uw.tcss450.nutrack.fragment.LookUpFoodFragment;
 import edu.uw.tcss450.nutrack.fragment.MonthlyWeightOverviewFragment;
 import edu.uw.tcss450.nutrack.fragment.OverviewFragment;
+import edu.uw.tcss450.nutrack.fragment.RecipeDialogFragment;
 import edu.uw.tcss450.nutrack.fragment.WeeklyIntakeOverviewFragment;
 import edu.uw.tcss450.nutrack.helper.ProfileHelper;
 import edu.uw.tcss450.nutrack.R;
@@ -40,6 +43,7 @@ import edu.uw.tcss450.nutrack.fragment.SearchResultFragment;
 import edu.uw.tcss450.nutrack.fragment.SettingFragment;
 import edu.uw.tcss450.nutrack.model.Food;
 import edu.uw.tcss450.nutrack.model.Profile;
+import edu.uw.tcss450.nutrack.model.Recipe;
 
 import static edu.uw.tcss450.nutrack.R.id.naviView;
 
@@ -47,11 +51,15 @@ import static edu.uw.tcss450.nutrack.R.id.naviView;
  * Main container holding all fragment activity.
  * ProfileFragment, LookUpFoodFragment, SearchResultFragment, and SettingFragment.
  */
-public class MainActivity extends AppCompatActivity implements ProfileFragment.OnFragmentInteractionListener,
-        LookUpFoodFragment.OnFragmentInteractionListener, OverviewFragment.OnFragmentInteractionListener,
+public class MainActivity extends AppCompatActivity implements ProfileFragment.OnFragmentInteractionListener, OverviewFragment.OnFragmentInteractionListener,
         SettingFragment.OnFragmentInteractionListener, SearchResultFragment.OnFragmentInteractionListener,
         EditProfileDialogFragment.OnFragmentInteractionListener, DailyIntakeOverviewFragment.OnFragmentInteractionListener,
-        WeeklyIntakeOverviewFragment.OnFragmentInteractionListener,MonthlyWeightOverviewFragment.OnFragmentInteractionListener, DailyLogFragment.OnFragmentInteractionListener {
+        WeeklyIntakeOverviewFragment.OnFragmentInteractionListener, MonthlyWeightOverviewFragment.OnFragmentInteractionListener,
+        DailyLogFragment.OnFragmentInteractionListener, FoodDialogFragment.OnFragmentInteractionListener, RecipeDialogFragment.OnFragmentInteractionListener {
+
+    private static final int NUTRIENT_ACTIVITY_CODE = 1101;
+
+
     /**
      * The layout that hold the navigation drawer.
      */
@@ -305,7 +313,6 @@ public class MainActivity extends AppCompatActivity implements ProfileFragment.O
         sharedPref.edit().remove("email").commit();
         sharedPref.edit().remove("password").commit();
 
-
         SharedPreferences sharedPrefProfile = this.getSharedPreferences(getString(R.string.preference_profile), Context.MODE_PRIVATE);
         sharedPrefProfile.edit().clear().commit();
 
@@ -327,8 +334,38 @@ public class MainActivity extends AppCompatActivity implements ProfileFragment.O
     }
 
     @Override
-    public void onFragmentInteraction(Food food) {
+    public void onFragmentInteraction(Food theFood, String theType) {
+        Bundle bundle = new Bundle();
+        FragmentManager fragmentManager = this.getSupportFragmentManager();
+        DialogFragment dialogFragment = null;
+        bundle.putParcelable("food_info", theFood);
+        bundle.putString("type", theType);
+        dialogFragment = new FoodDialogFragment();
 
+
+        dialogFragment.setArguments(bundle);
+        dialogFragment.show(fragmentManager, "Info Dialog");
+    }
+
+    @Override
+    public void onFragmentInteraction(Recipe theRecipe, String theType) {
+        Bundle bundle = new Bundle();
+        FragmentManager fragmentManager = this.getSupportFragmentManager();
+        DialogFragment dialogFragment = null;
+        bundle.putParcelable("recipe_info", theRecipe);
+        bundle.putString("type", theType);
+        dialogFragment = new RecipeDialogFragment();
+
+        dialogFragment.setArguments(bundle);
+        dialogFragment.show(fragmentManager, "Info Dialog");
+    }
+
+    @Override
+    public void onFragmentInteraction(String theMessage) {
+        if (theMessage.equals("nutrient")) {
+            Intent intent = new Intent(this, NutrientActivity.class);
+            startActivityForResult(intent, NUTRIENT_ACTIVITY_CODE);
+        }
     }
 
     /**

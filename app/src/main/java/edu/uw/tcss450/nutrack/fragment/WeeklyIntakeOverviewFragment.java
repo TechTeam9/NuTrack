@@ -134,12 +134,12 @@ public class WeeklyIntakeOverviewFragment extends Fragment {
      * @param view the view
      */
     private void initializeWeeklyCalorieChart(final View view) {
-        final ColumnChartView weightChart = (ColumnChartView) view.findViewById(R.id.weekly_intake_chart);
-        weightChart.setInteractive(false);
-        weightChart.setZoomEnabled(false);
-        weightChart.setClickable(false);
+        final ColumnChartView weeklyIntakeChart = (ColumnChartView) view.findViewById(R.id.weekly_intake_chart);
+        weeklyIntakeChart.setInteractive(false);
+        weeklyIntakeChart.setZoomEnabled(false);
+        weeklyIntakeChart.setClickable(false);
 
-        ColumnChartData weightChartData;
+        ColumnChartData weeklyIntakeChartData;
 
         List<Column> columns = new ArrayList<Column>();
         List<SubcolumnValue> values;
@@ -153,7 +153,7 @@ public class WeeklyIntakeOverviewFragment extends Fragment {
 
         for (int i = 6; i >= 0; i--) {
 
-            labels[6- i] = letterMonthFormat.format(dateBefore).substring(5, 8) + " / " + letterMonthFormat.format(dateBefore).substring(9, 11);
+            labels[6- i] = letterMonthFormat.format(dateBefore).substring(5, 8) + "-" + letterMonthFormat.format(dateBefore).substring(9, 11);
             double calories = db.getCaloriesByDate(dateFormat.format(dateBefore));
 
             values = new ArrayList<>();
@@ -167,7 +167,7 @@ public class WeeklyIntakeOverviewFragment extends Fragment {
         }
 
 
-        weightChartData = new ColumnChartData(columns);
+        weeklyIntakeChartData = new ColumnChartData(columns);
 
         //Set Axis
         //String[] labels = {"Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"};
@@ -179,9 +179,9 @@ public class WeeklyIntakeOverviewFragment extends Fragment {
         }
         axisX.setValues(axisXValueList);
 
-        weightChartData.setAxisXBottom(axisX);
+        weeklyIntakeChartData.setAxisXBottom(axisX);
 
-        weightChart.setColumnChartData(weightChartData);
+        weeklyIntakeChart.setColumnChartData(weeklyIntakeChartData);
 
         final View graphView = view.findViewById(R.id.weekly_intake_chart);
         //********************Need to Fix***********************

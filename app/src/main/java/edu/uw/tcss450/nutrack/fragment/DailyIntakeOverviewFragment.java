@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.text.DecimalFormat;
@@ -135,19 +136,31 @@ public class DailyIntakeOverviewFragment extends Fragment {
         mListener = null;
     }
 
-    public void initializeDailyCalorieChart(final View view, final int theInt) {
+    public void initializeDailyCalorieChart(final View view, final int thePercentage) {
         PieView pieView = (PieView) view.findViewById(R.id.pieView);
-        pieView.setPercentageBackgroundColor(getResources().getColor(R.color.colorPrimary));
-        pieView.setPieInnerPadding(50);
-        int result =(int) ((theInt / 2000.0) * 100);
-        Log.d("Percentage", String.valueOf(result));
-        pieView.setPercentage(result);
-        //pieView.setPercentage((float) result);
-        pieView.setInnerText("Calories\n" + result + "%");
-        pieView.setPercentageTextSize(35.0f);
+
+        if(thePercentage == 0) {
+            pieView.setVisibility(View.GONE);
+
+            LinearLayout zeroPieChart = (LinearLayout) view.findViewById(R.id.overview_pieChart_zero);
+            zeroPieChart.setVisibility(View.VISIBLE);
+
+            TextView caloriesProgress =(TextView) view.findViewById(R.id.overview_textView_caloriesProgress);
+            caloriesProgress.setText("0 / 2000");
+        } else {
+            pieView.setPercentageBackgroundColor(getResources().getColor(R.color.colorPrimary));
+            pieView.setPieInnerPadding(50);
+            float percentage = (float) ((thePercentage / 2000.0) * 100);
+            Log.d("Percentage", String.valueOf(percentage));
+            pieView.setPercentage(percentage);
+
+            //pieView.setPercentage((float) result);
+            pieView.setInnerText("Calories\n" + percentage + "%");
+            pieView.setPercentageTextSize(35.0f);
 //        pieView.setTextColor(getResources().getColor(R.color.calories));
-        TextView caloriesProgress =(TextView) view.findViewById(R.id.overview_textView_caloriesProgress);
-        caloriesProgress.setText(theInt + " / 2000");
+            TextView caloriesProgress =(TextView) view.findViewById(R.id.overview_textView_caloriesProgress);
+            caloriesProgress.setText(thePercentage + " / 2000");
+        }
     }
 
     /**

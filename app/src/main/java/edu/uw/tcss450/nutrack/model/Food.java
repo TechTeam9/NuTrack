@@ -39,6 +39,8 @@ public class Food implements Parcelable {
      */
     private ArrayList<Double> mProtein;
 
+    private ArrayList<Integer> mServingId;
+
     /**
      * The more details information link.
      */
@@ -64,6 +66,7 @@ public class Food implements Parcelable {
         mProtein = new ArrayList<>();
         mURL = new ArrayList<>();
         mServing = new ArrayList<>();
+        mServingId = new ArrayList<>();
     }
 
     /**
@@ -78,6 +81,7 @@ public class Food implements Parcelable {
         mProtein = new ArrayList<>();
         mURL = new ArrayList<>();
         mServing = new ArrayList<>();
+        mServingId = new ArrayList<>();
     }
 
     protected Food(Parcel in) {
@@ -179,18 +183,21 @@ public class Food implements Parcelable {
         return mURL;
     }
 
-    public void setmURL(ArrayList<String> mURL) {
-        this.mURL = mURL;
+    public void setmURL(ArrayList<String> theURL) {
+        mURL = theURL;
     }
 
     public ArrayList<String> getmServing() {
         return mServing;
     }
 
-    public void setmServing(ArrayList<String> mServing) {
-        this.mServing = mServing;
+    public void setmServing(ArrayList<String> theServing) {
+        mServing = theServing;
     }
 
+    public void setServingId(ArrayList<Integer> theServingId) { mServingId = theServingId; }
+
+    public ArrayList<Integer> getServingId() { return mServingId; }
     @Override
     public int describeContents() {
         return 0;
@@ -206,6 +213,7 @@ public class Food implements Parcelable {
         dest.writeList(mProtein);
         dest.writeList(mURL);
         dest.writeList(mServing);
+        dest.writeList(mServingId);
     }
 
 }

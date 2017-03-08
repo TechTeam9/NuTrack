@@ -24,6 +24,7 @@ import java.util.Date;
 
 import edu.uw.tcss450.nutrack.R;
 import edu.uw.tcss450.nutrack.database.DBDailyLog;
+import edu.uw.tcss450.nutrack.database.DBNutrientRecord;
 import edu.uw.tcss450.nutrack.model.Food;
 import edu.uw.tcss450.nutrack.model.Recipe;
 
@@ -53,6 +54,7 @@ public class RecipeDialogFragment extends DialogFragment {
 
     private Recipe mRecipe;
 
+    private String mType;
 
     public RecipeDialogFragment() {
         // Required empty public constructor
@@ -81,6 +83,7 @@ public class RecipeDialogFragment extends DialogFragment {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             mRecipe = getArguments().getParcelable("recipe_info");
+            mType = getArguments().getString("type");
         }
     }
 
@@ -91,27 +94,14 @@ public class RecipeDialogFragment extends DialogFragment {
 
         initializeRecipeInfoPanel(0);
 
-//        TextView dialogTitle = (TextView) mView.findViewById(R.id.dialog_recipe_title);
-//        TextView caloriesResult = (TextView) mView.findViewById(R.id.calories_recipe_result);
-//        TextView fatResult = (TextView) mView.findViewById(R.id.fat_recipe_result);
-//        TextView carbsResult = (TextView) mView.findViewById(R.id.carbs_recipe_result);
-//        TextView proteinResult = (TextView) mView.findViewById(R.id.protein_recipe_result);
-//
-//        dialogTitle.setText(mRecipe.getName());
-//        caloriesResult.setText(String.valueOf(mRecipe.getCalorie().get(0)));
-//        fatResult.setText(String.valueOf(mRecipe.getFat().get(0)));
-//        carbsResult.setText(String.valueOf(mRecipe.getCarbs().get(0)));
-//        proteinResult.setText(String.valueOf(mRecipe.getProtein().get(0)));
-//
-//        ImageView recipeImage = (ImageView) mView.findViewById(R.id.recipeDialog_imageView);
-//        if (mRecipe.getImageURL() != null && mRecipe.getImageURL() != "") {
-//            Picasso.with(getContext()).load(mRecipe.getImageURL()).into(recipeImage);
-//        }
-
-
         // Buttons action
         final Button addButton = (Button) mView.findViewById(R.id.dialog_add_button);
-        Button cancelButton = (Button) mView.findViewById(R.id.dialog_cancel_button);
+        final Button cancelButton = (Button) mView.findViewById(R.id.dialog_cancel_button);
+
+        if (mType.equals("read")) {
+            addButton.setVisibility(View.GONE);
+            cancelButton.setText("CLOSE");
+        }
 
         addButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -143,11 +133,16 @@ public class RecipeDialogFragment extends DialogFragment {
                             break;
                     }
 
-                    DBDailyLog db = new DBDailyLog(getContext());
+                    DBDailyLog dbDailyLog = new DBDailyLog(getContext());
+                    DBNutrientRecord dbNutrientRecord = new DBNutrientRecord(getContext());
                     SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
                     String date = dateFormat.format(new Date(datePicker.getYear() - 1900, datePicker.getMonth(), datePicker.getDayOfMonth()));
-                    db.insertFood(mRecipe.getName(), mRecipe.getId(), "recipe", mealType, date);
-                    System.out.println(mealType + ", " + date);
+                    dbDailyLog.insertFood(mRecipe.getName(), mRecipe.getId(), "recipe", mealType, date, 0);
+                    dbNutrientRecord.insertNutrient(date, mRecipe.getCalorie().get(0),
+                            mRecipe.getFat().get(0),
+                            mRecipe.getCarbs().get(0),
+                            mRecipe.getProtein().get(0));
+
                     dismiss();
                 }
             }
@@ -165,7 +160,12 @@ public class RecipeDialogFragment extends DialogFragment {
         cancelButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                dismiss();
+
+                if (cancelButton.getText().toString().equals("CLOSE") || cancelButton.getText().toString().equals("CANCEL")) {
+                    dismiss();
+                } else {
+
+                }
             }
         });
 
@@ -222,6 +222,6 @@ public class RecipeDialogFragment extends DialogFragment {
      */
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
-        void onFragmentInteraction(Recipe theRecipe);
+        void onFragmentInteraction(Recipe theRecipe, String theType);
     }
 }

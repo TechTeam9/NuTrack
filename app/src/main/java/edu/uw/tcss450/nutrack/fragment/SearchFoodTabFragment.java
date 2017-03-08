@@ -395,6 +395,7 @@ public class SearchFoodTabFragment extends Fragment {
             ArrayList<Double> proteinList = new ArrayList<>();
             ArrayList<String> urlList = new ArrayList<>();
             ArrayList<String> servingList = new ArrayList<>();
+            ArrayList<Integer> servingIdList = new ArrayList<>();
 
             try {
                 if (result != null) {
@@ -415,6 +416,10 @@ public class SearchFoodTabFragment extends Fragment {
                             servingList.add(servingObject.getDouble("metric_serving_amount")
                                     + servingObject.getString("metric_serving_unit"));
                         }
+
+                        if (servingObject.has("serving_id")) {
+                            servingIdList.add(servingObject.getInt("serving_id"));
+                        }
                     } else {
                         jsonArray = jsonObject.getJSONArray("serving");
                         if (jsonArray != null) {
@@ -432,6 +437,10 @@ public class SearchFoodTabFragment extends Fragment {
                                     servingList.add(serving.getDouble("metric_serving_amount")
                                             + serving.getString("metric_serving_unit"));
                                 }
+
+                                if (serving.has("serving_id")) {
+                                    servingIdList.add(serving.getInt("serving_id"));
+                                }
                             }
                         }
                     }
@@ -442,7 +451,8 @@ public class SearchFoodTabFragment extends Fragment {
                     mFood.setProtein(proteinList);
                     mFood.setmURL(urlList);
                     mFood.setmServing(servingList);
-                    mListener.onFragmentInteraction(mFood);
+                    mFood.setServingId(servingIdList);
+                    mListener.onFragmentInteraction(mFood, "write");
                 }
 
             } catch (JSONException exception) {
@@ -453,6 +463,6 @@ public class SearchFoodTabFragment extends Fragment {
     }
 
     public interface OnFragmentInteractionListener {
-        void onFragmentInteraction(Food theFood);
+        void onFragmentInteraction(Food theFood, String theType);
     }
 }

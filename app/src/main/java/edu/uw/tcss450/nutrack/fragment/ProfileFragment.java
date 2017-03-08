@@ -140,7 +140,6 @@ public class ProfileFragment extends Fragment implements EditProfileDialogFragme
 
     @Override
     public void onFragmentInteraction() {
-
     }
 
     /**

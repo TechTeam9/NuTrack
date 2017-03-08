@@ -9,9 +9,9 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
         android:layout_marginTop="10dp"
-        android:gravity="">
+        android:gravity=""
+        android:orientation="vertical">
 
         <TextView
             android:id="@+id/textView3"
@@ -22,13 +22,14 @@
             android:textColor="@color/black"
             android:textSize="28sp"
             android:textStyle="bold" />
+
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:layout_marginTop="10dp"
             android:layout_marginBottom="50dp"
             android:layout_marginLeft="60dp"
             android:layout_marginRight="60dp"
+            android:layout_marginTop="10dp"
             android:background="@android:color/darker_gray" />
 
     </LinearLayout>
@@ -49,42 +50,95 @@
             class="im.dacer.androidcharts.LineView"
             android:id="@+id/weight_chart" />
     </HorizontalScrollView>-->
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Your Goal"
-        android:textSize="20sp"
-        android:layout_gravity="center_horizontal"/>
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="122lb"
-        android:textSize="28sp"
-        android:textColor="@color/black"
-        android:layout_gravity="center_horizontal"/>
-
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+    <ImageView
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_gravity="center_horizontal"
-        android:gravity="center_horizontal">
+        android:layout_weight="1"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:text="Your Goal"
+            android:textStyle="bold"
+            android:textSize="28sp" />
+        <ImageView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"/>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Submit Your Weight For Today:"
-            android:textSize="20sp"
-            android:layout_gravity="center_horizontal"/>
+            android:layout_gravity="center"
+            android:text="122 lbs"
+            android:textColor="@color/black"
+            android:textSize="28sp" />
+        <ImageView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"/>
+    </LinearLayout>
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        android:background="@android:color/darker_gray" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:gravity="center_horizontal"
+        android:orientation="horizontal">
+        <ImageView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="Log your weight"
+            android:textSize="20sp" />
+        <ImageView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"/>
         <EditText
             android:id="@+id/overview_editText_weightInput"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:inputType="number|none"/>
+            android:layout_gravity="center"
+            android:inputType="number"
+            android:textColor="@color/black"
+            android:textSize="20sp"
+            android:layout_weight="2"
+            android:maxLength="4"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="lbs"
+            android:layout_gravity="center"/>
 
+        <Button
+            android:id="@+id/ov_weight_save"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Save"
+            android:onClick="logWeight"
+            android:textColor="@color/colorPrimaryDark"
+            style="?android:attr/borderlessButtonStyle" />
+        <!--android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"-->
+        <ImageView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"/>
     </LinearLayout>
 
 </LinearLayout>

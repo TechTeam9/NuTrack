@@ -28,6 +28,8 @@ public class DBDailyLog extends SQLiteOpenHelper {
 
     private static final String COLUMN_ID = "id";
 
+    private static final String COLUMN_SERVING_ID = "serving_id";
+
     private static final String COLUMN_TYPE = "type";
 
     private static final String COLUMN_MEAL_TYPE = "meal_type";
@@ -45,13 +47,13 @@ public class DBDailyLog extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        String createTableQuery = "CREATE TABLE IF NOT EXISTS daily_log(log_id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, id INTEGER, type TEXT, meal_type TEXT, eat_time NUMERIC)";
+        String createTableQuery = "CREATE TABLE IF NOT EXISTS daily_log(log_id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, id INTEGER, type TEXT, meal_type TEXT, serving_id INTEGER, eat_time NUMERIC)";
         db.execSQL(createTableQuery);
     }
 
     @Override
     public void onOpen(SQLiteDatabase db) {
-        String createTableQuery = "CREATE TABLE IF NOT EXISTS daily_log(log_id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, id INTEGER, type TEXT, meal_type TEXT, eat_time NUMERIC)";
+        String createTableQuery = "CREATE TABLE IF NOT EXISTS daily_log(log_id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, id INTEGER, type TEXT, meal_type TEXT, serving_id INTEGER, eat_time NUMERIC)";
         db.execSQL(createTableQuery);
     }
 
@@ -61,7 +63,7 @@ public class DBDailyLog extends SQLiteOpenHelper {
         onCreate(db);
     }
 
-    public boolean insertFood(String theName, int theId, String theType, String theMealType, String theDate) {
+    public boolean insertFood(String theName, int theId, String theType, String theMealType, String theDate, int theServingId) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues value = new ContentValues();
 
@@ -69,6 +71,7 @@ public class DBDailyLog extends SQLiteOpenHelper {
         value.put(COLUMN_ID, theId);
         value.put(COLUMN_TYPE, theType);
         value.put(COLUMN_MEAL_TYPE, theMealType);
+        value.put(COLUMN_SERVING_ID, theServingId);
         value.put(COLUMN_TIME, theDate);
 
         db.insert(TABLE_NAME, null, value);
@@ -76,11 +79,10 @@ public class DBDailyLog extends SQLiteOpenHelper {
         return true;
     }
 
-
     public void deleteFood(int theLogId) {
         SQLiteDatabase db = this.getWritableDatabase();
         String[] logId = {String.valueOf(theLogId)};
-        db.delete(TABLE_NAME, "food_name", logId);
+        db.delete(TABLE_NAME, "log_id=?", logId);
 
     }
 
@@ -105,6 +107,12 @@ public class DBDailyLog extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getReadableDatabase();
 
         return db.rawQuery("SELECT * FROM daily_log WHERE eat_time='" + theDate + "'", null);
+    }
+
+    public Cursor getFoodByDailyLogId(int theDailyLogId) {
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        return db.rawQuery("SELECT * FROM daily_log WHERE log_id=" + theDailyLogId, null);
     }
 
 }
