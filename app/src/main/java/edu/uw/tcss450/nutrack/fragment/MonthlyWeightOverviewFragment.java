@@ -6,9 +6,11 @@ import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -31,6 +33,7 @@ import java.util.Date;
 import java.util.List;
 
 import edu.uw.tcss450.nutrack.R;
+import edu.uw.tcss450.nutrack.activity.MainActivity;
 import edu.uw.tcss450.nutrack.database.DBNutrientRecord;
 import edu.uw.tcss450.nutrack.database.DBWeight;
 import im.dacer.androidcharts.LineView;
@@ -96,23 +99,9 @@ public class MonthlyWeightOverviewFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
-
-        //final Button mButton = (Button) getView().findViewById(R.id.ov_weight_save);
-        //final EditText mEdit = (EditText) getView().findViewById(R.id.overview_editText_weightInput);
-
-        //mButton.setOnClickListener(
-        //        new View.OnClickListener() {
-        //           public void onClick(View view) {
-
-        //            }
-        //        });
     }
 
-    public void logWeight() {
-        //SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-        //DBWeight dbWeight = new DBWeight(getContext());
-        //dbWeight.insertWeight(dateFormat.format(new Date()), Integer.valueOf(mEdit.getText()));
-    }
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -121,6 +110,18 @@ public class MonthlyWeightOverviewFragment extends Fragment {
         mView = inflater.inflate(R.layout.fragment_monthly_weight_overview, container, false);
         //ArrayList<Integer> weights = new ArrayList<>(); //Should go away after we have real code here.
         initializeMonthlyWeightGraph(mView);
+        EditText editText = (EditText) mView.findViewById(R.id.overview_editText_weightInput);
+        editText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                boolean handled = false;
+                if (actionId == EditorInfo.IME_ACTION_GO) {
+                    logWeight();
+                    handled = true;
+                }
+                return handled;
+            }
+        });
         return mView;
     }
 
@@ -262,4 +263,11 @@ public class MonthlyWeightOverviewFragment extends Fragment {
 //        lineView.setBottom(50);
 //    }
 
+    public void refresh(){
+        initializeMonthlyWeightGraph(mView);
+    }
+    public void logWeight(){
+        MainActivity main = (MainActivity) getActivity();
+        main.logWeight(getView());
+    }
 }

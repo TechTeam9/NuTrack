@@ -118,12 +118,14 @@
             android:textColor="@color/black"
             android:textSize="20sp"
             android:layout_weight="2"
-            android:maxLength="4"/>
+            android:maxLength="4"
+            android:imeOptions="actionGo"/>
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="lbs"
-            android:layout_gravity="center"/>
+            android:layout_gravity="center"
+            />
 
         <Button
             android:id="@+id/ov_weight_save"

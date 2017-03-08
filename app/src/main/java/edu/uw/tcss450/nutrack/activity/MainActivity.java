@@ -19,14 +19,21 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 
+import edu.uw.tcss450.nutrack.database.DBWeight;
 import edu.uw.tcss450.nutrack.fragment.DailyIntakeOverviewFragment;
 import edu.uw.tcss450.nutrack.fragment.FoodDialogFragment;
 import edu.uw.tcss450.nutrack.fragment.LookUpFoodFragment;
@@ -124,7 +131,6 @@ public class MainActivity extends AppCompatActivity implements ProfileFragment.O
             fragmentTracs.commit();
         }
         //initializeFloatingActionButton();
-
     }
 
     /**
@@ -399,7 +405,7 @@ public class MainActivity extends AppCompatActivity implements ProfileFragment.O
 
         ImageView imageAvatar = (ImageView) headerView.findViewById(R.id.nav_avatar_image);
         TextView name = (TextView) headerView.findViewById(R.id.name);
-        TextView email = (TextView) headerView.findViewById(R.id.name);
+        TextView email = (TextView) headerView.findViewById(R.id.email);
 
         Log.i("WHAT", "avatar " + profile.getAvatarId());
 
@@ -407,5 +413,18 @@ public class MainActivity extends AppCompatActivity implements ProfileFragment.O
         name.setText(profile.getName());
         //email.setText(account.getEmail());
         //LAP TEST
+    }
+
+    public void logWeight(View view) {
+        EditText mEdit = (EditText) findViewById(R.id.overview_editText_weightInput);
+        if(!mEdit.getText().toString().equals("")) {
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+            DBWeight dbWeight = new DBWeight(this);
+            String currentDate = dateFormat.format(new Date());
+            dbWeight.insertWeight(currentDate, Integer.valueOf(mEdit.getText().toString()));
+            MonthlyWeightOverviewFragment weightFragment = (MonthlyWeightOverviewFragment) getSupportFragmentManager().findFragmentByTag("bottom");
+            weightFragment.refresh();
+            mEdit.setText("");
+        }
     }
 }

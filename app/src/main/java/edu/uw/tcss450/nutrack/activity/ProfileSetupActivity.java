@@ -53,49 +53,57 @@ public class ProfileSetupActivity extends AppCompatActivity implements AvatarSel
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_profile_setup);
 
-        Intent intent = getIntent();
+            setContentView(R.layout.activity_profile_setup);
+        //if (savedInstanceState == null) { //If I do this the gender chooser stops working....
+            Intent intent = getIntent();
 
-        mEmail = intent.getStringExtra("email");
+            mEmail = intent.getStringExtra("email");
 
-        mAvatarSelectorFragment = new AvatarSelectorFragment();
-        final Button maleIcon = (Button) findViewById(R.id.profileSetup_button_male);
-        final Button femaleIcon = (Button) findViewById(R.id.profileSetup_button_female);
+            mAvatarSelectorFragment = new AvatarSelectorFragment();
+            final Button maleIcon = (Button) findViewById(R.id.profileSetup_button_male);
+            final Button femaleIcon = (Button) findViewById(R.id.profileSetup_button_female);
 
-        mGenderChosen = "Male";
-        maleIcon.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mAvatarSelectorFragment.changeAvatarGender(AvatarSelectorFragment.MALE, femaleIcon);
-                maleIcon.setClickable(false);
-                mGenderChosen = "Male";
-            }
-        });
-        maleIcon.setClickable(false);
+            mGenderChosen = "Male";
+            maleIcon.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mAvatarSelectorFragment.changeAvatarGender(AvatarSelectorFragment.MALE, femaleIcon);
+                    maleIcon.setClickable(false);
+                    mGenderChosen = "Male";
+                }
+            });
+            maleIcon.setClickable(false);
 
-        femaleIcon.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mAvatarSelectorFragment.changeAvatarGender(AvatarSelectorFragment.FEMALE, maleIcon);
-                femaleIcon.setClickable(false);
-                mGenderChosen = "Female";
-            }
-        });
+            femaleIcon.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mAvatarSelectorFragment.changeAvatarGender(AvatarSelectorFragment.FEMALE, maleIcon);
+                    femaleIcon.setClickable(false);
+                    mGenderChosen = "Female";
+                }
+            });
 
-        FragmentManager fragmentManager = getFragmentManager();
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.add(R.id.avatar_frame, mAvatarSelectorFragment, "Avatar");
-        fragmentTransaction.commit();
+            FragmentManager fragmentManager = getFragmentManager();
+            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+            fragmentTransaction.add(R.id.avatar_frame, mAvatarSelectorFragment, "Avatar");
+            fragmentTransaction.commit();
 
-        Button btnSubmit = (Button) findViewById(R.id.profileSetup_button_submit);
-        btnSubmit.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                submitProfile();
-            }
-        });
-
+            Button btnSubmit = (Button) findViewById(R.id.profileSetup_button_submit);
+            btnSubmit.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    submitProfile();
+                }
+            });
+            Button btnCancel = (Button) findViewById(R.id.profileSetup_button_cancel);
+            btnCancel.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    userSignOut();
+                }
+            });
+        //}
     }
 
     /**
@@ -167,7 +175,7 @@ public class ProfileSetupActivity extends AppCompatActivity implements AvatarSel
 
     @Override
     public void onBackPressed() {
-        Toast.makeText(this, "Sorry, you have to finish your profile", Toast.LENGTH_LONG).show();
+        userSignOut();
     }
 
     /**
@@ -190,5 +198,21 @@ public class ProfileSetupActivity extends AppCompatActivity implements AvatarSel
         } catch (JSONException e) {
             e.printStackTrace();
         }
+    }
+
+    /**
+     * Cleans up after the user logs out.
+     */
+    private void userSignOut() {
+        SharedPreferences sharedPref = this.getSharedPreferences(getString(R.string.preference_account), Context.MODE_PRIVATE);
+
+        sharedPref.edit().remove("email").commit();
+        sharedPref.edit().remove("password").commit();
+
+        SharedPreferences sharedPrefProfile = this.getSharedPreferences(getString(R.string.preference_profile), Context.MODE_PRIVATE);
+        sharedPrefProfile.edit().clear().commit();
+
+        Intent intent = new Intent(this, LoginActivity.class);
+        startActivity(intent);
     }
 }
