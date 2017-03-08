@@ -119,16 +119,7 @@ public class MonthlyWeightOverviewFragment extends Fragment {
         }
         */
         //Get weight goal from sharedPreference and set it to textView
-
-        TextView weightGoal = (TextView) mView.findViewById(R.id.overview_textView_weightGoal);
-
-        weightGoal.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View v) {
-                Toast.makeText(getContext(), "Long clicked", Toast.LENGTH_LONG).show();
-                return false;
-            }
-        });
+        
         ArrayList<AxisValue> dayList = new ArrayList<>();
 
         for(int i=1; i < 7; i++){
