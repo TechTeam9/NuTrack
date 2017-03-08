@@ -82,8 +82,7 @@ public class DBWeight extends SQLiteOpenHelper {
         }
     }
 
-    // Mon, Tue, Wed, Thur, Fri, Sat, (Sun)
-    // Thur, Fri, Sat, Sun, Mon, Tue, (Wed)
+
     public ArrayList<Integer> getWeight(Date theDate) {
         SQLiteDatabase dbRead = this.getReadableDatabase();
 

@@ -8,10 +8,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import edu.uw.tcss450.nutrack.R;
+import edu.uw.tcss450.nutrack.database.DBDailyLog;
+import edu.uw.tcss450.nutrack.database.DBNutrientRecord;
 import lecho.lib.hellocharts.model.Axis;
 import lecho.lib.hellocharts.model.AxisValue;
 import lecho.lib.hellocharts.model.Column;
@@ -126,6 +130,7 @@ public class WeeklyIntakeOverviewFragment extends Fragment {
 
     /**
      * Initialize the calories chart.
+     *
      * @param view the view
      */
     private void initializeWeeklyCalorieChart(final View view) {
@@ -135,28 +140,37 @@ public class WeeklyIntakeOverviewFragment extends Fragment {
         weightChart.setClickable(false);
 
         ColumnChartData weightChartData;
-        int numSubcolumns = 1;
-        int numColumns = 7;
 
         List<Column> columns = new ArrayList<Column>();
         List<SubcolumnValue> values;
-        for (int i = 0; i < numColumns; ++i) {
+        String[] labels = new String[7];
+        //Open Daily Log Table to grab calories value
+        DBNutrientRecord db = new DBNutrientRecord(getContext());
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        SimpleDateFormat letterMonthFormat = new SimpleDateFormat("yyyy-MMM-dd");
+        Date date = new Date();
+        Date dateBefore = new Date(date.getTime() - (6) * 24 * 3600 * 1000l);
 
-            values = new ArrayList<SubcolumnValue>();
-            for (int j = 0; j < numSubcolumns; ++j) {
-                values.add(new SubcolumnValue((float) Math.random() * 50f + 5, getResources().getColor(R.color.colorPrimary)));
-            }
+        for (int i = 6; i >= 0; i--) {
+
+            labels[6- i] = letterMonthFormat.format(dateBefore).substring(5, 8) + " / " + letterMonthFormat.format(dateBefore).substring(9, 11);
+            double calories = db.getCaloriesByDate(dateFormat.format(dateBefore));
+
+            values = new ArrayList<>();
+            values.add(new SubcolumnValue((float) calories, getResources().getColor(R.color.colorPrimary)));
 
             Column column = new Column(values);
             column.setHasLabels(true);
             columns.add(column);
+
+            dateBefore = new Date(date.getTime() - (i - 1) * 24 * 3600 * 1000l);
         }
 
 
         weightChartData = new ColumnChartData(columns);
 
         //Set Axis
-        String[] labels = {"Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"};
+        //String[] labels = {"Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"};
         List<AxisValue> axisXValueList = new ArrayList<AxisValue>();
         Axis axisX = new Axis();
 

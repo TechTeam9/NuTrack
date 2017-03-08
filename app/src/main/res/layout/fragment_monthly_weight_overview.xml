@@ -9,36 +9,27 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
-        <ImageView
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:layout_gravity="center"
-            android:background="@drawable/scale" />
+        android:orientation="vertical"
+        android:layout_marginTop="10dp"
+        android:gravity="">
 
         <TextView
-            android:layout_width="0dp"
+            android:id="@+id/textView3"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_marginLeft="16dp"
-            android:layout_marginStart="16dp"
-            android:layout_weight="1"
-            android:alpha="0.8"
-            android:text="Your Weight"
+            android:text="Weekly Weight Progress"
             android:textColor="@color/black"
-            android:textSize="24sp" />
-
-            <TextView
-                android:id="@+id/overview_textView_weightGoal"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="right|center"
-                android:layout_margin="5dp"
-                android:padding="5dp"
-                android:text="Goal: 123lb"
-                android:textColor="@android:color/black"
-                android:textSize="20sp" />
+            android:textSize="28sp"
+            android:textStyle="bold" />
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="50dp"
+            android:layout_marginLeft="60dp"
+            android:layout_marginRight="60dp"
+            android:background="@android:color/darker_gray" />
 
     </LinearLayout>
 
@@ -58,5 +49,42 @@
             class="im.dacer.androidcharts.LineView"
             android:id="@+id/weight_chart" />
     </HorizontalScrollView>-->
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Your Goal"
+        android:textSize="20sp"
+        android:layout_gravity="center_horizontal"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="122lb"
+        android:textSize="28sp"
+        android:textColor="@color/black"
+        android:layout_gravity="center_horizontal"/>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_gravity="center_horizontal"
+        android:gravity="center_horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Submit Your Weight For Today:"
+            android:textSize="20sp"
+            android:layout_gravity="center_horizontal"/>
+
+        <EditText
+            android:id="@+id/overview_editText_weightInput"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="number|none"/>
+
+    </LinearLayout>
 
 </LinearLayout>

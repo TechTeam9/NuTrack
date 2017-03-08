@@ -118,4 +118,19 @@ public class DBNutrientRecord extends SQLiteOpenHelper{
         return db.rawQuery("SELECT * FROM nutrient_record WHERE date=?", new String[]{theDate});
     }
 
+    public double getCaloriesByDate(String theDate) {
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        Cursor cursor = db.rawQuery("SELECT calories FROM nutrient_record WHERE date='" + theDate + "'", null);
+        double calories;
+        if (cursor.getCount() == 0) {
+            calories = 0;
+        } else {
+            cursor.moveToFirst();
+            calories = cursor.getDouble(0);
+        }
+        return calories;
+
+    }
+
 }
