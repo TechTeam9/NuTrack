@@ -2,6 +2,7 @@ package edu.uw.tcss450.nutrack.fragment;
 
 import android.animation.ObjectAnimator;
 import android.content.Context;
+import android.database.Cursor;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
@@ -11,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -110,18 +112,18 @@ public class MonthlyWeightOverviewFragment extends Fragment {
         mView = inflater.inflate(R.layout.fragment_monthly_weight_overview, container, false);
         //ArrayList<Integer> weights = new ArrayList<>(); //Should go away after we have real code here.
         initializeMonthlyWeightGraph(mView);
-        EditText editText = (EditText) mView.findViewById(R.id.overview_editText_weightInput);
-        editText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+
+        Button submitButton = (Button) mView.findViewById(R.id.ov_weight_save);
+        submitButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                boolean handled = false;
-                if (actionId == EditorInfo.IME_ACTION_GO) {
-                    logWeight();
-                    handled = true;
-                }
-                return handled;
+            public void onClick(View v) {
+                logWeight();
+
+                InputMethodManager imm = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(mView.getApplicationWindowToken(), 0);
             }
         });
+
         return mView;
     }
 
@@ -161,6 +163,16 @@ public class MonthlyWeightOverviewFragment extends Fragment {
     }
 
     public void initializeMonthlyWeightGraph(View view) {
+        EditText editText = (EditText) mView.findViewById(R.id.overview_editText_weightInput);
+
+        DBWeight dbWeight = new DBWeight(getContext());
+        Cursor cursor = dbWeight.getTodayWeight();
+        if (cursor.getCount() != 0) {
+            cursor.moveToFirst();
+            editText.setHint(String.valueOf(cursor.getInt(1)));
+        }
+
+
         LineChartView weightChart = (LineChartView) mView.findViewById(R.id.weight_chart);
         weightChart.setInteractive(false);
         weightChart.setZoomEnabled(false);
@@ -168,9 +180,7 @@ public class MonthlyWeightOverviewFragment extends Fragment {
 
         LineChartData chartData = weightChart.getLineChartData();
 
-        //TEST CODE B
-        DBWeight dbWeight = new DBWeight(getContext());
-        //dbWeight.insertWeight("2017-03-07", 112);
+         //dbWeight.insertWeight("2017-03-07", 112);
         dbWeight.insertWeight("2017-03-06", 122);
         dbWeight.insertWeight("2017-03-05", 121);
         dbWeight.insertWeight("2017-03-04", 120);
@@ -267,7 +277,18 @@ public class MonthlyWeightOverviewFragment extends Fragment {
         initializeMonthlyWeightGraph(mView);
     }
     public void logWeight(){
-        MainActivity main = (MainActivity) getActivity();
-        main.logWeight(getView());
+        EditText weightEditText = (EditText) mView.findViewById(R.id.overview_editText_weightInput);
+        if(!weightEditText.getText().toString().equals("")) {
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+            DBWeight dbWeight = new DBWeight(getContext());
+            String currentDate = dateFormat.format(new Date());
+            dbWeight.insertWeight(currentDate, Integer.valueOf(weightEditText.getText().toString()));
+            weightEditText.setText("");
+            refresh();
+        } else {
+            weightEditText.setError("Weight cannot be empty.");
+        }
+
+
     }
 }

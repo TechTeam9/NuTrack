@@ -84,6 +84,8 @@ public class MainActivity extends AppCompatActivity implements ProfileFragment.O
 
     private Fragment mFragment;
 
+    private String mCurrentFragment;
+
     /**
      * The toggle for expanding and collapsing the drawer.
      */
@@ -118,15 +120,15 @@ public class MainActivity extends AppCompatActivity implements ProfileFragment.O
 
         if (savedInstanceState == null) {
             Class fragmentClass = OverviewFragment.class;
-            Fragment fragment = null;
             try {
-                fragment = (Fragment) fragmentClass.newInstance();
+                mFragment = (Fragment) fragmentClass.newInstance();
+                mCurrentFragment = "overview";
             } catch (Exception e) {
                 e.printStackTrace();
             }
 
             FragmentTransaction fragmentTracs = getSupportFragmentManager().beginTransaction();
-            fragmentTracs.add(R.id.flContent, fragment);
+            fragmentTracs.add(R.id.flContent, mFragment);
 
             fragmentTracs.commit();
         }
@@ -239,18 +241,22 @@ public class MainActivity extends AppCompatActivity implements ProfileFragment.O
         switch (theMenuItem.getItemId()) {
             case R.id.nav_profile:
                 fragmentClass = ProfileFragment.class;
+                mCurrentFragment = "profile";
                 mToolbar.setTitle("Profile");
                 break;
             case R.id.nav_overview:
                 fragmentClass = OverviewFragment.class;
+                mCurrentFragment = "overview";
                 mToolbar.setTitle("Overview");
                 break;
             case R.id.nav_Daily_log:
                 fragmentClass = DailyLogFragment.class;
+                mCurrentFragment = "dailyLog";
                 mToolbar.setTitle("Daily Log");
                 break;
             case R.id.nav_settings:
                 fragmentClass = SettingFragment.class;
+                mCurrentFragment = "settings";
                 mToolbar.setTitle("Settings");
                 break;
             case R.id.nav_sign_out:
@@ -327,8 +333,54 @@ public class MainActivity extends AppCompatActivity implements ProfileFragment.O
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+
+        switch (mCurrentFragment) {
+            case "overview":
+                mFragment = new OverviewFragment();
+                break;
+            case "profile":
+                mFragment = new ProfileFragment();
+                break;
+            case "dailyLog":
+                mFragment = new DailyLogFragment();
+                break;
+            case "settings":
+                mFragment = new SettingFragment();
+                break;
+            default:
+                mFragment = new OverviewFragment();
+                break;
+        }
+
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        fragmentManager.beginTransaction().replace(R.id.flContent, mFragment).commit();
+    }
+
+
+
+    @Override
     public void onFragmentInteraction() {
-        mFragment = new ProfileFragment();
+
+        switch (mCurrentFragment) {
+            case "overview":
+                mFragment = new OverviewFragment();
+                break;
+            case "profile":
+                mFragment = new ProfileFragment();
+                break;
+            case "dailyLog":
+                mFragment = new DailyLogFragment();
+                break;
+            case "settings":
+                mFragment = new SettingFragment();
+                break;
+            default:
+                mFragment = new OverviewFragment();
+                break;
+        }
+
         FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction().replace(R.id.flContent, mFragment).commit();
 
@@ -413,18 +465,5 @@ public class MainActivity extends AppCompatActivity implements ProfileFragment.O
         name.setText(profile.getName());
         //email.setText(account.getEmail());
         //LAP TEST
-    }
-
-    public void logWeight(View view) {
-        EditText mEdit = (EditText) findViewById(R.id.overview_editText_weightInput);
-        if(!mEdit.getText().toString().equals("")) {
-            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-            DBWeight dbWeight = new DBWeight(this);
-            String currentDate = dateFormat.format(new Date());
-            dbWeight.insertWeight(currentDate, Integer.valueOf(mEdit.getText().toString()));
-            MonthlyWeightOverviewFragment weightFragment = (MonthlyWeightOverviewFragment) getSupportFragmentManager().findFragmentByTag("bottom");
-            weightFragment.refresh();
-            mEdit.setText("");
-        }
     }
 }

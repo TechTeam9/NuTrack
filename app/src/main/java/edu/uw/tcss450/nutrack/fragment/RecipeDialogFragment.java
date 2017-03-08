@@ -185,11 +185,6 @@ public class RecipeDialogFragment extends DialogFragment {
         carbsResult.setText(String.valueOf(mRecipe.getCarbs().get(0)) + "g");
         proteinResult.setText(String.valueOf(mRecipe.getProtein().get(0)) + "g");
 
-        ImageView recipeImage = (ImageView) mView.findViewById(R.id.recipeDialog_imageView);
-        if (mRecipe.getImageURL() != null && mRecipe.getImageURL() != "") {
-            Picasso.with(getContext()).load(mRecipe.getImageURL()).into(recipeImage);
-        }
-
         mView.invalidate();
     }
 

@@ -128,7 +128,9 @@ public class FoodDialogFragment extends DialogFragment {
                 if (addButton.getText().equals("ADD")) {
                     Spinner servingSpinner = (Spinner) mView.findViewById(R.id.foodDialog_spinner);
                     mChosenServingOffset = servingSpinner.getSelectedItemPosition();
-
+                    if (mChosenServingOffset < 0) {
+                        mChosenServingOffset = 0;
+                    }
                     foodInfoPanel.setVisibility(View.GONE);
                     addInfoPanel.setVisibility(View.VISIBLE);
                     addButton.setText("SUBMIT");

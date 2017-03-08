@@ -39,10 +39,6 @@ public class Recipe implements Parcelable {
      */
     private ArrayList<Double> mProtein;
 
-    /**
-     * The more details information link.
-     */
-    private String mImageURL;
 
 
 
@@ -59,7 +55,6 @@ public class Recipe implements Parcelable {
         mFat = new ArrayList<>();
         mCarbs = new ArrayList<>();
         mProtein = new ArrayList<>();
-        mImageURL = "";
     }
 
     /**
@@ -72,7 +67,6 @@ public class Recipe implements Parcelable {
         mFat = new ArrayList<>();
         mCarbs = new ArrayList<>();
         mProtein = new ArrayList<>();
-        mImageURL = "";
     }
 
     protected Recipe(Parcel in) {
@@ -170,14 +164,6 @@ public class Recipe implements Parcelable {
         return mProtein;
     }
 
-    public String getImageURL() {
-        return mImageURL;
-    }
-
-    public void setImageURL(String theImageURL) {
-        mImageURL = theImageURL;
-    }
-
     @Override
     public int describeContents() {
         return 0;
@@ -191,6 +177,5 @@ public class Recipe implements Parcelable {
         dest.writeList(mFat);
         dest.writeList(mCarbs);
         dest.writeList(mProtein);
-        dest.writeString(mImageURL);
     }
 }

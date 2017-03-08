@@ -161,20 +161,13 @@ public class ProfileFragment extends Fragment implements EditProfileDialogFragme
         textView = (TextView) theView.findViewById(R.id.profile_textView_valueDoB);
         textView.setText(profile.getDOB());
         textView = (TextView) theView.findViewById(R.id.profile_textView_valueHeight);
-        textView.setText(String.valueOf(profile.getHeight()));
+        textView.setText(String.valueOf(profile.getHeight()) + " cm");
         textView = (TextView) theView.findViewById(R.id.profile_textView_valueWeight);
-        textView.setText(String.valueOf(profile.getWeight()));
+        textView.setText(String.valueOf(profile.getWeight()) + " lbs");
 
         imageAvatar.setImageResource(profile.getAvatarId());
     }
 
-
-
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
-        }
-    }
 
     @Override
     public void onAttach(Context context) {

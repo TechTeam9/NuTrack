@@ -17,6 +17,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 
 import org.json.JSONArray;
@@ -63,6 +64,14 @@ public class NutrientActivity extends AppCompatActivity implements SearchFoodTab
 
         setSupportActionBar(mToolBar);
         getSupportActionBar().setTitle(null);
+
+        mToolBar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                System.out.println("back clicked ");
+                finish();
+            }
+        });
 
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
         tabLayout.addTab(tabLayout.newTab().setText("Food"));
@@ -156,7 +165,6 @@ public class NutrientActivity extends AppCompatActivity implements SearchFoodTab
         switch (requestCode) {
             case (10): {
                 if (resultCode == Activity.RESULT_OK) {
-                    // TODO Extract the data returned from the child Activity.
                     String returnValue = (String) data.getStringExtra("barcode");
 
                     APIBarcodeSearch barcodeSearch = new APIBarcodeSearch();

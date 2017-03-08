@@ -299,7 +299,6 @@ public class DailyLogFragment extends Fragment {
                     APIRecipeGet api = new APIRecipeGet();
                     api.execute(String.valueOf(cursor.getInt(2)), "delete", cursor.getString(6), String.valueOf(theFood.getDailyLogId()));
                 }
-
             }
         });
 
@@ -367,6 +366,8 @@ public class DailyLogFragment extends Fragment {
         void onFragmentInteraction(Recipe theRecipe, String theType);
 
         void onFragmentInteraction(String theMessage);
+
+        void onFragmentInteraction();
     }
 
     private class DailyLogFood {
@@ -557,10 +558,6 @@ public class DailyLogFragment extends Fragment {
                 if (result != null) {
                     mRecipe.setId(new JSONObject(result).getJSONObject("recipe").getInt("recipe_id"));
                     mRecipe.setName(new JSONObject(result).getJSONObject("recipe").getString("recipe_name"));
-                    JSONObject imageJSONObject = new JSONObject(result).getJSONObject("recipe").optJSONObject("recipe_images");
-                    if (imageJSONObject != null) {
-                        mRecipe.setImageURL(imageJSONObject.getString("recipe_image"));
-                    }
 
                     jsonObject = new JSONObject(result).getJSONObject("recipe").getJSONObject("serving_sizes");
                     JSONObject servingObject = jsonObject.optJSONObject("serving");
@@ -691,6 +688,7 @@ public class DailyLogFragment extends Fragment {
                             mDeleteFood.getProtein().get(0));
                     DBDailyLog dbDailyLog = new DBDailyLog(getContext());
                     dbDailyLog.deleteFood(mDailyLogId);
+                    mListener.onFragmentInteraction();
                 }
 
             } catch (JSONException exception) {

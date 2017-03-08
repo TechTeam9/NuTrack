@@ -82,6 +82,14 @@ public class DBWeight extends SQLiteOpenHelper {
         }
     }
 
+    public Cursor getTodayWeight() {
+        SQLiteDatabase dbRead = this.getReadableDatabase();
+
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        Date date = new Date();
+
+        return dbRead.rawQuery("SELECT * FROM weight_log WHERE date='" + dateFormat.format(date) + "'", null);
+    }
 
     public ArrayList<Integer> getWeight(Date theDate) {
         SQLiteDatabase dbRead = this.getReadableDatabase();
