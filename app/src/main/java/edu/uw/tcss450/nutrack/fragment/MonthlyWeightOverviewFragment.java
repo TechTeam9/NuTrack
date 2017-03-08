@@ -118,7 +118,17 @@ public class MonthlyWeightOverviewFragment extends Fragment {
             System.out.println(test.get(i));
         }
         */
+        //Get weight goal from sharedPreference and set it to textView
 
+        TextView weightGoal = (TextView) mView.findViewById(R.id.overview_textView_weightGoal);
+
+        weightGoal.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                Toast.makeText(getContext(), "Long clicked", Toast.LENGTH_LONG).show();
+                return false;
+            }
+        });
         ArrayList<AxisValue> dayList = new ArrayList<>();
 
         for(int i=1; i < 7; i++){
@@ -158,7 +168,7 @@ public class MonthlyWeightOverviewFragment extends Fragment {
         values.add(new PointValue(9, 248));
         values.add(new PointValue(10, 247));
 
-        Line line = new Line(values).setColor(getResources().getColor(R.color.colorPrimary)).setCubic(false);
+        Line line = new Line(values).setColor(getResources().getColor(R.color.colorPrimary)).setCubic(true);
         line.setStrokeWidth(2);
         line.setHasLabels(true);
         List<Line> lines = new ArrayList<Line>();

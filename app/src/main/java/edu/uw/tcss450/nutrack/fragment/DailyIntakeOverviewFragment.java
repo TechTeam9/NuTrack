@@ -141,7 +141,7 @@ public class DailyIntakeOverviewFragment extends Fragment {
         pieView.setPieInnerPadding(50);
         int result =(int) ((theInt / 2000.0) * 100);
         Log.d("Percentage", String.valueOf(result));
-        pieView.setPercentage(90f);
+        pieView.setPercentage(result);
         //pieView.setPercentage((float) result);
         pieView.setInnerText("Calories\n" + result + "%");
         pieView.setPercentageTextSize(35.0f);
