@@ -1,12 +1,12 @@
-package edu.uw.tcss450.nutrack.Helper;
+package edu.uw.tcss450.nutrack.helper;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.database.Cursor;
-import android.view.View;
 
-import edu.uw.tcss450.nutrack.API.AddAccountInfo;
-import edu.uw.tcss450.nutrack.DBHelper.DBMemberInfoHelper;
-import edu.uw.tcss450.nutrack.API.getAccountInfo;
+import edu.uw.tcss450.nutrack.R;
+import edu.uw.tcss450.nutrack.api.AddAccountInfo;
+import edu.uw.tcss450.nutrack.api.getAccountInfo;
 import edu.uw.tcss450.nutrack.model.Account;
 
 public class LoginHelper {
@@ -51,35 +51,14 @@ public class LoginHelper {
      */
     public static final int EMAIL_ALREADY_EXIST = 21;
 
-    /**
-     * Static method for auto verifying account existance.
-     * @param theContext context of the activity
-     * @return result code
-     */
-    public static int autoVerifyAccountExistance(Context theContext) {
-        int resultCode = ERROR;
-        DBMemberInfoHelper dbHelper = new DBMemberInfoHelper(theContext);
-        //NEED TO CHANGE COMPARE TO == AFTER COMPLETING LOGIN PAGE
-        if (dbHelper.getMemberSize() >= 1) {
-            Cursor accountInfo = dbHelper.getData();
-            accountInfo.moveToFirst();
-            Account account = new Account(accountInfo.getString(0), accountInfo.getString(1));
-
-            autoVerifyAccount(account, theContext);
-        } else {
-            resultCode = NO_ACCOUNT_FOUND;
-        }
-
-        dbHelper.close();
-        return resultCode;
-    }
 
     /**
      * Auto verify account for current user.
+     *
      * @param theAccount account model
      * @param theContext context
      */
-    private static void autoVerifyAccount(Account theAccount, Context theContext) {
+    public static void autoVerifyAccount(Account theAccount, Context theContext) {
         final String baseUrl = "http://cssgate.insttech.washington.edu/~mhl325/";
 
         getAccountInfo task = new getAccountInfo(theContext);
@@ -88,6 +67,7 @@ public class LoginHelper {
 
     /**
      * Verify account for first time user.
+     *
      * @param theAccount account model
      * @param theContext context
      */
@@ -100,6 +80,7 @@ public class LoginHelper {
 
     /**
      * Add a new account.
+     *
      * @param theAccount account model
      * @param theContext context
      */
@@ -112,4 +93,12 @@ public class LoginHelper {
         AddAccountInfo task = new AddAccountInfo(theContext);
         task.execute(baseUrl, theAccount.getUsername(), theAccount.getPassword());
     }
+    /**
+     *
+     * @param theContext context
+     */
+    //public static Account getAccountInfo(Context theContext) {
+        //DBMemberInfo dbHelper = new DBMemberInfo(theContext);
+        //return dbHelper.getAccountData();
+    //}
 }

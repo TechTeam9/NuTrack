@@ -22,9 +22,9 @@
     <string name="nutrack_logo">NuTrack Logo</string>
     <string name="login">Login</string>
     <string name="lbs">lbs</string>
-    <string name="weight">Weight</string>
+    <string name="weight">Weight (lbs)</string>
     <string name="cm">cm</string>
-    <string name="height">Height</string>
+    <string name="height">Height (cm)</string>
     <string name="name">Name</string>
     <string name="date_of_birth">Date of Birth</string>
     <string name="submit">Submit</string>
@@ -45,6 +45,10 @@
     <string name="overview">Overview</string>
     <string name="social">Social</string>
     <string name="daily_log">Daily Log</string>
+    <string name="for_more_details_click_here"><u>For more details click here.</u></string>
+    <string name="fat">Fat</string>
+    <string name="carbs">Carbs</string>
+    <string name="protein">Protein</string>
 
     <string-array name="list_view_labels">
         <item>Name</item>
@@ -53,4 +57,9 @@
         <item>Date of Birth</item>
         <item>Gender</item>
     </string-array>
+
+    <!-- SharedPreferences -->
+    <string name="preference_profile">SharedPreferenceProfile</string>
+    <string name="preference_goal">SharedPreferenceGoal</string>
+    <string name="preference_account">SharedPreferenceAccount</string>
 </resources>

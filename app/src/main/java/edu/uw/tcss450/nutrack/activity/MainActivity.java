@@ -2,12 +2,14 @@ package edu.uw.tcss450.nutrack.activity;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -17,24 +19,38 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 
-import edu.uw.tcss450.nutrack.DBHelper.DBMemberInfoHelper;
-import edu.uw.tcss450.nutrack.DBHelper.DBPersonalInfoTableHelper;
-import edu.uw.tcss450.nutrack.Helper.ProfileHelper;
-import edu.uw.tcss450.nutrack.R;
+import edu.uw.tcss450.nutrack.database.DBWeight;
+import edu.uw.tcss450.nutrack.fragment.DailyIntakeOverviewFragment;
+import edu.uw.tcss450.nutrack.fragment.FoodDialogFragment;
 import edu.uw.tcss450.nutrack.fragment.LookUpFoodFragment;
-import edu.uw.tcss450.nutrack.fragment.MainFragment;
+import edu.uw.tcss450.nutrack.fragment.MonthlyWeightOverviewFragment;
+import edu.uw.tcss450.nutrack.fragment.OverviewFragment;
+import edu.uw.tcss450.nutrack.fragment.RecipeDialogFragment;
+import edu.uw.tcss450.nutrack.fragment.WeeklyIntakeOverviewFragment;
+import edu.uw.tcss450.nutrack.helper.ProfileHelper;
+import edu.uw.tcss450.nutrack.R;
+import edu.uw.tcss450.nutrack.fragment.DailyLogFragment;
+import edu.uw.tcss450.nutrack.fragment.EditProfileDialogFragment;
 import edu.uw.tcss450.nutrack.fragment.ProfileFragment;
 import edu.uw.tcss450.nutrack.fragment.SearchResultFragment;
 import edu.uw.tcss450.nutrack.fragment.SettingFragment;
+import edu.uw.tcss450.nutrack.model.Food;
 import edu.uw.tcss450.nutrack.model.Profile;
+import edu.uw.tcss450.nutrack.model.Recipe;
 
 import static edu.uw.tcss450.nutrack.R.id.naviView;
 
@@ -42,7 +58,15 @@ import static edu.uw.tcss450.nutrack.R.id.naviView;
  * Main container holding all fragment activity.
  * ProfileFragment, LookUpFoodFragment, SearchResultFragment, and SettingFragment.
  */
-public class MainActivity extends AppCompatActivity implements ProfileFragment.OnFragmentInteractionListener, LookUpFoodFragment.OnFragmentInteractionListener, MainFragment.OnFragmentInteractionListener, SettingFragment.OnFragmentInteractionListener, SearchResultFragment.OnFragmentInteractionListener {
+public class MainActivity extends AppCompatActivity implements ProfileFragment.OnFragmentInteractionListener, OverviewFragment.OnFragmentInteractionListener,
+        SettingFragment.OnFragmentInteractionListener, SearchResultFragment.OnFragmentInteractionListener,
+        EditProfileDialogFragment.OnFragmentInteractionListener, DailyIntakeOverviewFragment.OnFragmentInteractionListener,
+        WeeklyIntakeOverviewFragment.OnFragmentInteractionListener, MonthlyWeightOverviewFragment.OnFragmentInteractionListener,
+        DailyLogFragment.OnFragmentInteractionListener, FoodDialogFragment.OnFragmentInteractionListener, RecipeDialogFragment.OnFragmentInteractionListener {
+
+    private static final int NUTRIENT_ACTIVITY_CODE = 1101;
+
+
     /**
      * The layout that hold the navigation drawer.
      */
@@ -58,12 +82,18 @@ public class MainActivity extends AppCompatActivity implements ProfileFragment.O
      */
     private NavigationView mNaviDrawer;
 
+    private Fragment mFragment;
+
+    private String mCurrentFragment;
+
     /**
      * The toggle for expanding and collapsing the drawer.
      */
     private ActionBarDrawerToggle mDrawerToggle;
+
     /**
      * Builds and sets up MainActivity.
+     *
      * @param savedInstanceState the saved instance state.
      */
     @Override
@@ -72,8 +102,9 @@ public class MainActivity extends AppCompatActivity implements ProfileFragment.O
         setContentView(R.layout.activity_main);
 
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
+        mToolbar.setTitle("Overview");
         mToolbar.setTitleTextColor(Color.WHITE);
-        mToolbar.setTitle("Home");
+
 
         mNaviDrawer = (NavigationView) findViewById(naviView);
         mDrawer = (DrawerLayout) findViewById(R.id.main_frame);
@@ -85,21 +116,23 @@ public class MainActivity extends AppCompatActivity implements ProfileFragment.O
         mDrawer.addDrawerListener(mDrawerToggle);
 
         initializeDrawerContent();
-
-
-        Class fragmentClass = MainFragment.class;
-        Fragment fragment = null;
-        try {
-            fragment = (Fragment) fragmentClass.newInstance();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        FragmentTransaction fragmentTracs = getSupportFragmentManager().beginTransaction();
-        fragmentTracs.add(R.id.flContent, fragment).commit();
-
         initializeDrawerHeaderContent();
-        //initializeFloatingActionButton();
 
+        if (savedInstanceState == null) {
+            Class fragmentClass = OverviewFragment.class;
+            try {
+                mFragment = (Fragment) fragmentClass.newInstance();
+                mCurrentFragment = "overview";
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            FragmentTransaction fragmentTracs = getSupportFragmentManager().beginTransaction();
+            fragmentTracs.add(R.id.flContent, mFragment);
+
+            fragmentTracs.commit();
+        }
+        //initializeFloatingActionButton();
     }
 
     /**
@@ -124,6 +157,7 @@ public class MainActivity extends AppCompatActivity implements ProfileFragment.O
         mDrawerToggle.onConfigurationChanged(newConfig);
     }
 
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
@@ -133,6 +167,7 @@ public class MainActivity extends AppCompatActivity implements ProfileFragment.O
         }
         return super.onOptionsItemSelected(item);
     }
+
 
     /**
      * Initializes the Drawer content.
@@ -149,7 +184,20 @@ public class MainActivity extends AppCompatActivity implements ProfileFragment.O
 
     @Override
     public void onBackPressed() {
-        Toast.makeText(this, "Please use the sign out button to sign out. Thank you.", Toast.LENGTH_LONG).show();
+        if(mCurrentFragment.equals("overview")) {
+            finish();
+
+            android.os.Process.killProcess(android.os.Process.myPid());
+            super.onDestroy();
+        } else {
+            mFragment = new OverviewFragment();
+            mToolbar.setTitle("Overview");
+        }
+
+
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        fragmentManager.beginTransaction().replace(R.id.flContent, mFragment).commit();
+
     }
 
     /* SAVE THIS PART OF THE CODE FOR NEXT VERSION. NOT USING IT IN CURRENT VERSION
@@ -195,48 +243,57 @@ public class MainActivity extends AppCompatActivity implements ProfileFragment.O
     */
 
     /**
-    * Allows the user to select a menu item from the slide out drawer.
-    *
-    * @param theMenuItem the menu item selected by the user
-    */
+     * Allows the user to select a menu item from the slide out drawer.
+     *
+     * @param theMenuItem the menu item selected by the user
+     */
     public void selectDrawerItem(MenuItem theMenuItem) {
-        Fragment fragment = null;
+        mFragment = null;
 
         Class fragmentClass = null;
         switch (theMenuItem.getItemId()) {
-
-            //case R.id.nav_profile:
-            //case R.id.nav_avatar_image:
-            //    fragmentClass = ProfileFragment.class;
-            //    break;
+            case R.id.nav_profile:
+                fragmentClass = ProfileFragment.class;
+                mCurrentFragment = "profile";
+                mToolbar.setTitle("Profile");
+                break;
             case R.id.nav_overview:
-                fragmentClass = MainFragment.class;
+                fragmentClass = OverviewFragment.class;
+                mCurrentFragment = "overview";
+                mToolbar.setTitle("Overview");
+                break;
+            case R.id.nav_Daily_log:
+                fragmentClass = DailyLogFragment.class;
+                mCurrentFragment = "dailyLog";
+                mToolbar.setTitle("Daily Log");
                 break;
             case R.id.nav_settings:
                 fragmentClass = SettingFragment.class;
+                mCurrentFragment = "settings";
+                mToolbar.setTitle("Settings");
                 break;
             case R.id.nav_sign_out:
                 userSignOut();
                 break;
             case R.id.nav_add_food:
-                fragmentClass = LookUpFoodFragment.class;
+                Intent intent = new Intent(this, NutrientActivity.class);
+                startActivity(intent);
                 break;
             default:
-                fragmentClass = MainFragment.class;
+                fragmentClass = OverviewFragment.class;
         }
 
-        if (theMenuItem.getItemId() != R.id.nav_sign_out) {
+        if (theMenuItem.getItemId() != R.id.nav_sign_out && theMenuItem.getItemId() != R.id.nav_add_food) {
             try {
-                fragment = (Fragment) fragmentClass.newInstance();
+                mFragment = (Fragment) fragmentClass.newInstance();
             } catch (Exception e) {
                 e.printStackTrace();
             }
 
             FragmentManager fragmentManager = getSupportFragmentManager();
-            fragmentManager.beginTransaction().replace(R.id.flContent, fragment).commit();
+            fragmentManager.beginTransaction().replace(R.id.flContent, mFragment).commit();
         }
         theMenuItem.setChecked(true);
-        mToolbar.setTitle(theMenuItem.getTitle());
         mDrawer.closeDrawers();
 
     }
@@ -276,18 +333,110 @@ public class MainActivity extends AppCompatActivity implements ProfileFragment.O
      * Cleans up after the user logs out.
      */
     private void userSignOut() {
-        DBMemberInfoHelper DBMemberInfoHelper = new DBMemberInfoHelper(this);
-        DBMemberInfoHelper.deleteData();
+        SharedPreferences sharedPref = this.getSharedPreferences(getString(R.string.preference_account), Context.MODE_PRIVATE);
 
-        DBPersonalInfoTableHelper dbPersonalInfoTableHelper = new DBPersonalInfoTableHelper(this);
-        dbPersonalInfoTableHelper.deletePersonalInfo();
+        sharedPref.edit().remove("email").commit();
+        sharedPref.edit().remove("password").commit();
+
+        SharedPreferences sharedPrefProfile = this.getSharedPreferences(getString(R.string.preference_profile), Context.MODE_PRIVATE);
+        sharedPrefProfile.edit().clear().commit();
 
         Intent intent = new Intent(this, LoginActivity.class);
         startActivity(intent);
     }
 
     @Override
-    public void onFragmentInteraction(Uri theUri) {
+    public void onResume() {
+        super.onResume();
+
+        switch (mCurrentFragment) {
+            case "overview":
+                mFragment = new OverviewFragment();
+                break;
+            case "profile":
+                mFragment = new ProfileFragment();
+                break;
+            case "dailyLog":
+                mFragment = new DailyLogFragment();
+                break;
+            case "settings":
+                mFragment = new SettingFragment();
+                break;
+            default:
+                mFragment = new OverviewFragment();
+                break;
+        }
+
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        fragmentManager.beginTransaction().replace(R.id.flContent, mFragment).commit();
+    }
+
+
+
+    @Override
+    public void onFragmentInteraction() {
+
+        switch (mCurrentFragment) {
+            case "overview":
+                mFragment = new OverviewFragment();
+                break;
+            case "profile":
+                mFragment = new ProfileFragment();
+                break;
+            case "dailyLog":
+                mFragment = new DailyLogFragment();
+                break;
+            case "settings":
+                mFragment = new SettingFragment();
+                break;
+            default:
+                mFragment = new OverviewFragment();
+                break;
+        }
+
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        fragmentManager.beginTransaction().replace(R.id.flContent, mFragment).commit();
+
+    }
+
+    @Override
+    public void onFragmentInteraction(Uri uri) {
+
+    }
+
+    @Override
+    public void onFragmentInteraction(Food theFood, String theType) {
+        Bundle bundle = new Bundle();
+        FragmentManager fragmentManager = this.getSupportFragmentManager();
+        DialogFragment dialogFragment = null;
+        bundle.putParcelable("food_info", theFood);
+        bundle.putString("type", theType);
+        dialogFragment = new FoodDialogFragment();
+
+
+        dialogFragment.setArguments(bundle);
+        dialogFragment.show(fragmentManager, "Info Dialog");
+    }
+
+    @Override
+    public void onFragmentInteraction(Recipe theRecipe, String theType) {
+        Bundle bundle = new Bundle();
+        FragmentManager fragmentManager = this.getSupportFragmentManager();
+        DialogFragment dialogFragment = null;
+        bundle.putParcelable("recipe_info", theRecipe);
+        bundle.putString("type", theType);
+        dialogFragment = new RecipeDialogFragment();
+
+        dialogFragment.setArguments(bundle);
+        dialogFragment.show(fragmentManager, "Info Dialog");
+    }
+
+    @Override
+    public void onFragmentInteraction(String theMessage) {
+        if (theMessage.equals("nutrient")) {
+            Intent intent = new Intent(this, NutrientActivity.class);
+            startActivityForResult(intent, NUTRIENT_ACTIVITY_CODE);
+        }
     }
 
     /**
@@ -321,12 +470,19 @@ public class MainActivity extends AppCompatActivity implements ProfileFragment.O
 
         ImageView imageAvatar = (ImageView) headerView.findViewById(R.id.nav_avatar_image);
         TextView name = (TextView) headerView.findViewById(R.id.name);
-        TextView email = (TextView) headerView.findViewById(R.id.name);
+        TextView email = (TextView) headerView.findViewById(R.id.email);
 
         Log.i("WHAT", "avatar " + profile.getAvatarId());
 
         imageAvatar.setImageResource(profile.getAvatarId());
         name.setText(profile.getName());
-        //email.setText(account.getEmail());
+        SharedPreferences sharedPref = this.getSharedPreferences(getString(R.string.preference_account), Context.MODE_PRIVATE);
+        String userEmail = sharedPref.getString("email", "null");
+        if (userEmail.equals("null")) {
+            email.setText("");
+        } else {
+            email.setText(userEmail);
+        }
+        //LAP TEST
     }
 }

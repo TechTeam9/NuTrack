@@ -24,15 +24,7 @@ import java.util.ArrayList;
 import edu.uw.tcss450.nutrack.R;
 import edu.uw.tcss450.nutrack.model.Food;
 
-/**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link SearchResultFragment.OnFragmentInteractionListener} interface
- * to handle interaction events.
- * Use the {@link SearchResultFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
-public class SearchResultFragment extends Fragment implements FoodDialogFragment.OnFragmentInteractionListener{
+public class SearchResultFragment extends Fragment {
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     /**
      * First parameter string.
@@ -107,7 +99,7 @@ public class SearchResultFragment extends Fragment implements FoodDialogFragment
 
         myFoodList = getArguments().getStringArrayList("food_list");
         listView.setAdapter(new ArrayAdapter<String>(getContext(), android.R.layout.simple_list_item_1, myFoodList));
-//        listView.invalidate();
+
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, final View view,
@@ -128,6 +120,7 @@ public class SearchResultFragment extends Fragment implements FoodDialogFragment
         return rootView;
     }
 
+    /*
     @Override
     public void onFragmentInteraction() {
         FragmentTransaction ft = getFragmentManager().beginTransaction();
@@ -142,6 +135,7 @@ public class SearchResultFragment extends Fragment implements FoodDialogFragment
         .addToBackStack(null);
         ft.commit();
     }
+    */
 
     @Override
     public void onStart() {

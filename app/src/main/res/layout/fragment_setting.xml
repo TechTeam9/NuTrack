@@ -7,19 +7,21 @@
     tools:context="edu.uw.tcss450.nutrack.fragment.SettingFragment">
 
     <TextView
+        android:id="@+id/textView5"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="36sp"
-        android:text="ON PROGRESS..."
-        android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:text="ON PROGRESS..."
+        android:textSize="36sp" />
 
     <TextView
+        android:id="@+id/textView4"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="36sp"
-        android:text="MORE COMING SOON!" />
+        android:text="MORE COMING SOON!"
+        android:textSize="36sp" />
 
 
 </LinearLayout>

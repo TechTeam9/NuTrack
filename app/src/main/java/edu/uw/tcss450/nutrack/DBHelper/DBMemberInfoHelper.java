@@ -47,17 +47,7 @@ public class DBMemberInfoHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        String createTableQuery = "CREATE TABLE IF NOT EXISTS account_info(" +
-                "email TEXT PRIMARY KEY ASC," +
-                "password TEXT," +
-                "join_date NUMERIC" +
-                ")";
-        db.execSQL(createTableQuery);
-    }
-
-    @Override
-    public void onOpen(SQLiteDatabase db) {
-        String createTableQuery = "CREATE TABLE IF NOT EXISTS account_info(" +
+        String createTableQuery = "CREATE TABLE account_info(" +
                 "email TEXT PRIMARY KEY ASC," +
                 "password TEXT," +
                 "join_date NUMERIC" +

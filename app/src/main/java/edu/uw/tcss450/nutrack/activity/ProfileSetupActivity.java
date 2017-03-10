@@ -4,6 +4,7 @@ import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.support.design.widget.TextInputEditText;
 import android.support.v7.app.AppCompatActivity;
@@ -19,11 +20,10 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 
 import edu.uw.tcss450.nutrack.fragment.AvatarSelectorFragment;
-import edu.uw.tcss450.nutrack.Helper.ProfileHelper;
+import edu.uw.tcss450.nutrack.helper.ProfileHelper;
 import edu.uw.tcss450.nutrack.R;
 import edu.uw.tcss450.nutrack.model.Profile;
 
-import static android.R.id.empty;
 import static android.media.CamcorderProfile.get;
 
 /**
@@ -33,7 +33,7 @@ public class ProfileSetupActivity extends AppCompatActivity implements AvatarSel
     /**
      * The user's chosen gender.
      */
-    private char mGenderChosen;
+    private String mGenderChosen;
 
     /**
      * The user's email.
@@ -53,49 +53,57 @@ public class ProfileSetupActivity extends AppCompatActivity implements AvatarSel
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_profile_setup);
 
-        Intent intent = getIntent();
+            setContentView(R.layout.activity_profile_setup);
+        //if (savedInstanceState == null) { //If I do this the gender chooser stops working....
+            Intent intent = getIntent();
 
-        mEmail = intent.getStringExtra("email");
+            mEmail = intent.getStringExtra("email");
 
-        mAvatarSelectorFragment = new AvatarSelectorFragment();
-        final Button maleIcon = (Button) findViewById(R.id.profileSetup_button_male);
-        final Button femaleIcon = (Button) findViewById(R.id.profileSetup_button_female);
+            mAvatarSelectorFragment = new AvatarSelectorFragment();
+            final Button maleIcon = (Button) findViewById(R.id.profileSetup_button_male);
+            final Button femaleIcon = (Button) findViewById(R.id.profileSetup_button_female);
 
-        mGenderChosen = 'm';
-        maleIcon.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mAvatarSelectorFragment.changeAvatarGender(AvatarSelectorFragment.MALE, femaleIcon);
-                maleIcon.setClickable(false);
-                mGenderChosen = 'm';
-            }
-        });
-        maleIcon.setClickable(false);
+            mGenderChosen = "Male";
+            maleIcon.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mAvatarSelectorFragment.changeAvatarGender(AvatarSelectorFragment.MALE, femaleIcon);
+                    maleIcon.setClickable(false);
+                    mGenderChosen = "Male";
+                }
+            });
+            maleIcon.setClickable(false);
 
-        femaleIcon.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mAvatarSelectorFragment.changeAvatarGender(AvatarSelectorFragment.FEMALE, maleIcon);
-                femaleIcon.setClickable(false);
-                mGenderChosen = 'f';
-            }
-        });
+            femaleIcon.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mAvatarSelectorFragment.changeAvatarGender(AvatarSelectorFragment.FEMALE, maleIcon);
+                    femaleIcon.setClickable(false);
+                    mGenderChosen = "Female";
+                }
+            });
 
-        FragmentManager fragmentManager = getFragmentManager();
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.add(R.id.avatar_frame, mAvatarSelectorFragment, "Avatar");
-        fragmentTransaction.commit();
+            FragmentManager fragmentManager = getFragmentManager();
+            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+            fragmentTransaction.add(R.id.avatar_frame, mAvatarSelectorFragment, "Avatar");
+            fragmentTransaction.commit();
 
-        Button btnSubmit = (Button) findViewById(R.id.profileSetup_button_submit);
-        btnSubmit.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                submitProfile();
-            }
-        });
-
+            Button btnSubmit = (Button) findViewById(R.id.profileSetup_button_submit);
+            btnSubmit.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    submitProfile();
+                }
+            });
+            Button btnCancel = (Button) findViewById(R.id.profileSetup_button_cancel);
+            btnCancel.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    userSignOut();
+                }
+            });
+        //}
     }
 
     /**
@@ -139,15 +147,22 @@ public class ProfileSetupActivity extends AppCompatActivity implements AvatarSel
             Toast.makeText(context, hint + "empty!", Toast.LENGTH_SHORT).show();
         } else {
             int avatarIconId = mAvatarSelectorFragment.getChosen();
-            String dateOfBirth = datePicker.getYear() + "-" + datePicker.getMonth() + "-" + datePicker.getDayOfMonth();
+            String dateOfBirth = datePicker.getYear() + "-" + (datePicker.getMonth() + 1) + "-" + datePicker.getDayOfMonth();
 
             Profile profile = new Profile(fieldName.getText().toString(), mGenderChosen
                     , dateOfBirth
-                    , Double.parseDouble(fieldHeight.getText().toString())
-                    , Double.parseDouble(fieldWeight.getText().toString())
+                    , Integer.parseInt(fieldHeight.getText().toString())
+                    , Integer.parseInt(fieldWeight.getText().toString())
                     , avatarIconId);
 
 
+            SharedPreferences sharedPrefProfile = this.getSharedPreferences(getString(R.string.preference_profile), Context.MODE_PRIVATE);
+            sharedPrefProfile.edit().putString("name", fieldName.getText().toString()).commit();
+            sharedPrefProfile.edit().putString("gender", mGenderChosen).commit();
+            sharedPrefProfile.edit().putString("dob", dateOfBirth).commit();
+            sharedPrefProfile.edit().putInt("height", Integer.parseInt(fieldHeight.getText().toString())).commit();
+            sharedPrefProfile.edit().putInt("weight", Integer.parseInt(fieldWeight.getText().toString())).commit();
+            sharedPrefProfile.edit().putInt("avatar_id", avatarIconId).commit();
 
             ProfileHelper.insertProfile(this, mEmail, profile);
         }
@@ -160,7 +175,7 @@ public class ProfileSetupActivity extends AppCompatActivity implements AvatarSel
 
     @Override
     public void onBackPressed() {
-        Toast.makeText(this, "Sorry, you have to finish your profile", Toast.LENGTH_LONG).show();
+        userSignOut();
     }
 
     /**
@@ -183,5 +198,21 @@ public class ProfileSetupActivity extends AppCompatActivity implements AvatarSel
         } catch (JSONException e) {
             e.printStackTrace();
         }
+    }
+
+    /**
+     * Cleans up after the user logs out.
+     */
+    private void userSignOut() {
+        SharedPreferences sharedPref = this.getSharedPreferences(getString(R.string.preference_account), Context.MODE_PRIVATE);
+
+        sharedPref.edit().remove("email").commit();
+        sharedPref.edit().remove("password").commit();
+
+        SharedPreferences sharedPrefProfile = this.getSharedPreferences(getString(R.string.preference_profile), Context.MODE_PRIVATE);
+        sharedPrefProfile.edit().clear().commit();
+
+        Intent intent = new Intent(this, LoginActivity.class);
+        startActivity(intent);
     }
 }
