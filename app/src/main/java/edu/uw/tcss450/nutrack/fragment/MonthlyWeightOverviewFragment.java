@@ -104,7 +104,6 @@ public class MonthlyWeightOverviewFragment extends Fragment {
     }
 
 
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -119,15 +118,13 @@ public class MonthlyWeightOverviewFragment extends Fragment {
             public void onClick(View v) {
                 logWeight();
 
-                InputMethodManager imm = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
                 imm.hideSoftInputFromWindow(mView.getApplicationWindowToken(), 0);
             }
         });
 
         return mView;
     }
-
-
 
 
     @Override
@@ -187,50 +184,67 @@ public class MonthlyWeightOverviewFragment extends Fragment {
 
         //Plug Weights into values
         String[] labels = new String[7];
-        List<PointValue> values = new ArrayList<PointValue>();
+        List<PointValue> weightValues = new ArrayList<PointValue>();
+        List<PointValue> goalValues = new ArrayList<PointValue>();
         DBNutrientRecord db = new DBNutrientRecord(getContext());
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         SimpleDateFormat letterMonthFormat = new SimpleDateFormat("yyyy-MMM-dd");
         Date date = new Date();
         Date dateBefore = new Date(date.getTime() - (6) * 24 * 3600 * 1000l);
 
-        Boolean nonZero = false;
 
+        Boolean nonZero = false;
+        //Remove LATER
+        int goal = 200;
         for (int i = 6; i >= 0; i--) {
             int weight = weightIntegers.remove(0);
             if (weight != 0) {
-                values.add(new PointValue(i, weight));
+                weightValues.add(new PointValue(i, weight));
                 nonZero = true;
             }
             labels[6 - i] = letterMonthFormat.format(dateBefore).substring(5, 8) + "-" + letterMonthFormat.format(dateBefore).substring(9, 11);
             dateBefore = new Date(date.getTime() - (i - 1) * 24 * 3600 * 1000l);
         }
-        if (nonZero) {
-            //Setup X axis
-            ArrayList<AxisValue> dayList = new ArrayList<>();
-            for(int i = 0; i < 7; i++){
-                dayList.add(new AxisValue(i).setLabel(labels[i]));
-            }
-            Axis axisX = new Axis(dayList);
-
-            chartData.setBaseValue(10);
-            chartData.setAxisXBottom(axisX);
-
-            Line line = new Line(values).setColor(getResources().getColor(R.color.colorPrimary)).setCubic(false);
-            line.setStrokeWidth(2);
-            line.setHasLabels(true);
-            List<Line> lines = new ArrayList<Line>();
-            lines.add(line);
-
-            chartData.setLines(lines);
-
-            weightChart.setLineChartData(chartData);
-        } else {
-            weightChart.setVisibility(View.GONE);
-
-            TextView zeroData = (TextView) view.findViewById(R.id.zero_data);
-            zeroData.setVisibility(View.VISIBLE);
+        goalValues.add(new PointValue(0, goal));
+        goalValues.add(new PointValue(6, goal));
+        //weightValues.add(new PointValue(new PointValue(1, 200)));
+        //Setup X axis
+        ArrayList<AxisValue> dayList = new ArrayList<>();
+        for (int i = 0; i < 7; i++) {
+            dayList.add(new AxisValue(i).setLabel(labels[i]));
         }
+        Axis axisX = new Axis(dayList);
+
+        chartData.setBaseValue(10);
+        chartData.setAxisXBottom(axisX);
+
+        List<Line> lines = new ArrayList<Line>();
+
+        Line weightLine = new Line(weightValues).setColor(getResources().getColor(R.color.colorPrimary)).setCubic(false);
+        weightLine.setStrokeWidth(2);
+        weightLine.setHasLabels(true);
+        lines.add(weightLine);
+
+        //Setup Goal Line
+        Line goalLine = new Line(goalValues).setColor(Color.GREEN).setCubic(false);
+        goalLine.setStrokeWidth(1);
+        goalLine.setHasLabelsOnlyForSelected(true);
+        //goalLine.setHasPoints(false);
+        lines.add(goalLine);
+
+
+        chartData.setLines(lines);
+
+        weightChart.setLineChartData(chartData);
+        //if (nonZero) {
+        TextView zeroData = (TextView) view.findViewById(R.id.zero_data);
+        zeroData.setVisibility(View.GONE);
+        weightChart.setVisibility(View.VISIBLE);
+        //} else {
+        //    TextView zeroData = (TextView) view.findViewById(R.id.zero_data);
+        //    weightChart.setVisibility(View.GONE);
+        //    zeroData.setVisibility(View.VISIBLE);
+        //}
     }
 //    public void initializeMonthlyWeightGraph(View view, ArrayList<Integer> weights) {
 //
@@ -258,12 +272,13 @@ public class MonthlyWeightOverviewFragment extends Fragment {
 //        lineView.setBottom(50);
 //    }
 
-    public void refresh(){
+    public void refresh() {
         initializeMonthlyWeightGraph(mView);
     }
-    public void logWeight(){
+
+    public void logWeight() {
         EditText weightEditText = (EditText) mView.findViewById(R.id.overview_editText_weightInput);
-        if(!weightEditText.getText().toString().equals("")) {
+        if (!weightEditText.getText().toString().equals("")) {
             SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
             DBWeight dbWeight = new DBWeight(getContext());
             String currentDate = dateFormat.format(new Date());
