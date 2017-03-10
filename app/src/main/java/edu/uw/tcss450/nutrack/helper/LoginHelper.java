@@ -52,9 +52,9 @@ public class LoginHelper {
     public static final int EMAIL_ALREADY_EXIST = 21;
 
 
-
     /**
      * Auto verify account for current user.
+     *
      * @param theAccount account model
      * @param theContext context
      */
@@ -67,6 +67,7 @@ public class LoginHelper {
 
     /**
      * Verify account for first time user.
+     *
      * @param theAccount account model
      * @param theContext context
      */
@@ -79,6 +80,7 @@ public class LoginHelper {
 
     /**
      * Add a new account.
+     *
      * @param theAccount account model
      * @param theContext context
      */
@@ -91,4 +93,12 @@ public class LoginHelper {
         AddAccountInfo task = new AddAccountInfo(theContext);
         task.execute(baseUrl, theAccount.getUsername(), theAccount.getPassword());
     }
+    /**
+     *
+     * @param theContext context
+     */
+    //public static Account getAccountInfo(Context theContext) {
+        //DBMemberInfo dbHelper = new DBMemberInfo(theContext);
+        //return dbHelper.getAccountData();
+    //}
 }

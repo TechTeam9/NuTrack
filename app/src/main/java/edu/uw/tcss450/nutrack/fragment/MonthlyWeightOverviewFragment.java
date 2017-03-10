@@ -169,7 +169,9 @@ public class MonthlyWeightOverviewFragment extends Fragment {
         Cursor cursor = dbWeight.getTodayWeight();
         if (cursor.getCount() != 0) {
             cursor.moveToFirst();
-            editText.setHint(String.valueOf(cursor.getInt(1)));
+            editText.setHint(String.valueOf(cursor.getInt(1)) + " lbs");
+        } else {
+            editText.setHint("lbs");
         }
 
 

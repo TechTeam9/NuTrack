@@ -184,7 +184,20 @@ public class MainActivity extends AppCompatActivity implements ProfileFragment.O
 
     @Override
     public void onBackPressed() {
-        Toast.makeText(this, "Please use the sign out button to sign out. Thank you.", Toast.LENGTH_LONG).show();
+        if(mCurrentFragment.equals("overview")) {
+            finish();
+
+            android.os.Process.killProcess(android.os.Process.myPid());
+            super.onDestroy();
+        } else {
+            mFragment = new OverviewFragment();
+            mToolbar.setTitle("Overview");
+        }
+
+
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        fragmentManager.beginTransaction().replace(R.id.flContent, mFragment).commit();
+
     }
 
     /* SAVE THIS PART OF THE CODE FOR NEXT VERSION. NOT USING IT IN CURRENT VERSION
@@ -463,7 +476,13 @@ public class MainActivity extends AppCompatActivity implements ProfileFragment.O
 
         imageAvatar.setImageResource(profile.getAvatarId());
         name.setText(profile.getName());
-        //email.setText(account.getEmail());
+        SharedPreferences sharedPref = this.getSharedPreferences(getString(R.string.preference_account), Context.MODE_PRIVATE);
+        String userEmail = sharedPref.getString("email", "null");
+        if (userEmail.equals("null")) {
+            email.setText("");
+        } else {
+            email.setText(userEmail);
+        }
         //LAP TEST
     }
 }

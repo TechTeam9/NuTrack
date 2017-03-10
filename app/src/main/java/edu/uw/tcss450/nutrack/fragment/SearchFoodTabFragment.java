@@ -423,7 +423,7 @@ public class SearchFoodTabFragment extends Fragment {
                     } else {
                         jsonArray = jsonObject.getJSONArray("serving");
                         if (jsonArray != null) {
-                            for (int i = 0; i < jsonArray.length(); i++) {
+                            for (int i = 1; i < jsonArray.length(); i++) {
                                 JSONObject serving = jsonArray.getJSONObject(i);
 
                                 calorieList.add(serving.getDouble("calories"));

@@ -7,6 +7,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -151,11 +152,14 @@ public class WeeklyIntakeOverviewFragment extends Fragment {
         Date date = new Date();
         Date dateBefore = new Date(date.getTime() - (6) * 24 * 3600 * 1000l);
 
+        Boolean nonZero = false;
         for (int i = 6; i >= 0; i--) {
 
             labels[6- i] = letterMonthFormat.format(dateBefore).substring(5, 8) + "-" + letterMonthFormat.format(dateBefore).substring(9, 11);
             double calories = db.getCaloriesByDate(dateFormat.format(dateBefore));
-
+            if (calories != 0) {
+                nonZero = true;
+            }
             values = new ArrayList<>();
             values.add(new SubcolumnValue((float) calories, getResources().getColor(R.color.colorPrimary)));
 
@@ -165,27 +169,35 @@ public class WeeklyIntakeOverviewFragment extends Fragment {
 
             dateBefore = new Date(date.getTime() - (i - 1) * 24 * 3600 * 1000l);
         }
-
-
-        weeklyIntakeChartData = new ColumnChartData(columns);
-
-        //Set Axis
-        //String[] labels = {"Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"};
-        List<AxisValue> axisXValueList = new ArrayList<AxisValue>();
-        Axis axisX = new Axis();
-
-        for (int i = 0; i < 7; i++) {
-            axisXValueList.add(new AxisValue(i).setLabel(labels[i]));
-        }
-        axisX.setValues(axisXValueList);
-
-        weeklyIntakeChartData.setAxisXBottom(axisX);
-
-        weeklyIntakeChart.setColumnChartData(weeklyIntakeChartData);
-
         final View graphView = view.findViewById(R.id.weekly_intake_chart);
-        //********************Need to Fix***********************
-        mGraphHeight = graphView.getHeight();
-        //**************************************************
+        if (nonZero) {
+            weeklyIntakeChartData = new ColumnChartData(columns);
+
+            //Set Axis
+            //String[] labels = {"Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"};
+            List<AxisValue> axisXValueList = new ArrayList<AxisValue>();
+            Axis axisX = new Axis();
+
+            for (int i = 0; i < 7; i++) {
+                axisXValueList.add(new AxisValue(i).setLabel(labels[i]));
+            }
+            axisX.setValues(axisXValueList);
+
+            weeklyIntakeChartData.setAxisXBottom(axisX);
+
+            weeklyIntakeChart.setColumnChartData(weeklyIntakeChartData);
+
+
+
+
+            //********************Need to Fix*******************
+            mGraphHeight = graphView.getHeight();
+            //**************************************************
+        } else {
+            graphView.setVisibility(View.GONE);
+
+            TextView zeroData = (TextView) view.findViewById(R.id.zero_data);
+            zeroData.setVisibility(View.VISIBLE);
+        }
     }
 }

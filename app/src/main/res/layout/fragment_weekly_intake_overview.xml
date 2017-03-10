@@ -38,4 +38,12 @@
         android:layout_height="match_parent"
         android:layout_marginTop="32dp"
         android:layout_weight="1"></lecho.lib.hellocharts.view.ColumnChartView>
+    <TextView
+        android:id="@+id/zero_data"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:textSize="56sp"
+        android:gravity="center_horizontal"
+        android:text="No Logged Data..."
+        android:visibility="gone"/>
 </LinearLayout>

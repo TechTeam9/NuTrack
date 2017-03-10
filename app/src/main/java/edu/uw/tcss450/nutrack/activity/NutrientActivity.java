@@ -4,6 +4,7 @@ import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.support.design.widget.FloatingActionButton;
@@ -64,6 +65,8 @@ public class NutrientActivity extends AppCompatActivity implements SearchFoodTab
 
         setSupportActionBar(mToolBar);
         getSupportActionBar().setTitle(null);
+        mToolBar.setTitle("Nutrients");
+        mToolBar.setTitleTextColor(Color.WHITE);
 
         mToolBar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
