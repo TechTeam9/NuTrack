@@ -44,6 +44,15 @@
         android:padding="20dp"
         android:paddingTop="0dp"
         android:paddingBottom="0dp"/>
+    <TextView
+        android:id="@+id/zero_data"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:textSize="28sp"
+        android:gravity="center"
+        android:text="No Logged Data"
+        android:visibility="gone"/>
     <!--<HorizontalScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent">

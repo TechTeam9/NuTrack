@@ -193,55 +193,43 @@ public class MonthlyWeightOverviewFragment extends Fragment {
         Date date = new Date();
         Date dateBefore = new Date(date.getTime() - (6) * 24 * 3600 * 1000l);
 
+        Boolean nonZero = false;
+
         for (int i = 6; i >= 0; i--) {
             int weight = weightIntegers.remove(0);
             if (weight != 0) {
                 values.add(new PointValue(i, weight));
+                nonZero = true;
             }
             labels[6 - i] = letterMonthFormat.format(dateBefore).substring(5, 8) + "-" + letterMonthFormat.format(dateBefore).substring(9, 11);
             dateBefore = new Date(date.getTime() - (i - 1) * 24 * 3600 * 1000l);
         }
-        //Setup X axis
-        ArrayList<AxisValue> dayList = new ArrayList<>();
+        if (nonZero) {
+            //Setup X axis
+            ArrayList<AxisValue> dayList = new ArrayList<>();
+            for(int i = 0; i < 7; i++){
+                dayList.add(new AxisValue(i).setLabel(labels[i]));
+            }
+            Axis axisX = new Axis(dayList);
 
+            chartData.setBaseValue(10);
+            chartData.setAxisXBottom(axisX);
 
-        for(int i = 0; i < 7; i++){
-            dayList.add(new AxisValue(i).setLabel(labels[i]));
+            Line line = new Line(values).setColor(getResources().getColor(R.color.colorPrimary)).setCubic(false);
+            line.setStrokeWidth(2);
+            line.setHasLabels(true);
+            List<Line> lines = new ArrayList<Line>();
+            lines.add(line);
+
+            chartData.setLines(lines);
+
+            weightChart.setLineChartData(chartData);
+        } else {
+            weightChart.setVisibility(View.GONE);
+
+            TextView zeroData = (TextView) view.findViewById(R.id.zero_data);
+            zeroData.setVisibility(View.VISIBLE);
         }
-        Axis axisX = new Axis(dayList);
-
-        chartData.setBaseValue(10);
-        chartData.setAxisXBottom(axisX);
-
-
-        /*
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-        Date date = new Date();
-        Date dateBefore = date;
-        String dateString = dateFormat.format(date);
-        ArrayList<Integer> weightList = dbWeight.getWeight(date);
-        String[] dateSplit = dateString.split("-");
-        String result = dateSplit[2];
-        int today = Integer.parseInt(result);
-
-        for (int i = 6; i >=0; i--) {
-            String tempDate = dateFormat.format(dateFormat).substring(6, 11).replace('-', '/');
-            values.add(new PointValue(i, (float) weightList));
-            values.ad
-            dateBefore = new Date(date.getTime() - i * 24 * 3600 * 1000l);
-
-        }
-        */
-
-        Line line = new Line(values).setColor(getResources().getColor(R.color.colorPrimary)).setCubic(false);
-        line.setStrokeWidth(2);
-        line.setHasLabels(true);
-        List<Line> lines = new ArrayList<Line>();
-        lines.add(line);
-
-        chartData.setLines(lines);
-
-        weightChart.setLineChartData(chartData);
     }
 //    public void initializeMonthlyWeightGraph(View view, ArrayList<Integer> weights) {
 //

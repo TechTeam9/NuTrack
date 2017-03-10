@@ -186,10 +186,6 @@ public class WeeklyIntakeOverviewFragment extends Fragment {
             weeklyIntakeChartData.setAxisXBottom(axisX);
 
             weeklyIntakeChart.setColumnChartData(weeklyIntakeChartData);
-
-
-
-
             //********************Need to Fix*******************
             mGraphHeight = graphView.getHeight();
             //**************************************************
