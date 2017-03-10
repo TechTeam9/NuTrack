@@ -104,7 +104,6 @@ public class MonthlyWeightOverviewFragment extends Fragment {
     }
 
 
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -119,15 +118,13 @@ public class MonthlyWeightOverviewFragment extends Fragment {
             public void onClick(View v) {
                 logWeight();
 
-                InputMethodManager imm = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
                 imm.hideSoftInputFromWindow(mView.getApplicationWindowToken(), 0);
             }
         });
 
         return mView;
     }
-
-
 
 
     @Override
@@ -139,6 +136,7 @@ public class MonthlyWeightOverviewFragment extends Fragment {
             throw new RuntimeException(context.toString()
                     + " must implement OnFragmentInteractionListener");
         }
+        //SLEEPY
     }
 
     @Override
@@ -174,7 +172,6 @@ public class MonthlyWeightOverviewFragment extends Fragment {
             editText.setHint("lbs");
         }
 
-
         LineChartView weightChart = (LineChartView) mView.findViewById(R.id.weight_chart);
         weightChart.setInteractive(false);
         weightChart.setZoomEnabled(false);
@@ -182,36 +179,42 @@ public class MonthlyWeightOverviewFragment extends Fragment {
 
         LineChartData chartData = weightChart.getLineChartData();
 
-         //dbWeight.insertWeight("2017-03-07", 112);
-        dbWeight.insertWeight("2017-03-06", 122);
-        dbWeight.insertWeight("2017-03-05", 121);
-        dbWeight.insertWeight("2017-03-04", 120);
-        dbWeight.insertWeight("2017-03-03", 121);
-        dbWeight.insertWeight("2017-03-02", 145);
-        dbWeight.insertWeight("2017-03-01", 999);
-        //TEST CODE E
         //Comment next line so I can test my code
         ArrayList<Integer> weightIntegers = dbWeight.getWeight(new Date());
 
         //Plug Weights into values
         String[] labels = new String[7];
-        List<PointValue> values = new ArrayList<PointValue>();
+        List<PointValue> weightValues = new ArrayList<PointValue>();
+        List<PointValue> goalValues = new ArrayList<PointValue>();
+        List<PointValue> spacerValues = new ArrayList<PointValue>();
         DBNutrientRecord db = new DBNutrientRecord(getContext());
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         SimpleDateFormat letterMonthFormat = new SimpleDateFormat("yyyy-MMM-dd");
         Date date = new Date();
         Date dateBefore = new Date(date.getTime() - (6) * 24 * 3600 * 1000l);
 
+
+        Boolean nonZero = false;
+        //Remove LATER
+        int goal = 200;
         for (int i = 6; i >= 0; i--) {
-            values.add(new PointValue(i,weightIntegers.remove(0)));
+            int weight = weightIntegers.remove(0);
+            if (weight != 0) {
+                weightValues.add(new PointValue(i, weight));
+                nonZero = true;
+            }
             labels[6 - i] = letterMonthFormat.format(dateBefore).substring(5, 8) + "-" + letterMonthFormat.format(dateBefore).substring(9, 11);
             dateBefore = new Date(date.getTime() - (i - 1) * 24 * 3600 * 1000l);
         }
+        goalValues.add(new PointValue(0, goal));
+        goalValues.add(new PointValue(6, goal));
+
+        spacerValues.add(new PointValue(0, goal - 10));
+        spacerValues.add(new PointValue(6, goal + 10));
+        //weightValues.add(new PointValue(new PointValue(1, 200)));
         //Setup X axis
         ArrayList<AxisValue> dayList = new ArrayList<>();
-
-
-        for(int i = 0; i < 7; i++){
+        for (int i = 0; i < 7; i++) {
             dayList.add(new AxisValue(i).setLabel(labels[i]));
         }
         Axis axisX = new Axis(dayList);
@@ -219,68 +222,48 @@ public class MonthlyWeightOverviewFragment extends Fragment {
         chartData.setBaseValue(10);
         chartData.setAxisXBottom(axisX);
 
-
-        /*
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-        Date date = new Date();
-        Date dateBefore = date;
-        String dateString = dateFormat.format(date);
-        ArrayList<Integer> weightList = dbWeight.getWeight(date);
-        String[] dateSplit = dateString.split("-");
-        String result = dateSplit[2];
-        int today = Integer.parseInt(result);
-
-        for (int i = 6; i >=0; i--) {
-            String tempDate = dateFormat.format(dateFormat).substring(6, 11).replace('-', '/');
-            values.add(new PointValue(i, (float) weightList));
-            values.ad
-            dateBefore = new Date(date.getTime() - i * 24 * 3600 * 1000l);
-
-        }
-        */
-
-        Line line = new Line(values).setColor(getResources().getColor(R.color.colorPrimary)).setCubic(false);
-        line.setStrokeWidth(2);
-        line.setHasLabels(true);
         List<Line> lines = new ArrayList<Line>();
-        lines.add(line);
+
+        Line weightLine = new Line(weightValues).setColor(getResources().getColor(R.color.colorPrimary)).setCubic(false);
+        weightLine.setStrokeWidth(2);
+        weightLine.setHasLabels(true);
+        lines.add(weightLine);
+
+        //Setup Goal Line
+        Line goalLine = new Line(goalValues).setColor(Color.GREEN).setCubic(false);
+        goalLine.setStrokeWidth(1);
+        goalLine.setHasLabels(false);
+        goalLine.setHasPoints(false);
+        lines.add(goalLine);
+
+        //Setup Invisible Spacer Line
+        Line spacerLine = new Line(spacerValues).setColor(Color.WHITE).setCubic(false);
+        spacerLine.setStrokeWidth(0);
+        spacerLine.setHasLabels(false);
+        spacerLine.setHasPoints(false);
+        lines.add(spacerLine);
 
         chartData.setLines(lines);
 
         weightChart.setLineChartData(chartData);
+        if (nonZero) {
+        TextView zeroData = (TextView) view.findViewById(R.id.zero_data);
+        zeroData.setVisibility(View.GONE);
+        weightChart.setVisibility(View.VISIBLE);
+        } else {
+            TextView zeroData = (TextView) view.findViewById(R.id.zero_data);
+            weightChart.setVisibility(View.GONE);
+            zeroData.setVisibility(View.VISIBLE);
+        }
     }
-//    public void initializeMonthlyWeightGraph(View view, ArrayList<Integer> weights) {
-//
-//        ArrayList<ArrayList<Integer>> dataLists = new ArrayList<>();
-//
-//        weights.add(0, 250);
-//        weights.add(0);
-//        weights.add(251);
-//        weights.add(200);
-//        weights.add(20);
-//        dataLists.add(weights);
-//        ArrayList<String> strList = new ArrayList<>();
-//        strList.add("JAN 1");
-//        strList.add("JAN 2");
-//        strList.add("JAN 3");
-//        strList.add("JAN 4");
-//        strList.add("JAN 5");
-//        strList.add("JAN 6");
-//        LineView lineView = (LineView) view.findViewById(R.id.weight_chart);
-//        lineView.setDrawDotLine(true); //optional
-//        lineView.setShowPopup(LineView.SHOW_POPUPS_MAXMIN_ONLY); //optional
-//        lineView.setBottomTextList(strList);
-//        lineView.setColorArray(new int[]{Color.BLACK,Color.GREEN,Color.GRAY,Color.CYAN});
-//        lineView.setDataList(dataLists); //or lineView.setFloatDataList(floatDataLists)
-//        lineView.setBottom(50);
-//    }
 
-    public void refresh(){
+    public void refresh() {
         initializeMonthlyWeightGraph(mView);
     }
-    public void logWeight(){
+
+    public void logWeight() {
         EditText weightEditText = (EditText) mView.findViewById(R.id.overview_editText_weightInput);
-        if(!weightEditText.getText().toString().equals("")) {
+        if (!weightEditText.getText().toString().equals("")) {
             SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
             DBWeight dbWeight = new DBWeight(getContext());
             String currentDate = dateFormat.format(new Date());

@@ -162,6 +162,8 @@ public class ProfileSetupActivity extends AppCompatActivity implements AvatarSel
             sharedPrefProfile.edit().putString("dob", dateOfBirth).commit();
             sharedPrefProfile.edit().putInt("height", Integer.parseInt(fieldHeight.getText().toString())).commit();
             sharedPrefProfile.edit().putInt("weight", Integer.parseInt(fieldWeight.getText().toString())).commit();
+            //DB change Weight
+
             sharedPrefProfile.edit().putInt("avatar_id", avatarIconId).commit();
 
             ProfileHelper.insertProfile(this, mEmail, profile);
