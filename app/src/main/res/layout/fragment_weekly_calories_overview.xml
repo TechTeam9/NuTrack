@@ -42,8 +42,8 @@
         android:id="@+id/zero_data"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:textSize="56sp"
-        android:gravity="center_horizontal"
-        android:text="No Logged Data..."
+        android:textSize="28sp"
+        android:gravity="center"
+        android:text="No Logged Data"
         android:visibility="gone"/>
 </LinearLayout>

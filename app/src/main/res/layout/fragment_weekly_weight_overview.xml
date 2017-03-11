@@ -27,7 +27,7 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:layout_marginBottom="50dp"
+            android:layout_marginBottom="0dp"
             android:layout_marginLeft="60dp"
             android:layout_marginRight="60dp"
             android:layout_marginTop="10dp"
@@ -41,7 +41,18 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:paddingTop="20dp" />
+        android:padding="20dp"
+        android:paddingTop="0dp"
+        android:paddingBottom="0dp"/>
+    <TextView
+        android:id="@+id/zero_data"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:textSize="28sp"
+        android:gravity="center"
+        android:text="No Logged Data"
+        android:visibility="gone"/>
     <!--<HorizontalScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -54,14 +65,15 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
-    <ImageView
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"/>
+        <ImageView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"/>
         <TextView
+            android:id="@+id/ov_goal_label"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
+            android:layout_gravity="center"
             android:text="Your Goal"
             android:textStyle="bold"
             android:textSize="28sp" />
@@ -70,17 +82,29 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"/>
 
-        <TextView
+        <EditText
+            android:id="@+id/overview_editText_goalInput"
+            android:layout_width="35dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:inputType="number|none"
+            android:textColor="@color/black"
+            android:textSize="28sp"
+            android:textAlignment="textEnd"
+            android:layout_weight="3"
+            android:maxLength="4" />
+        <Button
+            android:id="@+id/ov_goal_save"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:text="122 lbs"
-            android:textColor="@color/black"
-            android:textSize="28sp" />
+            android:text="Save"
+            android:textColor="@color/colorPrimaryDark"
+            style="?android:attr/borderlessButtonStyle" />
         <ImageView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"/>
+
     </LinearLayout>
 
     <View
@@ -101,6 +125,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"/>
         <TextView
+            android:id="@+id/ov_weight_label"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"

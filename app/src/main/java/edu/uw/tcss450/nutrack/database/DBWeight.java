@@ -82,6 +82,11 @@ public class DBWeight extends SQLiteOpenHelper {
         }
     }
 
+    public void setGoalWeight(int theWeight) {
+        //GOAL weight stored at Jan 1, 1 AD; LOL
+        insertWeight("0001-01-01", theWeight);
+    }
+
     public Cursor getTodayWeight() {
         SQLiteDatabase dbRead = this.getReadableDatabase();
 
@@ -89,6 +94,11 @@ public class DBWeight extends SQLiteOpenHelper {
         Date date = new Date();
 
         return dbRead.rawQuery("SELECT * FROM weight_log WHERE date='" + dateFormat.format(date) + "'", null);
+    }
+
+    public Cursor getGoalWeight() {
+        SQLiteDatabase dbRead = this.getReadableDatabase();
+        return dbRead.rawQuery("SELECT * FROM weight_log WHERE date='0001-01-01'", null);
     }
 
     public ArrayList<Integer> getWeight(Date theDate) {
