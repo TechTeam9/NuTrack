@@ -161,15 +161,31 @@ public class MonthlyWeightOverviewFragment extends Fragment {
     }
 
     public void initializeMonthlyWeightGraph(View view) {
-        EditText editText = (EditText) mView.findViewById(R.id.overview_editText_weightInput);
+        EditText editWeightText = (EditText) mView.findViewById(R.id.overview_editText_weightInput);
+        EditText editGoalText = (EditText) mView.findViewById(R.id.overview_editText_goalInput);
+        TextView weightLabel = (TextView) mView.findViewById(R.id.ov_weight_label);
+        TextView goalLabel = (TextView) mView.findViewById(R.id.ov_goal_label);
+        //goalLabel.setWidth(weightLabel.getWidth());
 
         DBWeight dbWeight = new DBWeight(getContext());
-        Cursor cursor = dbWeight.getTodayWeight();
-        if (cursor.getCount() != 0) {
-            cursor.moveToFirst();
-            editText.setHint(String.valueOf(cursor.getInt(1)) + " lbs");
+        Cursor weightCursor = dbWeight.getTodayWeight();
+        // Get value for Weight EditTextField
+        if (weightCursor.getCount() != 0) {
+            weightCursor.moveToFirst();
+            editWeightText.setHint(String.valueOf(weightCursor.getInt(1)) + " lbs");
         } else {
-            editText.setHint("lbs");
+            editWeightText.setHint("lbs");
+        }
+
+        int goal = 0;
+        // Get value for Goal EditTextField
+        Cursor goalCursor = dbWeight.getGoalWeight();
+        if (goalCursor.getCount() != 0) {
+            goalCursor.moveToFirst();
+            goal = goalCursor.getInt(1);
+            editGoalText.setHint(String.valueOf(goal) + " lbs");
+        } else {
+            editGoalText.setHint("lbs");
         }
 
         LineChartView weightChart = (LineChartView) mView.findViewById(R.id.weight_chart);
@@ -195,8 +211,10 @@ public class MonthlyWeightOverviewFragment extends Fragment {
 
 
         Boolean nonZero = false;
-        //Remove LATER
-        int goal = 200;
+        //GOAL STUFF
+
+
+
         for (int i = 6; i >= 0; i--) {
             int weight = weightIntegers.remove(0);
             if (weight != 0) {
@@ -246,15 +264,15 @@ public class MonthlyWeightOverviewFragment extends Fragment {
         chartData.setLines(lines);
 
         weightChart.setLineChartData(chartData);
-        if (nonZero) {
-        TextView zeroData = (TextView) view.findViewById(R.id.zero_data);
-        zeroData.setVisibility(View.GONE);
-        weightChart.setVisibility(View.VISIBLE);
-        } else {
+        //if (nonZero) {
             TextView zeroData = (TextView) view.findViewById(R.id.zero_data);
-            weightChart.setVisibility(View.GONE);
-            zeroData.setVisibility(View.VISIBLE);
-        }
+            zeroData.setVisibility(View.GONE);
+            weightChart.setVisibility(View.VISIBLE);
+        //} else {
+        //    TextView zeroData = (TextView) view.findViewById(R.id.zero_data);
+        //    weightChart.setVisibility(View.GONE);
+        //    zeroData.setVisibility(View.VISIBLE);
+        //}
     }
 
     public void refresh() {
@@ -273,7 +291,5 @@ public class MonthlyWeightOverviewFragment extends Fragment {
         } else {
             weightEditText.setError("Weight cannot be empty.");
         }
-
-
     }
 }

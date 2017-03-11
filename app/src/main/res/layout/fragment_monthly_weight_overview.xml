@@ -70,9 +70,10 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"/>
         <TextView
+            android:id="@+id/ov_goal_label"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
+            android:layout_gravity="center"
             android:text="Your Goal"
             android:textStyle="bold"
             android:textSize="28sp" />
@@ -81,17 +82,29 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"/>
 
-        <TextView
+        <EditText
+            android:id="@+id/overview_editText_goalInput"
+            android:layout_width="35dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:inputType="number|none"
+            android:textColor="@color/black"
+            android:textSize="28sp"
+            android:textAlignment="textEnd"
+            android:layout_weight="3"
+            android:maxLength="4" />
+        <Button
+            android:id="@+id/ov_goal_save"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:text="122 lbs"
-            android:textColor="@color/black"
-            android:textSize="28sp" />
+            android:text="Save"
+            android:textColor="@color/colorPrimaryDark"
+            style="?android:attr/borderlessButtonStyle" />
         <ImageView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"/>
+
     </LinearLayout>
 
     <View
@@ -112,6 +125,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"/>
         <TextView
+            android:id="@+id/ov_weight_label"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"

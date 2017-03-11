@@ -91,6 +91,11 @@ public class DBWeight extends SQLiteOpenHelper {
         return dbRead.rawQuery("SELECT * FROM weight_log WHERE date='" + dateFormat.format(date) + "'", null);
     }
 
+    public Cursor getGoalWeight() {
+        SQLiteDatabase dbRead = this.getReadableDatabase();
+        return dbRead.rawQuery("SELECT * FROM weight_log WHERE date='0001-01-01'", null);
+    }
+
     public ArrayList<Integer> getWeight(Date theDate) {
         SQLiteDatabase dbRead = this.getReadableDatabase();
 

@@ -17,8 +17,11 @@ import android.widget.Toast;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
+import edu.uw.tcss450.nutrack.database.DBWeight;
 import edu.uw.tcss450.nutrack.fragment.AvatarSelectorFragment;
 import edu.uw.tcss450.nutrack.helper.ProfileHelper;
 import edu.uw.tcss450.nutrack.R;
@@ -122,12 +125,14 @@ public class ProfileSetupActivity extends AppCompatActivity implements AvatarSel
         TextInputEditText fieldName = (TextInputEditText) findViewById(R.id.profileSetup_editText_name);
         TextInputEditText fieldHeight = (TextInputEditText) findViewById(R.id.profileSetup_editText_height);
         TextInputEditText fieldWeight = (TextInputEditText) findViewById(R.id.profileSetup_editText_weight);
+        TextInputEditText fieldGoal = (TextInputEditText) findViewById(R.id.profileSetup_editText_goal);
         DatePicker datePicker = (DatePicker) findViewById(R.id.profileSetup_datePicker);
         ArrayList<TextInputEditText> fields = new ArrayList<>();
         String[] fieldsName = {"Name", "Height", "Weight"};
         fields.add(fieldName);
         fields.add(fieldHeight);
         fields.add(fieldWeight);
+        fields.add(fieldGoal);
         String hint = "";
         int emptyCount = 0;
         for (int i = 0; i < fields.size(); i++) {
@@ -161,8 +166,12 @@ public class ProfileSetupActivity extends AppCompatActivity implements AvatarSel
             sharedPrefProfile.edit().putString("gender", mGenderChosen).commit();
             sharedPrefProfile.edit().putString("dob", dateOfBirth).commit();
             sharedPrefProfile.edit().putInt("height", Integer.parseInt(fieldHeight.getText().toString())).commit();
+            //Change weight in SharePref and DB
             sharedPrefProfile.edit().putInt("weight", Integer.parseInt(fieldWeight.getText().toString())).commit();
-            //DB change Weight
+            logWeight(Integer.parseInt(fieldWeight.getText().toString()));
+            //Change goal in SharePref and DB
+            sharedPrefProfile.edit().putInt("goal", Integer.parseInt(fieldGoal.getText().toString())).commit();
+            setGoal(Integer.parseInt(fieldGoal.getText().toString()));
 
             sharedPrefProfile.edit().putInt("avatar_id", avatarIconId).commit();
 
@@ -217,4 +226,18 @@ public class ProfileSetupActivity extends AppCompatActivity implements AvatarSel
         Intent intent = new Intent(this, LoginActivity.class);
         startActivity(intent);
     }
+    public void logWeight(int weight) {
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+            DBWeight dbWeight = new DBWeight(getBaseContext());
+            String currentDate = dateFormat.format(new Date());
+            dbWeight.insertWeight(currentDate, weight);
+    }
+    //A LIL HACKY YO
+    public void setGoal(int weight) {
+        DBWeight dbWeight = new DBWeight(getBaseContext());
+        //GOAL weight stored at Jan 1, 1 AD; LOL
+        dbWeight.insertWeight("0001-01-01", weight);
+    }
+
+
 }

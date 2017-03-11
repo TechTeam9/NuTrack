@@ -23,6 +23,7 @@
     <string name="login">Login</string>
     <string name="lbs">lbs</string>
     <string name="weight">Weight (lbs)</string>
+    <string name="goal_weight">Goal Weight (lbs)</string>
     <string name="cm">cm</string>
     <string name="height">Height (cm)</string>
     <string name="name">Name</string>
