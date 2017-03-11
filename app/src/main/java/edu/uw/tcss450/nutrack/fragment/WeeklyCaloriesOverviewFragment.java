@@ -15,25 +15,23 @@ import java.util.Date;
 import java.util.List;
 
 import edu.uw.tcss450.nutrack.R;
-import edu.uw.tcss450.nutrack.database.DBDailyLog;
 import edu.uw.tcss450.nutrack.database.DBNutrientRecord;
 import lecho.lib.hellocharts.model.Axis;
 import lecho.lib.hellocharts.model.AxisValue;
 import lecho.lib.hellocharts.model.Column;
 import lecho.lib.hellocharts.model.ColumnChartData;
 import lecho.lib.hellocharts.model.SubcolumnValue;
-import lecho.lib.hellocharts.util.ChartUtils;
 import lecho.lib.hellocharts.view.ColumnChartView;
 
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link WeeklyIntakeOverviewFragment.OnFragmentInteractionListener} interface
+ * {@link WeeklyCaloriesOverviewFragment.OnFragmentInteractionListener} interface
  * to handle interaction events.
- * Use the {@link WeeklyIntakeOverviewFragment#newInstance} factory method to
+ * Use the {@link WeeklyCaloriesOverviewFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class WeeklyIntakeOverviewFragment extends Fragment {
+public class WeeklyCaloriesOverviewFragment extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -50,7 +48,7 @@ public class WeeklyIntakeOverviewFragment extends Fragment {
 
     private OnFragmentInteractionListener mListener;
 
-    public WeeklyIntakeOverviewFragment() {
+    public WeeklyCaloriesOverviewFragment() {
         // Required empty public constructor
     }
 
@@ -60,11 +58,11 @@ public class WeeklyIntakeOverviewFragment extends Fragment {
      *
      * @param param1 Parameter 1.
      * @param param2 Parameter 2.
-     * @return A new instance of fragment WeeklyIntakeOverviewFragment.
+     * @return A new instance of fragment WeeklyCaloriesOverviewFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static WeeklyIntakeOverviewFragment newInstance(String param1, String param2) {
-        WeeklyIntakeOverviewFragment fragment = new WeeklyIntakeOverviewFragment();
+    public static WeeklyCaloriesOverviewFragment newInstance(String param1, String param2) {
+        WeeklyCaloriesOverviewFragment fragment = new WeeklyCaloriesOverviewFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -85,7 +83,7 @@ public class WeeklyIntakeOverviewFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        final View view = inflater.inflate(R.layout.fragment_weekly_intake_overview, container, false);
+        final View view = inflater.inflate(R.layout.fragment_weekly_calories_overview, container, false);
         initializeWeeklyCalorieChart(view);
         return view;
     }
@@ -186,8 +184,6 @@ public class WeeklyIntakeOverviewFragment extends Fragment {
             weeklyIntakeChartData.setAxisXBottom(axisX);
 
             weeklyIntakeChart.setColumnChartData(weeklyIntakeChartData);
-
-
 
 
             //********************Need to Fix*******************

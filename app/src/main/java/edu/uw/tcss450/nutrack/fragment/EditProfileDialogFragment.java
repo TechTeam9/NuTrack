@@ -17,6 +17,9 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import edu.uw.tcss450.nutrack.helper.ProfileHelper;
 import edu.uw.tcss450.nutrack.R;
 import edu.uw.tcss450.nutrack.model.Profile;
@@ -83,6 +86,7 @@ public class EditProfileDialogFragment extends DialogFragment {
                             return;
                         } else {
                             sharedPrefProfile.edit().putString("name", editText.getText().toString()).commit();
+                            ProfileHelper.updateProfile(getContext(), "name", editText.getText().toString());
                         }
                         break;
                     case GENDER_TYPE:
@@ -94,9 +98,14 @@ public class EditProfileDialogFragment extends DialogFragment {
                         }
 
                         sharedPrefProfile.edit().putString("gender", value).commit();
-
+                        ProfileHelper.updateProfile(getContext(), "gender", value);
                         break;
                     case DOB_TYPE:
+
+                        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+                        String dob = dateFormat.format(new Date(datePicker.getYear() - 1900, datePicker.getMonth(), datePicker.getDayOfMonth()));
+                        sharedPrefProfile.edit().putString("dob", dob).commit();
+                        ProfileHelper.updateProfile(getContext(), "date_of_birth", dob);
                         break;
                     case HEIGHT_TYPE:
                         if (editText.getText().length() < 1) {
@@ -107,6 +116,7 @@ public class EditProfileDialogFragment extends DialogFragment {
                             return;
                         } else {
                             sharedPrefProfile.edit().putInt("height", Integer.parseInt(editText.getText().toString())).commit();
+                            ProfileHelper.updateProfile(getContext(), "height", editText.getText().toString());
                         }
                         break;
                     case WEIGHT_TYPE:
@@ -118,6 +128,7 @@ public class EditProfileDialogFragment extends DialogFragment {
                             return;
                         } else {
                             sharedPrefProfile.edit().putInt("weight", Integer.parseInt(editText.getText().toString())).commit();
+                            ProfileHelper.updateProfile(getContext(), "weight", editText.getText().toString());
                         }
                         break;
                     default:

@@ -123,5 +123,10 @@ public class DBWeight extends SQLiteOpenHelper {
         return weightList;
     }
 
-
+    public boolean deleteAll() {
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.delete(TABLE_NAME, null, null);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME);
+        return true;
+    }
 }

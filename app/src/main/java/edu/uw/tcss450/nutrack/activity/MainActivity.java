@@ -19,28 +19,24 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.inputmethod.EditorInfo;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 
+import edu.uw.tcss450.nutrack.database.DBDailyLog;
+import edu.uw.tcss450.nutrack.database.DBFoodRecentSearch;
+import edu.uw.tcss450.nutrack.database.DBNutrientRecord;
+import edu.uw.tcss450.nutrack.database.DBRecipeRecentSearch;
 import edu.uw.tcss450.nutrack.database.DBWeight;
 import edu.uw.tcss450.nutrack.fragment.DailyIntakeOverviewFragment;
 import edu.uw.tcss450.nutrack.fragment.FoodDialogFragment;
-import edu.uw.tcss450.nutrack.fragment.LookUpFoodFragment;
-import edu.uw.tcss450.nutrack.fragment.MonthlyWeightOverviewFragment;
+import edu.uw.tcss450.nutrack.fragment.WeeklyWeightOverviewFragment;
 import edu.uw.tcss450.nutrack.fragment.OverviewFragment;
 import edu.uw.tcss450.nutrack.fragment.RecipeDialogFragment;
-import edu.uw.tcss450.nutrack.fragment.WeeklyIntakeOverviewFragment;
+import edu.uw.tcss450.nutrack.fragment.WeeklyCaloriesOverviewFragment;
 import edu.uw.tcss450.nutrack.helper.ProfileHelper;
 import edu.uw.tcss450.nutrack.R;
 import edu.uw.tcss450.nutrack.fragment.DailyLogFragment;
@@ -61,7 +57,7 @@ import static edu.uw.tcss450.nutrack.R.id.naviView;
 public class MainActivity extends AppCompatActivity implements ProfileFragment.OnFragmentInteractionListener, OverviewFragment.OnFragmentInteractionListener,
         SettingFragment.OnFragmentInteractionListener, SearchResultFragment.OnFragmentInteractionListener,
         EditProfileDialogFragment.OnFragmentInteractionListener, DailyIntakeOverviewFragment.OnFragmentInteractionListener,
-        WeeklyIntakeOverviewFragment.OnFragmentInteractionListener, MonthlyWeightOverviewFragment.OnFragmentInteractionListener,
+        WeeklyCaloriesOverviewFragment.OnFragmentInteractionListener, WeeklyWeightOverviewFragment.OnFragmentInteractionListener,
         DailyLogFragment.OnFragmentInteractionListener, FoodDialogFragment.OnFragmentInteractionListener, RecipeDialogFragment.OnFragmentInteractionListener {
 
     private static final int NUTRIENT_ACTIVITY_CODE = 1101;
@@ -191,12 +187,15 @@ public class MainActivity extends AppCompatActivity implements ProfileFragment.O
             super.onDestroy();
         } else {
             mFragment = new OverviewFragment();
+            mCurrentFragment = "overview";
             mToolbar.setTitle("Overview");
+
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            fragmentManager.beginTransaction().replace(R.id.flContent, mFragment).commit();
+
         }
 
 
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        fragmentManager.beginTransaction().replace(R.id.flContent, mFragment).commit();
 
     }
 
@@ -341,34 +340,58 @@ public class MainActivity extends AppCompatActivity implements ProfileFragment.O
         SharedPreferences sharedPrefProfile = this.getSharedPreferences(getString(R.string.preference_profile), Context.MODE_PRIVATE);
         sharedPrefProfile.edit().clear().commit();
 
+        DBWeight dbWeight = new DBWeight(this);
+        dbWeight.deleteAll();
+        dbWeight.close();
+
+        DBDailyLog dbDailyLog = new DBDailyLog(this);
+        dbDailyLog.deleteAll();
+        dbDailyLog.close();
+
+        DBNutrientRecord dbNutrientRecord = new DBNutrientRecord(this);
+        dbNutrientRecord.deleteAll();
+        dbNutrientRecord.close();
+
+        DBFoodRecentSearch dbFoodRecentSearch = new DBFoodRecentSearch(this);
+        dbFoodRecentSearch.deleteAll();
+        dbFoodRecentSearch.close();
+
+        DBRecipeRecentSearch dbRecipeRecentSearch = new DBRecipeRecentSearch(this);
+        dbRecipeRecentSearch.deleteAll();
+        dbRecipeRecentSearch.close();
+
         Intent intent = new Intent(this, LoginActivity.class);
         startActivity(intent);
+        finish();
     }
 
     @Override
     public void onResume() {
         super.onResume();
 
-        switch (mCurrentFragment) {
-            case "overview":
-                mFragment = new OverviewFragment();
-                break;
-            case "profile":
-                mFragment = new ProfileFragment();
-                break;
-            case "dailyLog":
-                mFragment = new DailyLogFragment();
-                break;
-            case "settings":
-                mFragment = new SettingFragment();
-                break;
-            default:
-                mFragment = new OverviewFragment();
-                break;
+        if (mFragment != null) {
+            switch (mCurrentFragment) {
+                case "overview":
+                    mFragment = new OverviewFragment();
+                    break;
+                case "profile":
+                    mFragment = new ProfileFragment();
+                    break;
+                case "dailyLog":
+                    mFragment = new DailyLogFragment();
+                    break;
+                case "settings":
+                    mFragment = new SettingFragment();
+                    break;
+                default:
+                    mFragment = new OverviewFragment();
+                    break;
+            }
+
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            fragmentManager.beginTransaction().replace(R.id.flContent, mFragment).commit();
         }
 
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        fragmentManager.beginTransaction().replace(R.id.flContent, mFragment).commit();
     }
 
 

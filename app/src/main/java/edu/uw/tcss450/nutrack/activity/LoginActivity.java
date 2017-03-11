@@ -23,9 +23,7 @@ import android.widget.Toast;
 import org.json.JSONArray;
 import org.json.JSONException;
 
-import edu.uw.tcss450.nutrack.api.getAccountInfo;
 import edu.uw.tcss450.nutrack.helper.LoginHelper;
-import edu.uw.tcss450.nutrack.api.AddAccountInfo;
 import edu.uw.tcss450.nutrack.helper.ProfileHelper;
 import edu.uw.tcss450.nutrack.R;
 import edu.uw.tcss450.nutrack.model.Account;
@@ -34,7 +32,7 @@ import edu.uw.tcss450.nutrack.model.Profile;
 /**
  * Provide a login activity when user open the app.
  */
-public class LoginActivity extends AppCompatActivity implements AddAccountInfo.RegistrationCompleted, getAccountInfo.LoginCompleted, ProfileHelper.CheckProfileCompleted {
+public class LoginActivity extends AppCompatActivity implements LoginHelper.RegistrationCompleted, LoginHelper.LoginCompleted, ProfileHelper.CheckProfileCompleted {
 
     /**
      * The ImageView for the main logo of the application.
@@ -124,6 +122,12 @@ public class LoginActivity extends AppCompatActivity implements AddAccountInfo.R
             default:
                 break;
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        android.os.Process.killProcess(android.os.Process.myPid());
+        super.onDestroy();
     }
 
     /**

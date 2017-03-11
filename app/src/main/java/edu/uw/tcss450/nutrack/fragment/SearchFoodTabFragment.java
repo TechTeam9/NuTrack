@@ -6,6 +6,8 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -274,14 +276,11 @@ public class SearchFoodTabFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> parent, final View view,
                                     int position, long id) {
-                final String item = (String) parent.getItemAtPosition(position);
-                mListView.setClickable(false);
+                mListView.setEnabled(false);
 //                listView.setVisibility(View.INVISIBLE);
-                Bundle bundle = new Bundle();
 
                 final APIFoodGet mFatSecret = new APIFoodGet();
                 mFatSecret.execute(String.valueOf(mFoodId.get(position)));
-
             }
         });
 
@@ -452,11 +451,22 @@ public class SearchFoodTabFragment extends Fragment {
                     mFood.setmURL(urlList);
                     mFood.setmServing(servingList);
                     mFood.setServingId(servingIdList);
+
                     mListener.onFragmentInteraction(mFood, "write");
+
+                    Handler handler = new Handler(Looper.getMainLooper());
+                    final Runnable r = new Runnable() {
+                        public void run() {
+                            mListView.setEnabled(true);
+                        }
+                    };
+                    handler.postDelayed(r, 1000);
+
                 }
 
             } catch (JSONException exception) {
                 Toast.makeText(getContext(), "Error fetching food info", Toast.LENGTH_LONG);
+                mListView.setEnabled(true);
                 Log.e("API Error!", exception.getMessage());
             }
         }

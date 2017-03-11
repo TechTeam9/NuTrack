@@ -4,13 +4,10 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
-import com.joaquimley.faboptions.FabOptions;
 
 import edu.uw.tcss450.nutrack.R;
 
@@ -85,8 +82,8 @@ public class OverviewFragment extends Fragment {
 
         if (savedInstanceState == null) {
             Class topFragmentClass = DailyIntakeOverviewFragment.class;
-            Class middleFragmentClass = WeeklyIntakeOverviewFragment.class;
-            Class bottomFragmentClass = MonthlyWeightOverviewFragment.class;
+            Class middleFragmentClass = WeeklyCaloriesOverviewFragment.class;
+            Class bottomFragmentClass = WeeklyWeightOverviewFragment.class;
 
             Fragment topFragment = null;
             Fragment middleFragment = null;

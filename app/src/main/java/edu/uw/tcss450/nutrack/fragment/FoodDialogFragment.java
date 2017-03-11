@@ -176,8 +176,6 @@ public class FoodDialogFragment extends DialogFragment {
 
                 if (cancelButton.getText().toString().equals("CLOSE") || cancelButton.getText().toString().equals("CANCEL")) {
                     dismiss();
-                } else {
-
                 }
             }
         });

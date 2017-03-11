@@ -1,48 +1,27 @@
 package edu.uw.tcss450.nutrack.fragment;
 
-import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.database.Cursor;
-import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.LinearLayout;
-import android.widget.TextView;
-import android.widget.Toast;
 
-import com.github.aakira.expandablelayout.ExpandableRelativeLayout;
-import com.github.mikephil.charting.charts.LineChart;
-import com.github.mikephil.charting.data.Entry;
-import com.github.mikephil.charting.data.LineData;
-import com.github.mikephil.charting.data.LineDataSet;
-import com.github.mikephil.charting.utils.ColorTemplate;
-
-import org.w3c.dom.Text;
-
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 import edu.uw.tcss450.nutrack.R;
-import edu.uw.tcss450.nutrack.activity.MainActivity;
 import edu.uw.tcss450.nutrack.database.DBNutrientRecord;
 import edu.uw.tcss450.nutrack.database.DBWeight;
-import im.dacer.androidcharts.LineView;
 import lecho.lib.hellocharts.model.Axis;
 import lecho.lib.hellocharts.model.AxisValue;
-import lecho.lib.hellocharts.model.ChartData;
-import lecho.lib.hellocharts.model.ColumnChartData;
 import lecho.lib.hellocharts.model.Line;
 import lecho.lib.hellocharts.model.LineChartData;
 import lecho.lib.hellocharts.model.PointValue;
@@ -53,12 +32,12 @@ import static java.text.DateFormat.getDateTimeInstance;
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link MonthlyWeightOverviewFragment.OnFragmentInteractionListener} interface
+ * {@link WeeklyWeightOverviewFragment.OnFragmentInteractionListener} interface
  * to handle interaction events.
- * Use the {@link MonthlyWeightOverviewFragment#newInstance} factory method to
+ * Use the {@link WeeklyWeightOverviewFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class MonthlyWeightOverviewFragment extends Fragment {
+public class WeeklyWeightOverviewFragment extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -72,7 +51,7 @@ public class MonthlyWeightOverviewFragment extends Fragment {
 
     private OnFragmentInteractionListener mListener;
 
-    public MonthlyWeightOverviewFragment() {
+    public WeeklyWeightOverviewFragment() {
         // Required empty public constructor
     }
 
@@ -82,11 +61,11 @@ public class MonthlyWeightOverviewFragment extends Fragment {
      *
      * @param param1 Parameter 1.
      * @param param2 Parameter 2.
-     * @return A new instance of fragment MonthlyWeightOverviewFragment.
+     * @return A new instance of fragment WeeklyWeightOverviewFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static MonthlyWeightOverviewFragment newInstance(String param1, String param2) {
-        MonthlyWeightOverviewFragment fragment = new MonthlyWeightOverviewFragment();
+    public static WeeklyWeightOverviewFragment newInstance(String param1, String param2) {
+        WeeklyWeightOverviewFragment fragment = new WeeklyWeightOverviewFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -109,7 +88,7 @@ public class MonthlyWeightOverviewFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        mView = inflater.inflate(R.layout.fragment_monthly_weight_overview, container, false);
+        mView = inflater.inflate(R.layout.fragment_weekly_weight_overview, container, false);
         //ArrayList<Integer> weights = new ArrayList<>(); //Should go away after we have real code here.
         initializeMonthlyWeightGraph(mView);
 
@@ -280,15 +259,18 @@ public class MonthlyWeightOverviewFragment extends Fragment {
     }
     public void logWeight(){
         EditText weightEditText = (EditText) mView.findViewById(R.id.overview_editText_weightInput);
-        if(!weightEditText.getText().toString().equals("")) {
+        String input = weightEditText.getText().toString();
+        if(input.equals("")) {
+            weightEditText.setError("Weight cannot be empty.");
+        } else if (Integer.parseInt(input) >= 300 || Integer.parseInt(input) <= 50){
+            weightEditText.setError("Please keep the input realistic.");
+        } else {
             SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
             DBWeight dbWeight = new DBWeight(getContext());
             String currentDate = dateFormat.format(new Date());
             dbWeight.insertWeight(currentDate, Integer.valueOf(weightEditText.getText().toString()));
             weightEditText.setText("");
             refresh();
-        } else {
-            weightEditText.setError("Weight cannot be empty.");
         }
 
 

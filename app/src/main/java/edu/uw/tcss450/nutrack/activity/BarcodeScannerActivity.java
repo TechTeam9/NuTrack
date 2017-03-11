@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.google.zxing.Result;
 
@@ -31,10 +32,15 @@ public class BarcodeScannerActivity extends Activity implements ZXingScannerView
 
     @Override
     public void handleResult(Result result) {
-        System.out.println(result.getText());
-        Intent resultIntent = new Intent();
-        resultIntent.putExtra("barcode", result.getText());
-        setResult(Activity.RESULT_OK, resultIntent);
-        finish();
+        if (result.getText().length() == 12) {
+            Intent resultIntent = new Intent();
+            resultIntent.putExtra("barcode", result.getText());
+            setResult(Activity.RESULT_OK, resultIntent);
+            finish();
+        } else {
+            finish();
+            Toast.makeText(this, "The barcode you want to scan is not working. Please try another barcode.", Toast.LENGTH_SHORT).show();
+        }
+
     }
 }

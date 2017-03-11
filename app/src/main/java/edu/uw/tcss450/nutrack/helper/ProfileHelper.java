@@ -118,6 +118,14 @@ public class ProfileHelper {
         sharedPrefProfile.edit().putInt("avatar_id", theProfile.getAvatarId()).commit();
     }
 
+    public static void updateProfile(Context theContext, String theKey, String theValue) {
+        SharedPreferences sharedPref = theContext.getSharedPreferences(theContext.getString(R.string.preference_account), Context.MODE_PRIVATE);
+        String email = sharedPref.getString("email", "null");
+
+        UpdatePersonalInfo updateInfo = new UpdatePersonalInfo();
+        updateInfo.execute(email, theKey, theValue);
+    }
+
     /**
      * Getting personal information.
      */
@@ -230,16 +238,63 @@ public class ProfileHelper {
     }
 
     /**
+     * Update personal information.
+     */
+    private static class UpdatePersonalInfo extends AsyncTask<String, Void, String> {
+
+        @Override
+        protected String doInBackground(String... strings) {
+            String response = "";
+            String serviceURL = "personal_info_update.php";
+
+            String email = strings[0];
+            String key = strings[1];
+            String value = strings[2];
+            System.out.println(email + ", " + key + ", " + value);
+            HttpURLConnection urlConnection = null;
+            try {
+                URL urlObject = new URL(BASE_URL + serviceURL);
+                urlConnection = (HttpURLConnection) urlObject.openConnection();
+                urlConnection.setRequestMethod("POST");
+                urlConnection.setDoOutput(true);
+                OutputStreamWriter wr = new OutputStreamWriter(urlConnection.getOutputStream());
+                String data = URLEncoder.encode("email", "UTF-8") + "=" + URLEncoder.encode(email, "UTF-8") + "&" +
+                        URLEncoder.encode("key", "UTF-8") + "=" + URLEncoder.encode(key, "UTF-8") + "&" +
+                        URLEncoder.encode("value", "UTF-8") + "=" + URLEncoder.encode(value, "UTF-8");
+
+
+                wr.write(data);
+                wr.flush();
+                InputStream content = urlConnection.getInputStream();
+                BufferedReader buffer = new BufferedReader(new InputStreamReader(content));
+                String s = "";
+                while ((s = buffer.readLine()) != null) {
+                    response += s;
+                }
+            } catch (Exception e) {
+                response = "Unable to connect, Reason: "
+                        + e.getMessage();
+            } finally {
+                if (urlConnection != null)
+                    urlConnection.disconnect();
+            }
+            System.out.println(response);
+            return response;
+        }
+    }
+
+    /**
      * Checking profile.
      */
     public interface CheckProfileCompleted {
-        public void onCheckProfileCompleted(String result);
+        void onCheckProfileCompleted(String result);
     }
 
     /**
      * Insert profile.
      */
     public interface InsertProfileCompleted {
-        public void onInsertProfileCompleted(String result);
+        void onInsertProfileCompleted(String result);
     }
+
 }
