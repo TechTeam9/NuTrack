@@ -112,8 +112,8 @@ public class MonthlyWeightOverviewFragment extends Fragment {
         //ArrayList<Integer> weights = new ArrayList<>(); //Should go away after we have real code here.
         initializeMonthlyWeightGraph(mView);
 
-        Button submitButton = (Button) mView.findViewById(R.id.ov_weight_save);
-        submitButton.setOnClickListener(new View.OnClickListener() {
+        Button submitWeightButton = (Button) mView.findViewById(R.id.ov_weight_save);
+        submitWeightButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 logWeight();
@@ -122,7 +122,16 @@ public class MonthlyWeightOverviewFragment extends Fragment {
                 imm.hideSoftInputFromWindow(mView.getApplicationWindowToken(), 0);
             }
         });
+        Button submitGoalWeightButton = (Button) mView.findViewById(R.id.ov_goal_save);
+        submitGoalWeightButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                setGoalWeight();
 
+                InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(mView.getApplicationWindowToken(), 0);
+            }
+        });
         return mView;
     }
 
@@ -290,6 +299,18 @@ public class MonthlyWeightOverviewFragment extends Fragment {
             refresh();
         } else {
             weightEditText.setError("Weight cannot be empty.");
+        }
+    }
+
+    public void setGoalWeight() {
+        EditText goalEditText = (EditText) mView.findViewById(R.id.overview_editText_goalInput);
+        if (!goalEditText.getText().toString().equals("")) {
+            DBWeight dbWeight = new DBWeight(getContext());
+            dbWeight.setGoalWeight(Integer.valueOf(goalEditText.getText().toString()));
+            goalEditText.setText("");
+            refresh();
+        } else {
+            goalEditText.setError("Goal cannot be empty.");
         }
     }
 }

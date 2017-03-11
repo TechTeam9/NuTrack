@@ -235,8 +235,7 @@ public class ProfileSetupActivity extends AppCompatActivity implements AvatarSel
     //A LIL HACKY YO
     public void setGoal(int weight) {
         DBWeight dbWeight = new DBWeight(getBaseContext());
-        //GOAL weight stored at Jan 1, 1 AD; LOL
-        dbWeight.insertWeight("0001-01-01", weight);
+        dbWeight.setGoalWeight(weight);
     }
 
 
